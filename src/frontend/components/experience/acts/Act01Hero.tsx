@@ -82,7 +82,7 @@ export function Act01Hero() {
         <div className="md:hidden order-4 w-full flex justify-center mt-8 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-lime/20 to-teal/20 blur-2xl rounded-full transform scale-90 -z-10" />
           <img
-            src="/images/phone-hero-poster.webp"
+            src="/images/phone-hero-poster-v2.webp"
             alt="Amrit Mobiles Flagship Phone"
             width={600}
             height={1200}

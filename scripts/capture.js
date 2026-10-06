@@ -40,13 +40,13 @@ const sharp = require('sharp');
   
   const buffer = await page.screenshot({ type: 'png', omitBackground: true });
   
-  const outputPath = path.join(__dirname, '../public/images/phone-hero-poster.webp');
+  const outputPath = path.join(__dirname, '../public/images/phone-hero-poster-v2.webp');
   
   await sharp(buffer)
     .trim({ background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .webp({ quality: 80 })
     .toFile(outputPath);
     
-  console.log('Saved phone-hero-poster.webp tightly cropped');
+  console.log('Saved phone-hero-poster-v2.webp tightly cropped');
   await browser.close();
 })();

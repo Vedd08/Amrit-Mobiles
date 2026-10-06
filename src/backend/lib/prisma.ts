@@ -6,8 +6,12 @@ declare global {
 }
 
 function createClient() {
+  // Local dev: a SQLite file (file:./dev.db). Production (e.g. Vercel): a
+  // hosted libSQL database such as Turso — libsql://<db>.turso.io plus an
+  // auth token — because serverless hosts have no writable local disk.
   const adapter = new PrismaLibSql({
     url: process.env.DATABASE_URL ?? "file:./dev.db",
+    authToken: process.env.DATABASE_AUTH_TOKEN,
   });
   return new PrismaClient({ adapter });
 }

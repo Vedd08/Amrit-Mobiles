@@ -169,7 +169,7 @@ function StaticHeroPoster({ stageReady }: { stageReady: boolean }) {
       aria-hidden="true"
     >
       <img 
-        src="/images/phone-hero-poster.webp" 
+        src="/images/phone-hero-poster-v2.webp" 
         alt="" 
         width={600} 
         height={1200}

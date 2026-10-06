@@ -39,3 +39,32 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/backend/generated/prisma
+
+# local sqlite dev database
+/dev.db
+/dev.db-journal
+
+# locally-uploaded product images (dev fallback when Vercel Blob isn't configured)
+/public/uploads
+# local scratch, debug dumps and one-off scripts (not part of the app)
+/.tmp/
+/scratch/
+/clean_hex.js
+/css_output.txt
+/debug_bounds.mjs
+/find_orphans.js
+/fix_orphans.js
+/fix_ts_hex.js
+/hex_to_rgb.js
+/html_dump.html
+/lh-*.json
+/phase3_4.js
+/phase5.js
+
+# AI-assistant tooling folders
+/.agents/
+/.claude/
+/.windsurf/
+/skills-lock.json

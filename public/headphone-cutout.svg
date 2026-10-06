@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" fill="none">
+  <!-- Standalone copy of HeadphoneCutout in src/components/shop/ProductCutouts.tsx.
+       It lives here as a real file so PhoneExperience can load it as a
+       same-origin Image and draw it into the phone's screen texture: that
+       canvas is uploaded to WebGL, and a cross-origin source would taint it
+       and make the upload throw. Keep the two in sync by eye. -->
+  <defs>
+    <linearGradient id="hp-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6E7582" />
+      <stop offset="40%" stop-color="#353942" />
+      <stop offset="80%" stop-color="#1B1E24" />
+      <stop offset="100%" stop-color="#0F1014" />
+    </linearGradient>
+    <linearGradient id="chrome-rod" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B4BBC8" />
+      <stop offset="50%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#777D8B" />
+    </linearGradient>
+    <radialGradient id="hp-foam" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#2A2E38" />
+      <stop offset="70%" stop-color="#111317" />
+      <stop offset="100%" stop-color="#06070A" />
+    </radialGradient>
+    <linearGradient id="hp-red" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF1E3C" />
+      <stop offset="100%" stop-color="#C20021" />
+    </linearGradient>
+    <filter id="hp-shadow" x="-20%" y="-60%" width="140%" height="260%">
+      <feGaussianBlur stdDeviation="10" />
+    </filter>
+  </defs>
+
+  <g transform="translate(0, 20)">
+    <ellipse cx="300" cy="520" rx="170" ry="24" fill="black" fill-opacity="0.45" filter="url(#hp-shadow)" />
+
+    <rect x="132" y="240" width="16" height="90" rx="8" fill="url(#chrome-rod)" stroke="#111" stroke-width="1.5" />
+    <rect x="452" y="240" width="16" height="90" rx="8" fill="url(#chrome-rod)" stroke="#111" stroke-width="1.5" />
+
+    <path d="M 140 260 C 140 90, 460 90, 460 260" stroke="url(#hp-metal)" stroke-width="46" stroke-linecap="round" fill="none" />
+    <path d="M 152 250 C 160 115, 440 115, 448 250" stroke="#14171E" stroke-width="22" stroke-linecap="round" fill="none" />
+    <path d="M 165 240 C 175 130, 425 130, 435 240" stroke="url(#hp-red)" stroke-width="2" stroke-dasharray="6 4" fill="none" />
+
+    <rect x="126" y="244" width="28" height="18" rx="6" fill="url(#hp-metal)" stroke="#0E1015" stroke-width="2" />
+    <rect x="446" y="244" width="28" height="18" rx="6" fill="url(#hp-metal)" stroke="#0E1015" stroke-width="2" />
+
+    <g>
+      <ellipse cx="140" cy="365" rx="55" ry="76" fill="url(#hp-metal)" stroke="#3E434F" stroke-width="3" />
+      <rect x="130" y="284" width="20" height="26" rx="6" fill="url(#hp-metal)" stroke="#0A0B0E" stroke-width="2" />
+      <circle cx="140" cy="297" r="4" fill="#B4BBC8" stroke="#000" stroke-width="1" />
+      <ellipse cx="144" cy="365" rx="46" ry="66" fill="none" stroke="url(#hp-red)" stroke-width="4" />
+      <ellipse cx="148" cy="365" rx="38" ry="56" fill="url(#hp-foam)" stroke="#1A1C22" stroke-width="2" />
+      <ellipse cx="152" cy="365" rx="20" ry="34" fill="#07080A" />
+      <text x="152" y="370" fill="#3B404E" font-size="18" font-weight="900" text-anchor="middle" font-family="sans-serif">L</text>
+    </g>
+
+    <g>
+      <ellipse cx="460" cy="365" rx="55" ry="76" fill="url(#hp-metal)" stroke="#3E434F" stroke-width="3" />
+      <rect x="450" y="284" width="20" height="26" rx="6" fill="url(#hp-metal)" stroke="#0A0B0E" stroke-width="2" />
+      <circle cx="460" cy="297" r="4" fill="#B4BBC8" stroke="#000" stroke-width="1" />
+      <ellipse cx="456" cy="365" rx="46" ry="66" fill="none" stroke="url(#hp-red)" stroke-width="4" />
+      <ellipse cx="452" cy="365" rx="38" ry="56" fill="url(#hp-foam)" stroke="#1A1C22" stroke-width="2" />
+      <ellipse cx="448" cy="365" rx="20" ry="34" fill="#07080A" />
+      <text x="448" y="370" fill="#3B404E" font-size="18" font-weight="900" text-anchor="middle" font-family="sans-serif">R</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+export const ORDER_STATUSES = [
+  "PENDING",
+  "AWAITING_PAYMENT",
+  "PAID",
+  "CONFIRMED_WHATSAPP",
+  "FULFILLED",
+  "CANCELLED",
+] as const;

@@ -3,7 +3,7 @@
 import { useStageTier } from '@/frontend/lib/experience/useStageTier';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { CinematicNav } from './ui/CinematicNav';
+import { SiteNav } from '@/frontend/components/layout/SiteNav';
 import { ExperienceBackdrop } from './ui/ExperienceBackdrop';
 import { Act01Hero } from './acts/Act01Hero';
 import { Act02Brands } from './acts/Act02Brands';
@@ -82,7 +82,7 @@ export function Experience({
     <>
       <ExperienceBackdrop />
       <ScrollProgressHairline />
-      <CinematicNav />
+      <SiteNav />
       {tier !== 'mobile' && load3D && <Stage onReady={() => { setStageReady(true); ScrollTrigger.refresh(); }} />}
       <StaticHeroPoster stageReady={stageReady} />
       {load3D && <ScrollDirector />}

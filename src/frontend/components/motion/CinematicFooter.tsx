@@ -9,6 +9,7 @@ import { useGSAP } from "@gsap/react";
 import { cn } from "@/frontend/lib/utils";
 import { prefersReducedMotion } from "@/frontend/lib/motion";
 import { useLenis } from "@/frontend/components/motion/SmoothScrollProvider";
+import { usePauseOffscreen } from "@/frontend/lib/use-pause-offscreen";
 import { CartIcon, WhatsAppIcon } from "@/frontend/components/icons";
 import { SHOP_WHATSAPP_LINK } from "@/shared/whatsapp";
 
@@ -119,6 +120,7 @@ const MarqueeItem = () => (
 export function CinematicFooter() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const giantTextRef = useRef<HTMLDivElement>(null);
+  usePauseOffscreen(wrapperRef);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
   const lenis = useLenis();

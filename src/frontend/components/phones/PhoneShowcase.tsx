@@ -83,16 +83,29 @@ export function PhoneShowcase({
   const tiltRef = useRef<HTMLDivElement>(null);
   const n = phones.length;
 
+  const rootRef = useRef<HTMLDivElement>(null);
+  const onScreenRef = useRef(true);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => (onScreenRef.current = e.isIntersecting), { rootMargin: "100px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!interactive || reducedMotion || paused || n < 2) return;
     const id = window.setInterval(() => {
-      if (document.visibilityState === "visible") setIndex((i) => (i + 1) % n);
+      if (document.visibilityState === "visible" && onScreenRef.current) setIndex((i) => (i + 1) % n);
     }, 3800);
     return () => window.clearInterval(id);
   }, [interactive, reducedMotion, paused, n]);
 
   useEffect(() => {
     if (!interactive || reducedMotion) return;
+    // Tilt follows a mouse; touch screens skip the per-frame loop entirely.
+    if (!window.matchMedia("(pointer: fine)").matches) return;
     let raf = 0;
     const target = { x: 0, y: 0 };
     const cur = { x: 0, y: 0 };
@@ -102,12 +115,16 @@ export function PhoneShowcase({
       target.y = (e.clientY / innerHeight - 0.5) * 2;
     };
     const tick = () => {
-      cur.x += (target.x - cur.x) * 0.06;
-      cur.y += (target.y - cur.y) * 0.06;
+      raf = requestAnimationFrame(tick);
+      if (!onScreenRef.current) return;
+      const dx = target.x - cur.x;
+      const dy = target.y - cur.y;
+      if (Math.abs(dx) < 0.0005 && Math.abs(dy) < 0.0005) return;
+      cur.x += dx * 0.06;
+      cur.y += dy * 0.06;
       if (tiltRef.current) {
         tiltRef.current.style.transform = `rotateY(${cur.x * 9}deg) rotateX(${-cur.y * 6}deg)`;
       }
-      raf = requestAnimationFrame(tick);
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     raf = requestAnimationFrame(tick);
@@ -121,6 +138,7 @@ export function PhoneShowcase({
 
   return (
     <div
+      ref={rootRef}
       className="relative mx-auto h-[440px] w-full max-w-[580px] sm:h-[480px] lg:h-[600px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -279,7 +297,7 @@ function StatPill({
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute z-10 flex items-center gap-2 whitespace-nowrap rounded-full border border-line bg-white/85 px-4 py-2 text-xs font-bold text-ink shadow-[0_10px_30px_-12px_rgba(26,28,25,0.35)] backdrop-blur motion-safe:animate-[showcasePill_5s_ease-in-out_infinite] ${className}`}
+      className={`pointer-events-none absolute z-10 flex items-center gap-2 whitespace-nowrap rounded-full border border-line bg-white/95 px-4 py-2 text-xs font-bold text-ink shadow-[0_10px_30px_-12px_rgba(26,28,25,0.35)] motion-safe:animate-[showcasePill_5s_ease-in-out_infinite] ${className}`}
       style={style}
     >
       {children}

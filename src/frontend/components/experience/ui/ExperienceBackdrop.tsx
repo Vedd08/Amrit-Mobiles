@@ -53,8 +53,17 @@ export function ExperienceBackdrop() {
 
     let raf = 0;
     const t0 = performance.now();
+    // Touch devices: the backdrop moves with the scroll only (no idle drift),
+    // so a phone does no work at all while the reader is still.
+    const touch = !window.matchMedia('(pointer: fine)').matches;
+    let lastY = -1;
     const tick = (now: number) => {
-      const t = (now - t0) / 1000;
+      if (touch && scrollY === lastY) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
+      lastY = scrollY;
+      const t = touch ? 0 : (now - t0) / 1000;
       const max = document.documentElement.scrollHeight - innerHeight;
       const y = scrollY;
       const p = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;

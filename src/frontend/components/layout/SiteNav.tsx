@@ -114,8 +114,8 @@ export function SiteNav() {
             scrolled ? "h-16" : "h-[68px] sm:h-[80px]"
           } ${
             scrolled || megaOpen
-              ? "border-white/70 bg-white/80 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_18px_40px_-18px_rgba(26,28,25,0.28),0_2px_6px_-2px_rgba(26,28,25,0.08)] backdrop-blur-xl backdrop-saturate-150"
-              : "border-line/80 bg-white/55 shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_8px_24px_-16px_rgba(26,28,25,0.18)] backdrop-blur-lg"
+              ? "border-white/70 bg-white/95 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_18px_40px_-18px_rgba(26,28,25,0.28),0_2px_6px_-2px_rgba(26,28,25,0.08)] lg:bg-white/80 lg:backdrop-blur-xl lg:backdrop-saturate-150"
+              : "border-line/80 bg-white/90 shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_8px_24px_-16px_rgba(26,28,25,0.18)] lg:bg-white/55 lg:backdrop-blur-lg"
           }`}
         >
           {/* Logo */}
@@ -270,7 +270,7 @@ export function SiteNav() {
       <div
         id="nav-mobile-sheet"
         inert={!sheetOpen}
-        className={`fixed inset-0 z-[55] flex flex-col overflow-y-auto bg-paper/95 px-6 pb-8 pt-28 backdrop-blur-xl transition-[opacity,visibility] duration-300 lg:hidden ${
+        className={`fixed inset-0 z-[55] flex flex-col overflow-y-auto bg-paper px-6 pb-8 pt-28 transition-[opacity,visibility] duration-300 lg:hidden ${
           sheetOpen ? "visible opacity-100" : "invisible opacity-0"
         }`}
         style={{

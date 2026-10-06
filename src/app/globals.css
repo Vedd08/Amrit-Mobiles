@@ -424,3 +424,31 @@
   }
 }
 
+
+
+/* Performance: decorative loops stop when their section is off screen
+   (usePauseOffscreen), and never run inside static copies such as the
+   homepage portal's replica of the /phones hero. */
+[data-anim-paused] *,
+[data-anim-paused] *::before,
+[data-anim-paused] *::after {
+  animation-play-state: paused !important;
+}
+[data-still] *,
+[data-still] *::before,
+[data-still] *::after {
+  animation: none !important;
+}
+
+/* Phones and tablets: no live backdrop blur anywhere. Every blurred surface
+   here already has a mostly opaque fill, so the look barely changes, but
+   blur over moving content is one of the most expensive things a mobile GPU
+   can be asked to do while scrolling. */
+@media (max-width: 1023px), (pointer: coarse) {
+  *,
+  *::before,
+  *::after {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

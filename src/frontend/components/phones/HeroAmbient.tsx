@@ -59,13 +59,17 @@ export function HeroAmbient() {
 
   useEffect(() => {
     if (reducedMotion || !marqueeRef.current) return;
-    // Marquee animation
-    gsap.to(marqueeRef.current, {
-      x: "-50%",
-      duration: 30,
-      ease: "none",
-      repeat: -1
-    });
+    // Marquee: paused while the hero is off screen, killed on unmount.
+    const tween = gsap.to(marqueeRef.current, { x: "-50%", duration: 30, ease: "none", repeat: -1 });
+    const host = containerRef.current;
+    const io = host
+      ? new IntersectionObserver(([e]) => (e.isIntersecting ? tween.resume() : tween.pause()), { rootMargin: "100px" })
+      : null;
+    if (host && io) io.observe(host);
+    return () => {
+      io?.disconnect();
+      tween.kill();
+    };
   }, [reducedMotion]);
 
   if (reducedMotion) {
@@ -97,11 +101,11 @@ export function HeroAmbient() {
       `}</style>
       
       {/* 3 soft drifting aurora blobs (lime, teal, steel) made with radial-gradient only, no filter: blur */}
-      <div className="absolute -top-[20%] -left-[10%] w-[800px] h-[800px] opacity-20 animate-[spin_40s_linear_infinite]"
+      <div className="absolute -top-[20%] -left-[10%] w-[800px] h-[800px] opacity-20"
            style={{ background: 'radial-gradient(circle at center, var(--color-lime) 0%, transparent 70%)' }} />
-      <div className="absolute top-[30%] -right-[20%] w-[900px] h-[900px] opacity-15 animate-[spin_50s_linear_infinite_reverse]"
+      <div className="absolute top-[30%] -right-[20%] w-[900px] h-[900px] opacity-15"
            style={{ background: 'radial-gradient(circle at center, var(--color-teal) 0%, transparent 70%)' }} />
-      <div className="absolute -bottom-[40%] left-[20%] w-[1000px] h-[1000px] opacity-20 animate-[spin_60s_linear_infinite]"
+      <div className="absolute -bottom-[40%] left-[20%] w-[1000px] h-[1000px] opacity-20"
            style={{ background: 'radial-gradient(circle at center, var(--color-steel) 0%, transparent 70%)' }} />
 
       {/* faint 56px steel grid with a radial mask */}

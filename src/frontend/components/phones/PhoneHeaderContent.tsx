@@ -8,6 +8,7 @@ import { PhoneShowcase, type PhoneHeroStats } from "./PhoneShowcase";
 import { SearchIcon } from "@/frontend/components/icons";
 import { SUGGESTIONS } from "@/shared/search-suggestions";
 import { useReducedMotion } from "@/frontend/lib/use-reduced-motion";
+import { usePauseOffscreen } from "@/frontend/lib/use-pause-offscreen";
 import type { ProductCardData } from "@/frontend/components/shop/ProductCard";
 
 export type { PhoneHeroStats };
@@ -40,6 +41,7 @@ export function PhoneHeaderContent({
   // double-run of effects, which otherwise consumed the flag on the first run
   // and replayed the "normal visit" entrance on the second.
   const arrivedRef = useRef<boolean | null>(null);
+  usePauseOffscreen(containerRef);
 
   useEffect(() => {
     if (reducedMotion || !interactiveSearch) return;
@@ -109,6 +111,7 @@ export function PhoneHeaderContent({
   return (
     <section
       ref={containerRef}
+      data-still={interactiveSearch ? undefined : ""}
       className="relative w-full overflow-hidden bg-paper pb-12 pt-10 lg:flex lg:min-h-[78svh] lg:items-center lg:pb-14 lg:pt-6"
     >
       {/* Background */}
@@ -195,7 +198,8 @@ export function PhoneHeaderContent({
           background-size: 200% auto;
           animation: hero-shimmer 6s linear infinite;
         }
-        @media (prefers-reduced-motion: reduce) {
+        /* The shimmer repaints the headline every frame: desktop only. */
+        @media (prefers-reduced-motion: reduce), (hover: none), (max-width: 1023px) {
           .animate-hero-shimmer { animation: none; }
         }
       `}</style>

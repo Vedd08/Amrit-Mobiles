@@ -13,6 +13,7 @@ import { BRANCHES } from '@/shared/branches';
 import type { ProductCardData } from '@/frontend/components/shop/ProductCard';
 import { brands } from '@/shared/brands';
 import { stageState } from '@/frontend/lib/experience/stageState';
+import Image from 'next/image';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -62,6 +63,8 @@ export function Act07EnterStore({
   const bezelRef = useRef<HTMLDivElement>(null);
   const portalRef = useRef<HTMLDivElement>(null);
   const splashRef = useRef<HTMLDivElement>(null);
+  const lockRef = useRef<HTMLDivElement>(null);
+  const islandRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const burstRef = useRef<HTMLDivElement>(null);
   const ringRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -137,11 +140,12 @@ export function Act07EnterStore({
         const tf = has3D
           ? 'none'
           : (() => {
-              const square = easeInOut(seg(p, 0.3, 0.45));
-              const ty = lerp(vh * 0.58, 0, rise);
-              const ry = lerp(lerp(-34, -10, rise), 0, square);
-              const rx = lerp(lerp(16, 5, rise), 0, square);
-              return `perspective(1600px) translate3d(0, ${ty}px, 0) rotateX(${rx}deg) rotateY(${ry}deg)`;
+              // Rises in turned sideways (edge-on), then swings round to face you.
+              const ty = lerp(vh * 0.55, 0, rise);
+              const ry = lerp(-78, 0, turn);
+              const rx = lerp(12, 0, turn);
+              const rz = lerp(-6, 0, turn);
+              return `perspective(1100px) translate3d(0, ${ty}px, 0) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg)`;
             })();
 
         const portal = portalRef.current;
@@ -162,7 +166,7 @@ export function Act07EnterStore({
         }
 
         // CSS stand-in phone: only without the 3D stage.
-        const bezelW = Math.max(8, r0.w * 0.045);
+        const bezelW = Math.max(9, r0.w * 0.05);
         const bezel = lerp(bezelW, 0, seg(dive, 0.9, 1));
         if (bezelRef.current) {
           const b = bezelRef.current;
@@ -192,6 +196,34 @@ export function Act07EnterStore({
         }
         if (headerRef.current) {
           headerRef.current.style.opacity = String(seg(p, 0.6, 0.74));
+        }
+
+        // Mobile stand-in only: a real lock screen (photo wallpaper, clock,
+        // notification) that "unlocks" into the Amrit home screen once the
+        // phone has turned to face you; plus the Dynamic Island.
+        if (lockRef.current) {
+          const l = lockRef.current;
+          l.style.display = has3D ? 'none' : 'block';
+          l.style.width = `${r0.w}px`;
+          l.style.height = `${r0.h}px`;
+          l.style.left = `${left + w / 2}px`;
+          l.style.top = `${top + h / 2}px`;
+          const unlock = easeInOut(seg(p, 0.3, 0.42));
+          l.style.opacity = String(1 - unlock);
+          l.style.transform = `translate(-50%, -50%) translateY(${-unlock * r0.h * 0.12}px)`;
+        }
+        // The splash draws its own island for the desktop handoff; on mobile
+        // the real island layer replaces it (no double pill).
+        const splashIsland = splashRef.current?.querySelector<HTMLElement>('[data-splash-island]');
+        if (splashIsland) splashIsland.style.visibility = has3D ? 'visible' : 'hidden';
+        if (islandRef.current) {
+          const d = islandRef.current;
+          d.style.display = has3D ? 'none' : 'block';
+          d.style.width = `${r0.w * 0.3}px`;
+          d.style.height = `${r0.w * 0.085}px`;
+          d.style.left = `${left + w / 2}px`;
+          d.style.top = `${top + r0.w * 0.05}px`;
+          d.style.opacity = String(1 - seg(dive, 0, 0.25));
         }
 
         // Copy lifts away as the phone rises.
@@ -333,22 +365,29 @@ export function Act07EnterStore({
           }}
         />
 
-        {/* Titanium bezel */}
+        {/* Handset body: thin titanium rim, black glass bezel, side buttons */}
         <div
           ref={bezelRef}
           aria-hidden="true"
           className="absolute left-1/2 top-1/2 pointer-events-none will-change-transform"
           style={{
             background:
-              'linear-gradient(145deg, #F7F9FA 0%, #C9D4DD 22%, #A8B8C8 45%, #E8EDF0 62%, #93A4B5 100%)',
+              'linear-gradient(135deg, #E9EDF0 0%, #B9C4CE 18%, #F5F7F8 32%, #9AA9B7 50%, #DCE3E8 68%, #8E9DAB 84%, #CDD6DD 100%)',
             boxShadow:
-              '0 40px 90px -30px rgba(95,138,13,0.45), 0 18px 40px -18px rgba(26,28,25,0.35), inset 0 0 0 1px rgba(255,255,255,0.7)',
+              '0 50px 90px -30px rgba(26,28,25,0.5), 0 30px 50px -25px rgba(95,138,13,0.45), inset 0 0 0 0.5px rgba(255,255,255,0.8)',
           }}
-        />
+        >
+          <div className="absolute inset-[2.5px] rounded-[inherit] bg-[#0B0C0D]" />
+          <span className="absolute -left-[2px] top-[17%] h-[5%] w-[3px] rounded-l-sm bg-[#9AA9B7]" />
+          <span className="absolute -left-[2px] top-[25%] h-[9%] w-[3px] rounded-l-sm bg-[#9AA9B7]" />
+          <span className="absolute -left-[2px] top-[36%] h-[9%] w-[3px] rounded-l-sm bg-[#9AA9B7]" />
+          <span className="absolute -right-[2px] top-[28%] h-[14%] w-[3px] rounded-r-sm bg-[#9AA9B7]" />
+        </div>
 
         {/* The screen: full-viewport layer clipped to the phone, then to the whole viewport */}
         <div
           ref={portalRef}
+          data-still=""
           className="absolute inset-0 bg-paper overflow-hidden will-change-transform"
           style={{ pointerEvents: 'none' }}
           aria-hidden="true"
@@ -381,6 +420,45 @@ export function Act07EnterStore({
             </PhoneHeaderContent>
           </div>
 
+          {/* Lock screen (mobile stand-in): real photo wallpaper, unlocks into the home screen */}
+          <div
+            ref={lockRef}
+            className="absolute left-1/2 top-1/2 z-10 overflow-hidden text-white"
+            style={{ display: 'none' }}
+          >
+            <Image src="/images/wallpapers/samsung.webp" alt="" fill sizes="260px" className="object-cover" />
+            <div className="absolute inset-0 bg-linear-to-b from-black/35 via-black/0 via-45% to-black/40" />
+            <div className="relative flex items-center justify-between px-[9%] pt-[5%] text-[10px] font-semibold">
+              <span>Amrit</span>
+              <span className="tracking-tight">5G ▮▮▮</span>
+            </div>
+            <p className="relative mt-[14%] text-center text-[11px] font-semibold opacity-90" suppressHydrationWarning>
+              {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </p>
+            <p className="relative text-center text-[64px] font-bold leading-none tracking-tight [text-shadow:0_2px_16px_rgba(0,0,0,0.2)]">9:41</p>
+            <div className="absolute inset-x-[6%] bottom-[16%] rounded-[16px] bg-white/30 p-[5%] shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.45)]">
+              <div className="flex items-start gap-2">
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-[7px] bg-lime">
+                  <LogoStar className="h-[70%] w-[70%]" />
+                </span>
+                <div className="min-w-0 text-left">
+                  <p className="text-[9px] font-semibold opacity-85">AMRIT MOBILES · now</p>
+                  <p className="text-[11px] font-bold leading-tight">Your new phone is waiting</p>
+                  <p className="text-[10px] leading-tight opacity-90">Swipe up to enter the store</p>
+                </div>
+              </div>
+            </div>
+            <div className="absolute bottom-[2.5%] left-1/2 h-[4px] w-[34%] -translate-x-1/2 rounded-full bg-white/90" />
+          </div>
+
+          {/* Dynamic Island (mobile stand-in): turns with the screen */}
+          <div
+            ref={islandRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute z-20 -translate-x-1/2 rounded-full bg-black"
+            style={{ display: 'none' }}
+          />
+
           {/* The phone's own home screen */}
           <div
             ref={splashRef}
@@ -392,7 +470,7 @@ export function Act07EnterStore({
           >
             <div className="flex w-full items-center justify-between text-[11px] font-bold text-ink-2">
               <span>9:41</span>
-              <span className="h-[18px] w-[32%] rounded-full bg-ink-2" />
+              <span data-splash-island className="h-[18px] w-[32%] rounded-full bg-ink-2" />
               <span className="tracking-tight">5G ▮▮▮</span>
             </div>
             <div className="mt-[14%] h-[22%] aspect-square motion-safe:animate-[spin_14s_linear_infinite]">

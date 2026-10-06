@@ -99,7 +99,7 @@ export function Experience({
       </div>
 
       {/* Sticky Mobile Bar - hides when final act enters */}
-      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-paper/90 backdrop-blur-md border-t border-line px-4 py-3 pb-[env(safe-area-inset-bottom)] flex gap-4 transition-transform duration-300 ${finalActEntered ? 'translate-y-[150%]' : 'translate-y-0'}`}>
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-paper/[0.97] border-t border-line px-4 py-3 pb-[env(safe-area-inset-bottom)] flex gap-4 transition-transform duration-300 ${finalActEntered ? 'translate-y-[150%]' : 'translate-y-0'}`}>
         <a href={SHOP_WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="flex-1 bg-white border border-line text-ink text-center py-3 rounded-full font-bold text-sm">
           WhatsApp
         </a>

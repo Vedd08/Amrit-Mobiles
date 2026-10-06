@@ -17,7 +17,6 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Amrit Mobiles & Electronics",
   description: "Mobile phones — shop online or order via WhatsApp.",
-  icons: { icon: "/logo.png" },
 };
 
 export default function RootLayout({

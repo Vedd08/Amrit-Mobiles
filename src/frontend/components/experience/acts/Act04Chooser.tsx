@@ -18,7 +18,7 @@ export function Act04Chooser({ allPhones = [] }: { allPhones?: ProductCardData[]
     <section
       id="chooser"
       data-act="chooser"
-      className="md:min-h-[100vh] py-16 md:py-0 relative px-6 md:mx-auto md:w-full md:max-w-[1360px] md:px-10 flex flex-col md:items-start items-center justify-center"
+      className="md:min-h-screen py-16 md:py-0 relative px-6 md:mx-auto md:w-full md:max-w-[1360px] md:px-10 flex flex-col md:items-start items-center justify-center"
     >
       <div className="text-center md:text-left z-10 w-full md:w-[48%]">
         <h2 className="reveal-up text-4xl md:text-6xl font-bold tracking-tight text-ink mb-10">

@@ -25,7 +25,7 @@ export default function WishlistPage() {
             </p>
             <Link
               href="/phones"
-              className="mt-6 inline-flex rounded-full bg-lime px-6 py-3 text-small font-bold text-[#2A2A2A] hover:bg-[#A9D93F] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-lo"
+              className="mt-6 inline-flex rounded-full bg-lime px-6 py-3 text-small font-bold text-[#2A2A2A] hover:bg-[#A9D93F] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-lo"
             >
               BROWSE PHONES
             </Link>

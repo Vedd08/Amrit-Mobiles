@@ -59,7 +59,7 @@ export function BrandGrid({ brands }: { brands: BrandTile[] }) {
       onClick={() => nudge(dir)}
       disabled={disabled}
       aria-label={label}
-      className="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface text-ink shadow-sh-1 transition-colors hover:border-lime-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+      className="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface text-ink shadow-sh-1 transition-colors hover:border-lime-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
     >
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4">
         <path d={dir === -1 ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} strokeLinecap="round" strokeLinejoin="round" />
@@ -90,7 +90,7 @@ export function BrandGrid({ brands }: { brands: BrandTile[] }) {
               <li key={b.slug} className="shrink-0 snap-start">
                 <Link
                   href={`/phones/${b.slug}`}
-                  className="group relative block w-[210px] outline-none sm:w-[236px] hover:shadow-sh-2 rounded-lg transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+                  className="group relative block w-[210px] outline-none sm:w-[236px] hover:shadow-sh-2 rounded-lg transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
                 >
                   {/* The handset, standing proud of the card's top edge. */}
                   <span className="absolute inset-x-6 -top-14 z-10 block h-36 overflow-hidden rounded-lg bg-surface shadow-sh-1 border border-line transition-transform duration-300 group-hover:-translate-y-1.5">
@@ -122,7 +122,7 @@ export function BrandGrid({ brands }: { brands: BrandTile[] }) {
           <li className="shrink-0">
             <Link
               href="/phones/all"
-              className="group flex h-[268px] w-[164px] flex-col justify-end rounded-lg border border-dashed border-line bg-surface p-5 transition-colors hover:border-lime-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+              className="group flex h-[268px] w-[164px] flex-col justify-end rounded-lg border border-dashed border-line bg-surface p-5 transition-colors hover:border-lime-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
             >
               <span className="text-body-lg font-bold leading-tight text-ink group-hover:text-ink transition-colors">
                 All phones

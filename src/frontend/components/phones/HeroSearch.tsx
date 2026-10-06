@@ -102,7 +102,7 @@ export function HeroSearch({ initialQuery = "" }: { initialQuery?: string }) {
         <button
           type="submit"
           aria-label="Search"
-          className="ml-2 flex h-12 items-center justify-center rounded-full bg-lime px-6 font-bold text-[#2A2A2A] transition-colors hover:bg-lime-lo focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+          className="ml-2 flex h-12 items-center justify-center rounded-full bg-lime px-6 font-bold text-[#2A2A2A] transition-colors hover:bg-lime-lo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
         >
           Search
         </button>
@@ -116,7 +116,7 @@ export function HeroSearch({ initialQuery = "" }: { initialQuery?: string }) {
               key={s}
               type="button"
               onClick={() => submit(undefined, s)}
-              className="rounded-full border border-line bg-surface px-3 py-1.5 text-micro font-medium text-ink transition-colors hover:border-lime-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+              className="rounded-full border border-line bg-surface px-3 py-1.5 text-micro font-medium text-ink transition-colors hover:border-lime-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
             >
               {s}
             </button>

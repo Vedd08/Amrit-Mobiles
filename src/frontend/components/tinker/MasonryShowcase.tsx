@@ -120,7 +120,7 @@ const renderCard = (item: ShowcaseItem) => (
     />
 
     {/* Dark gradient overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+    <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent" />
 
     {/* Badge */}
     {item.badge && (

@@ -17,7 +17,7 @@ export function Act03Why() {
       ref={sectionRef}
       id="why"
       data-act="why"
-      className="md:min-h-[150vh] py-16 md:py-0 relative px-6 md:mx-auto md:w-full md:max-w-[1360px] md:px-10 md:py-24 flex flex-col md:items-start items-center justify-center md:justify-start"
+      className="md:min-h-[150vh] py-16 relative px-6 md:mx-auto md:w-full md:max-w-[1360px] md:px-10 md:py-24 flex flex-col md:items-start items-center justify-center md:justify-start"
     >
       <div className="md:sticky top-[20vh] w-full md:w-[45%] z-10 text-center md:text-left">
         <div className="reveal-up inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-line shadow-sm text-sm font-semibold mb-4 text-ink">

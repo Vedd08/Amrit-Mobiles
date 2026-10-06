@@ -34,7 +34,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
       className="group block overflow-hidden rounded-lg border border-line bg-white transition-all duration-300 hover:-translate-y-2 hover:border-lime hover:shadow-sh-2 shadow-2xs relative flex flex-col justify-between h-full select-none"
     >
       {/* Top Image & Badge Container */}
-      <div className="relative aspect-square w-full bg-gradient-to-br from-paper via-ink-hi to-paper overflow-hidden p-6 flex items-center justify-center">
+      <div className="relative aspect-square w-full bg-linear-to-br from-paper via-ink-hi to-paper overflow-hidden p-6 flex items-center justify-center">
         {product.image ? (
           <div className="relative w-full h-full transition-transform duration-500 group-hover:scale-105">
             <Image

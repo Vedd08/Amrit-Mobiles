@@ -59,7 +59,7 @@ export function ProductGallery({
     <div>
       <div
         ref={stageRef}
-        className="relative aspect-square overflow-hidden rounded-lg border border-raised bg-gradient-to-br from-base via-raised to-void shadow-sh-2 "
+        className="relative aspect-square overflow-hidden rounded-lg border border-raised bg-linear-to-br from-base via-raised to-void shadow-sh-2 "
       >
         <span className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none text-display font-bold uppercase leading-none tracking-tighter text-white/[0.04] sm:text-display">
           {brand}

@@ -23,7 +23,7 @@ export function CategoryCard({
   return (
     <Link
       href={`/phones/category/${slug}`}
-      className="group block overflow-hidden rounded-lg border border-line bg-surface shadow-sh-1 transition-all duration-200 hover:border-lime-ink hover:-translate-y-1 hover:shadow-sh-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+      className="group block overflow-hidden rounded-lg border border-line bg-surface shadow-sh-1 transition-all duration-200 hover:border-lime-ink hover:-translate-y-1 hover:shadow-sh-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
     >
       <div className="relative aspect-[4/3] w-full bg-paper">
         {image && (

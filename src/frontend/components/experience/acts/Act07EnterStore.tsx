@@ -431,7 +431,7 @@ export function Act07EnterStore({
           <h2 className="text-5xl md:text-8xl font-extrabold tracking-tighter text-ink mb-8 leading-[0.95]">
             Ready?
             <br />
-            <span className="bg-gradient-to-r from-lime-ink via-lime to-teal bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-lime-ink via-lime to-teal bg-clip-text text-transparent">
               Step inside.
             </span>
           </h2>

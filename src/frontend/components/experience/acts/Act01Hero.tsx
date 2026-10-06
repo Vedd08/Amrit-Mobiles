@@ -64,7 +64,7 @@ export function Act01Hero() {
             className="group relative overflow-hidden bg-lime text-[#2A2A2A] px-10 py-5 rounded-full font-bold text-sm md:text-base shadow-sm flex items-center justify-center transition-transform duration-200"
           >
             {/* Hover shine sweep */}
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+            <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
             <span>Browse phones</span>
           </Link>
 
@@ -80,7 +80,7 @@ export function Act01Hero() {
 
         {/* Mobile Poster (no canvas) */}
         <div className="md:hidden order-4 w-full flex justify-center mt-8 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-lime/20 to-teal/20 blur-2xl rounded-full transform scale-90 -z-10" />
+          <div className="absolute inset-0 bg-linear-to-r from-lime/20 to-teal/20 blur-2xl rounded-full transform scale-90 -z-10" />
           <img
             src="/images/phone-hero-poster-v2.webp"
             alt="Amrit Mobiles Flagship Phone"

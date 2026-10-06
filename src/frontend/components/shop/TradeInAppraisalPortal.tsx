@@ -83,7 +83,7 @@ Please confirm spot inspection availability!`;
       <div className="max-w-7xl mx-auto">
         
         {/* Top Flagship Hero Banner (Clean, Bright & High Contrast!) */}
-        <div className="rounded-lg bg-gradient-to-r from-base via-teal to-teal text-white p-8 sm:p-14 mb-14 shadow-sh-1 relative overflow-hidden">
+        <div className="rounded-lg bg-linear-to-r from-base via-teal to-teal text-white p-8 sm:p-14 mb-14 shadow-sh-1 relative overflow-hidden">
           <div className="max-w-3xl relative z-10">
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold uppercase tracking-wider mb-6 backdrop-blur-md shadow-sm">
               <span className="w-2 h-2 rounded-full bg-lime-ink animate-ping" />

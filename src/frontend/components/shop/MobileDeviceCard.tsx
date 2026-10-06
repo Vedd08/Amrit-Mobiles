@@ -148,7 +148,7 @@ export function MobileDeviceCard({ product, onCompareToggle, isCompared = false 
       {/* Main Product Link & Preview */}
       <Link href={`/product/${product.slug}`} className="block px-6 pt-4 pb-3 flex-1 flex flex-col">
         {/* Image Container with Apple Studio Lighting Feel */}
-        <div className="relative aspect-square w-full rounded-lg bg-gradient-to-b from-white via-paper to-ink-hi border border-ink-hi flex items-center justify-center p-4 mb-4 overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
+        <div className="relative aspect-square w-full rounded-lg bg-linear-to-b from-white via-paper to-ink-hi border border-ink-hi flex items-center justify-center p-4 mb-4 overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
           {product.image ? (
             <Image
               src={product.image}

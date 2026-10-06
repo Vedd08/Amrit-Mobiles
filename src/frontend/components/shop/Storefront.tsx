@@ -239,7 +239,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
             max={dataMaxPrice}
             value={minPriceFilter}
             onChange={(e) => updateUrl({ minPrice: e.target.value })}
-            className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-ink [&::-webkit-slider-thumb]:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-ink [&::-webkit-slider-thumb]:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
             aria-label="Minimum price"
           />
           <input
@@ -248,7 +248,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
             max={dataMaxPrice}
             value={maxPriceFilter}
             onChange={(e) => updateUrl({ maxPrice: e.target.value })}
-            className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-ink [&::-webkit-slider-thumb]:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="absolute top-1/2 -translate-y-1/2 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-ink [&::-webkit-slider-thumb]:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
             aria-label="Maximum price"
           />
         </div>
@@ -308,7 +308,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
             <button
               onClick={() => setSearchDraft("")}
               aria-label="Clear search"
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-4 hover:text-danger focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-4 hover:text-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full"
             >
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
@@ -317,7 +317,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <button
             type="button"
-            className="lg:hidden flex items-center justify-center gap-2 bg-white border border-line rounded-sm px-5 py-3 text-small font-medium text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="lg:hidden flex items-center justify-center gap-2 bg-white border border-line rounded-sm px-5 py-3 text-small font-medium text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
             onClick={() => setIsMobileFilterOpen(true)}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
@@ -341,7 +341,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
           <button
             onClick={handleViewToggle}
             aria-label={view === "grid" ? "Switch to list view" : "Switch to grid view"}
-            className="hidden sm:flex items-center justify-center w-[46px] h-[46px] bg-white border border-line rounded-sm text-ink-4 hover:text-ink transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="hidden sm:flex items-center justify-center w-[46px] h-[46px] bg-white border border-line rounded-sm text-ink-4 hover:text-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
           >
             {view === "grid" ? (
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" /></svg>
@@ -373,7 +373,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
               <button
                 onClick={() => setIsMobileFilterOpen(false)}
                 aria-label="Close filters"
-                className="w-8 h-8 flex items-center justify-center rounded-sm bg-paper -ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+                className="w-8 h-8 flex items-center justify-center rounded-sm bg-paper -ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
@@ -384,13 +384,13 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
             <div className="p-6 border-t border-line flex gap-4 bg-white">
               <button
                 onClick={clearAll}
-                className="flex-1 py-3.5 rounded-sm border border-line text-small font-semibold text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+                className="flex-1 py-3.5 rounded-sm border border-line text-small font-semibold text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
               >
                 Clear all
               </button>
               <button
                 onClick={() => setIsMobileFilterOpen(false)}
-                className="flex-1 py-3.5 rounded-sm bg-lime text-small font-semibold text-[#2A2A2A] shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+                className="flex-1 py-3.5 rounded-sm bg-lime text-small font-semibold text-[#2A2A2A] shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
               >
                 View {filteredProducts.length}
               </button>
@@ -410,7 +410,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
                 {categoryFilter !== "all" && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-line text-micro font-medium text-ink">
                     Category: {categoryFilter}
-                    <button aria-label="Remove category filter" onClick={() => updateUrl({ category: null })} className="hover:text-danger focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full">
+                    <button aria-label="Remove category filter" onClick={() => updateUrl({ category: null })} className="hover:text-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full">
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                   </span>
@@ -420,7 +420,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
                   return (
                     <span key={b} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-line text-micro font-medium text-ink">
                       {brandName}
-                      <button aria-label={`Remove brand ${b}`} onClick={() => updateUrl({ brands: brandFilter.filter((x) => x !== b).join(",") || null })} className="hover:text-danger focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full">
+                      <button aria-label={`Remove brand ${b}`} onClick={() => updateUrl({ brands: brandFilter.filter((x) => x !== b).join(",") || null })} className="hover:text-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
                       </button>
                     </span>
@@ -429,7 +429,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
                 {(minPriceFilter > dataMinPrice || maxPriceFilter < dataMaxPrice) && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-line text-micro font-medium text-ink">
                     {formatINR(minPriceFilter)} - {formatINR(maxPriceFilter)}
-                    <button aria-label="Remove price filter" onClick={() => updateUrl({ minPrice: null, maxPrice: null })} className="hover:text-danger focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full">
+                    <button aria-label="Remove price filter" onClick={() => updateUrl({ minPrice: null, maxPrice: null })} className="hover:text-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full">
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                   </span>
@@ -437,14 +437,14 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
                 {inStockFilter && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-line text-micro font-medium text-ink">
                     In Stock
-                    <button aria-label="Remove stock filter" onClick={() => updateUrl({ inStock: null })} className="hover:text-danger focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full">
+                    <button aria-label="Remove stock filter" onClick={() => updateUrl({ inStock: null })} className="hover:text-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink rounded-full">
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                   </span>
                 )}
                 <button
                   onClick={clearAll}
-                  className="text-micro font-medium text-lime-ink hover:underline px-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+                  className="text-micro font-medium text-lime-ink hover:underline px-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
                 >
                   Clear all
                 </button>
@@ -488,7 +488,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
               <p className="text-small text-ink-4 mb-6 max-w-xs mx-auto">Try adjusting your filters or search query to find what you&apos;re looking for.</p>
               <button
                 onClick={clearAll}
-                className="bg-lime text-[#2A2A2A] text-small font-semibold px-8 py-3 rounded-sm shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+                className="bg-lime text-[#2A2A2A] text-small font-semibold px-8 py-3 rounded-sm shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
               >
                 Clear all filters
               </button>
@@ -500,7 +500,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
             <div className="mt-12 flex justify-center">
               <button
                 onClick={() => setPage((p) => p + 1)}
-                className="bg-white border-2 border-line hover:border-ink-4 text-ink text-small font-semibold px-10 py-3 rounded-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+                className="bg-white border-2 border-line hover:border-ink-4 text-ink text-small font-semibold px-10 py-3 rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
               >
                 Load More
               </button>

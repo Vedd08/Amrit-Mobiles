@@ -109,7 +109,7 @@ export function AuthorizedBrandPartners() {
           <Link
             key={brand.name}
             href={`/category/phones?brand=${encodeURIComponent(brand.name)}`}
-            className={`group rounded-lg bg-gradient-to-b from-white via-white to-paper-2 border border-line p-6 flex flex-col items-center justify-between text-center shadow-2xs transition-all duration-300 hover:-translate-y-2 select-none min-h-[190px] ${brand.color}`}
+            className={`group rounded-lg bg-linear-to-b from-white via-white to-paper-2 border border-line p-6 flex flex-col items-center justify-between text-center shadow-2xs transition-all duration-300 hover:-translate-y-2 select-none min-h-[190px] ${brand.color}`}
           >
             {/* Top Brand Logo Container */}
             <div className="h-16 flex items-center justify-center w-full my-auto">

@@ -72,7 +72,7 @@ export function MagneticChip({ href, children }: { href: string; children: React
     <Link 
       ref={ref} 
       href={href} 
-      className="group relative overflow-hidden rounded-full border border-line bg-surface px-4 py-2 text-micro font-bold uppercase tracking-wider text-ink transition-colors hover:border-lime-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+      className="group relative overflow-hidden rounded-full border border-line bg-surface px-4 py-2 text-micro font-bold uppercase tracking-wider text-ink transition-colors hover:border-lime-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
     >
       <div 
         ref={bgRef} 

@@ -30,7 +30,7 @@ function Chip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-full border px-4 py-2 text-small font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink ${
+      className={`rounded-full border px-4 py-2 text-small font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink ${
         active
           ? "border-lime bg-lime text-[#2A2A2A]"
           : "border-line bg-surface text-ink hover:border-lime-ink"
@@ -116,7 +116,7 @@ export function FilterSheet({
             type="button"
             onClick={onClose}
             aria-label="Close filters"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-paper transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-paper transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
           >
             <CloseIcon className="h-5 w-5" />
           </button>
@@ -209,14 +209,14 @@ export function FilterSheet({
           <button
             type="button"
             onClick={onClear}
-            className="rounded-full px-5 py-3 text-small font-bold text-ink-3 hover:text-ink transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="rounded-full px-5 py-3 text-small font-bold text-ink-3 hover:text-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
           >
             Clear all
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-full bg-lime py-4 text-small font-bold text-[#2A2A2A] hover:bg-lime-lo transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="flex-1 rounded-full bg-lime py-4 text-small font-bold text-[#2A2A2A] hover:bg-lime-lo transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
           >
             Show {resultCount} {resultCount === 1 ? "phone" : "phones"}
           </button>

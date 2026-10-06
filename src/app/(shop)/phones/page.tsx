@@ -134,13 +134,13 @@ export default async function PhonesPage({
                   <Link
                     key={s}
                     href={`/phones?q=${encodeURIComponent(s)}`}
-                    className="rounded-full border border-line bg-surface px-3 py-1.5 text-micro font-medium text-ink transition-colors hover:border-lime-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+                    className="rounded-full border border-line bg-surface px-3 py-1.5 text-micro font-medium text-ink transition-colors hover:border-lime-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
                   >
                     {s}
                   </Link>
                 ))}
               </div>
-              <Link href="/phones" className="mt-8 inline-flex items-center justify-center rounded-full bg-lime px-6 py-3 font-bold text-[#2A2A2A] hover:bg-lime-lo transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink">
+              <Link href="/phones" className="mt-8 inline-flex items-center justify-center rounded-full bg-lime px-6 py-3 font-bold text-[#2A2A2A] hover:bg-lime-lo transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink">
                 Browse all phones
               </Link>
             </div>

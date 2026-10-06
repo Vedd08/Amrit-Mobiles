@@ -165,7 +165,7 @@ function StaticHeroPoster({ stageReady }: { stageReady: boolean }) {
   return (
     <div 
       ref={wrapperRef}
-      className="hidden md:flex fixed inset-0 z-0 pointer-events-none items-start justify-center transition-opacity duration-500 pt-[25vh] pr-[12vw] justify-end"
+      className="hidden md:flex fixed inset-0 z-0 pointer-events-none items-start transition-opacity duration-500 pt-[25vh] pr-[12vw] justify-end"
       aria-hidden="true"
     >
       <img 

@@ -2,7 +2,7 @@ import { BRANCHES } from '@/shared/business';
 
 export function Act06Stores() {
   return (
-    <section id="stores" data-act="stores" className="md:min-h-[100vh] py-16 md:py-0 relative px-6 md:py-24 z-10">
+    <section id="stores" data-act="stores" className="md:min-h-screen py-16 md:py-0 relative px-6 md:py-24 z-10">
       <div className="max-w-6xl mx-auto">
         <div className="reveal-up text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-ink mb-6">Visit a store</h2>

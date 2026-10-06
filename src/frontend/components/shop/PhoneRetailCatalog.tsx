@@ -349,7 +349,7 @@ export function PhoneRetailCatalog({ initialProducts, initialBrands, category }:
 
               <h1 className="text-4xl sm:text-6xl font-bold text-ink ">
                 Original Flagships. <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-ink via-raised to-ink-3">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-ink via-raised to-ink-3">
                   Complete Indian Warranty.
                 </span>
               </h1>
@@ -605,7 +605,7 @@ export function PhoneRetailCatalog({ initialProducts, initialBrands, category }:
         </div>
 
         {/* ── INTEGRATED INSTANT COUNTER EXCHANGE PROMOTION STRIP ── */}
-        <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-ink via-raised to-ink text-white p-8 sm:p-14 border border-raised shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
+        <div className="relative overflow-hidden rounded-lg bg-linear-to-r from-ink via-raised to-ink text-white p-8 sm:p-14 border border-raised shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
           <div className="max-w-xl text-left">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-danger px-3.5 py-1 text-micro font-bold tracking-widest text-white uppercase shadow-sm mb-3">
               <RefreshIcon className="w-3 h-3" />

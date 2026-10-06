@@ -29,7 +29,7 @@ export function PhonePromo() {
               href={wa}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full bg-[#2A2A2A] px-8 py-4 text-small font-bold uppercase tracking-wider text-lime transition-colors hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A2A2A]"
+              className="inline-flex items-center rounded-full bg-[#2A2A2A] px-8 py-4 text-small font-bold uppercase tracking-wider text-lime transition-colors hover:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A2A2A]"
             >
               Get an exchange quote
             </a>

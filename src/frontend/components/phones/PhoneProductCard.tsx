@@ -68,7 +68,7 @@ export function PhoneProductCard({
         onClick={() => toggleSaved(product)}
         aria-pressed={mounted ? saved : undefined}
         aria-label={isSaved ? `Remove ${product.name} from your wishlist` : `Save ${product.name} to your wishlist`}
-        className="absolute right-2.5 top-2.5 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-surface/95 border border-line text-ink transition-colors hover:bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+        className="absolute right-2.5 top-2.5 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-surface/95 border border-line text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
       >
         <HeartIcon className={`h-[18px] w-[18px] ${isSaved ? "text-danger" : ""}`} filled={isSaved} />
       </button>
@@ -81,7 +81,7 @@ export function PhoneProductCard({
             setShowModal(true);
           }
         }}
-        className="flex flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+        className="flex flex-col focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
       >
         <div className={`relative aspect-[4/5] w-full flex items-center justify-center bg-paper-2 overflow-hidden ${outOfStock ? "grayscale opacity-60" : ""}`}>
           {product.image ? (
@@ -147,7 +147,7 @@ export function PhoneProductCard({
           onClick={addToCart}
           disabled={outOfStock}
           aria-label={outOfStock ? "Sold out" : `Add ${product.name} to cart`}
-          className="w-full flex items-center justify-center gap-1.5 rounded-full bg-paper-2 py-2 text-small font-semibold text-ink transition-colors hover:bg-lime hover:text-[#2A2A2A] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-paper-2 disabled:hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+          className="w-full flex items-center justify-center gap-1.5 rounded-full bg-paper-2 py-2 text-small font-semibold text-ink transition-colors hover:bg-lime hover:text-[#2A2A2A] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-paper-2 disabled:hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
         >
           {outOfStock ? (
             "Sold out"
@@ -231,7 +231,7 @@ function QuickViewModal({
             type="button"
             onClick={handleClose}
             aria-label="Close modal"
-            className="md:hidden absolute top-4 right-4 h-8 w-8 rounded-full bg-surface flex items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="md:hidden absolute top-4 right-4 h-8 w-8 rounded-full bg-surface flex items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
           >
             <svg className="w-4 h-4 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -251,7 +251,7 @@ function QuickViewModal({
             type="button"
             onClick={handleClose}
             aria-label="Close modal"
-            className="hidden md:flex absolute top-4 right-4 h-8 w-8 rounded-full hover:bg-paper items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            className="hidden md:flex absolute top-4 right-4 h-8 w-8 rounded-full hover:bg-paper items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
           >
             <svg className="w-4 h-4 text-ink-3 hover:text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -273,7 +273,7 @@ function QuickViewModal({
               type="button"
               onClick={onAdd}
               disabled={outOfStock}
-              className="w-full flex items-center justify-center gap-2 rounded-full bg-lime py-3 text-small font-bold text-[#2A2A2A] transition-colors hover:bg-lime-lo disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+              className="w-full flex items-center justify-center gap-2 rounded-full bg-lime py-3 text-small font-bold text-[#2A2A2A] transition-colors hover:bg-lime-lo disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
             >
               {outOfStock ? (
                 "Sold out"
@@ -290,7 +290,7 @@ function QuickViewModal({
             </button>
             <Link 
               href={`/product/${product.slug}`}
-              className="w-full text-center text-small font-bold text-ink-3 hover:text-ink underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+              className="w-full text-center text-small font-bold text-ink-3 hover:text-ink underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
             >
               View full details
             </Link>

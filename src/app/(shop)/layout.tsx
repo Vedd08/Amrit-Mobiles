@@ -2,6 +2,7 @@ import { SiteNav } from "@/frontend/components/layout/SiteNav";
 import { BottomNav } from "@/frontend/components/layout/BottomNav";
 import { CinematicFooter } from "@/frontend/components/motion/CinematicFooter";
 import { SmoothScrollProvider } from "@/frontend/components/motion/SmoothScrollProvider";
+import { StoreChatPicker } from "@/frontend/components/whatsapp/StoreChatPicker";
 
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +13,7 @@ export default function ShopLayout({ children }: { children: React.ReactNode }) 
         <CinematicFooter />
         <BottomNav />
       </div>
+      <StoreChatPicker />
     </SmoothScrollProvider>
   );
 }

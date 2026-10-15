@@ -11,7 +11,7 @@ import { prefersReducedMotion } from "@/frontend/lib/motion";
 import { useLenis } from "@/frontend/components/motion/SmoothScrollProvider";
 import { usePauseOffscreen } from "@/frontend/lib/use-pause-offscreen";
 import { CartIcon, WhatsAppIcon } from "@/frontend/components/icons";
-import { SHOP_WHATSAPP_LINK } from "@/shared/whatsapp";
+import { useStoreChatLink } from "@/frontend/store/store-chat-store";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -118,6 +118,7 @@ const MarqueeItem = () => (
 // Footer used across cart/checkout/category pages.
 // -------------------------------------------------------------------------
 export function CinematicFooter() {
+  const chat = useStoreChatLink();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const giantTextRef = useRef<HTMLDivElement>(null);
   usePauseOffscreen(wrapperRef);
@@ -231,9 +232,7 @@ export function CinematicFooter() {
 
                 <MagneticButton
                   as="a"
-                  href={SHOP_WHATSAPP_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...chat}
                   className="footer-glass-pill px-10 py-5 rounded-full text-ink font-bold text-sm md:text-base flex items-center gap-3 group"
                 >
                   <WhatsAppIcon className="w-6 h-6 text-ink-3 group-hover:text-ink transition-colors" />

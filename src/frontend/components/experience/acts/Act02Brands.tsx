@@ -16,7 +16,7 @@ export function Act02Brands({ brandData = [] }: { brandData?: BrandWithCount[] }
     <section
       id="brands"
       data-act="brands"
-      className="md:min-h-[150vh] py-16 md:py-0 relative flex flex-col md:items-start items-center px-6 md:mx-auto md:w-full md:max-w-[1360px] md:px-10 overflow-hidden"
+      className="md:min-h-[230vh] py-16 md:py-0 relative flex flex-col md:items-start items-center px-6 md:mx-auto md:w-full md:max-w-[1360px] md:px-10 overflow-hidden"
     >
       {/* Huge steel-outlined brand name crossfade watermark */}
       <div
@@ -27,11 +27,12 @@ export function Act02Brands({ brandData = [] }: { brandData?: BrandWithCount[] }
       </div>
 
       <div className="md:sticky top-[20vh] w-full md:w-[45%] z-10 flex flex-col gap-4 text-center md:text-left">
-        <h2 className="reveal-up text-4xl md:text-6xl font-bold tracking-tight text-ink mb-6">
+        <h2 className="reveal-up text-4xl md:text-6xl font-bold tracking-tight text-ink mb-4">
           Brands we stock
         </h2>
 
-        <div className="reveal-stagger flex flex-col gap-3">
+        {/* Eleven brands: two compact columns so the list fits beside the phone. */}
+        <div className="reveal-stagger grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {brands.map((brand, i) => {
             const data = brandData.find((b) => b.slug === brand.slug);
             const count = data?.count || 0;
@@ -42,26 +43,18 @@ export function Act02Brands({ brandData = [] }: { brandData?: BrandWithCount[] }
               <Link
                 key={brand.slug}
                 href={brand.href}
-                className={`flex items-center justify-between p-4 px-6 rounded-2xl transition-all duration-300 text-ink border scale-100 ${
+                className={`flex flex-col items-start gap-0.5 px-5 py-3 rounded-2xl transition-all duration-300 text-ink border scale-100 ${
                   isActive
                     ? 'bg-white shadow-md border-lime scale-102 text-ink font-bold'
                     : 'bg-white/60 border-line hover:border-ink/30 text-ink-2 hover:text-ink'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <span className="font-extrabold text-xl">{brand.name}</span>
-                </div>
-
-                <div className="flex items-center gap-3 text-sm">
-                  {count > 0 && (
-                    <span className="text-ink-3 font-medium">{count} models</span>
-                  )}
-                  {fromPrice && (
-                    <span className="bg-paper px-3 py-1 rounded-full text-xs font-bold text-ink border border-line">
-                      from {formatINR(fromPrice)}
-                    </span>
-                  )}
-                </div>
+                <span className="font-extrabold text-lg leading-tight">{brand.name}</span>
+                <span className="text-xs font-medium text-ink-3">
+                  {count > 0
+                    ? `${count} ${count === 1 ? "model" : "models"}${fromPrice ? `, from ${formatINR(fromPrice)}` : ""}`
+                    : "Ask in store"}
+                </span>
               </Link>
             );
           })}

@@ -20,7 +20,9 @@ const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 const WALLPAPERS: Record<string, [string, string, string]> = {
   apple: ["#5B4BDB", "#A18CFF", "#FFC6E6"],
   samsung: ["#1D4ED8", "#60A5FA", "#A7F3D0"],
-  oneplus: ["#E11D48", "#FB7185", "#FDBA74"],
+  infinix: ["#047857", "#10B981", "#A7F3D0"],
+  tecno: ["#1D4ED8", "#22D3EE", "#BAE6FD"],
+  itel: ["#BE123C", "#FB7185", "#FDBA74"],
   google: ["#2563EB", "#34D399", "#FDE68A"],
   xiaomi: ["#EA580C", "#FB923C", "#FDE68A"],
   vivo: ["#4338CA", "#818CF8", "#67E8F9"],
@@ -45,7 +47,7 @@ function wallpaper(brand: string) {
 /** Real photographic lock-screen wallpaper per brand (Unsplash, stored locally). */
 function wallpaperSrc(brand: string) {
   const slug = PHONE_BRANDS.find((b) => b.dbBrand.toLowerCase() === brand.toLowerCase())?.slug;
-  const known = ["apple", "samsung", "oneplus", "google", "xiaomi", "vivo", "oppo", "realme", "nothing", "motorola", "poco"];
+  const known = ["apple", "samsung", "google", "xiaomi", "vivo", "oppo", "realme", "nothing", "motorola", "poco", "infinix", "tecno", "itel"];
   return `/images/wallpapers/${slug && known.includes(slug) ? slug : "default"}.webp`;
 }
 

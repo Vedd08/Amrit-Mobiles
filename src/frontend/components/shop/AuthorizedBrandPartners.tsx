@@ -30,16 +30,16 @@ export function AuthorizedBrandPartners() {
       ),
     },
     {
-      name: "OnePlus",
-      tagline: "Never Settle Flagship",
-      color: "hover:border-danger hover:shadow-sh-1 ",
-      badgeColor: "bg-danger text-white",
+      name: "Motorola",
+      tagline: "Edge, razr and moto g",
+      color: "hover:border-teal hover:shadow-sh-1 ",
+      badgeColor: "bg-teal text-white",
       logo: (
         <div className="flex items-center gap-2 transition-transform duration-300 group-hover:scale-110">
-          <div className="h-9 w-9 bg-danger rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm border border-red-400">
-            1+
+          <div className="h-9 w-9 rounded-full border-2 border-ink flex items-center justify-center text-ink font-bold text-lg">
+            M
           </div>
-          <span className="text-xl font-bold text-ink ">OnePlus</span>
+          <span className="text-xl font-bold text-ink lowercase">motorola</span>
         </div>
       ),
     },

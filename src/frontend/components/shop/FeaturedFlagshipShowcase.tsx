@@ -39,7 +39,7 @@ export function FeaturedFlagshipShowcase({ products }: { products: ProductCardDa
     if (activeTab === "ALL") return true;
     if (activeTab === "PHONES") {
       return (
-        ["Apple", "Samsung", "Vivo", "Oppo", "Xiaomi", "OnePlus"].includes(p.brand) ||
+        ["Apple", "Samsung", "Vivo", "Oppo", "Xiaomi", "Google"].includes(p.brand) ||
         p.name.toLowerCase().includes("phone") ||
         p.name.toLowerCase().includes("galaxy") ||
         p.name.toLowerCase().includes("iphone") ||

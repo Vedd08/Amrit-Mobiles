@@ -8,7 +8,7 @@ import {
 import { SHOP_WHATSAPP_NUMBER } from "@/shared/whatsapp";
 
 /**
- * LocalBusiness structured data for the six Surat branches.
+ * LocalBusiness structured data for the Surat branches.
  *
  * For a multi-branch local retailer this is the single highest-leverage SEO
  * surface there is — it decides whether the shops surface for "mobile shop
@@ -19,10 +19,9 @@ import { SHOP_WHATSAPP_NUMBER } from "@/shared/whatsapp";
  * rather than next/script, per the framework guide: JSON-LD is data, not
  * executable code.
  *
- * Fields the owner still has to confirm are listed in src/shared/branches.ts —
- * notably street addresses and per-branch phone numbers. Nothing here is
- * invented beyond the hours constant; branches with no confirmed street simply
- * omit `streetAddress` rather than carry a fabricated one.
+ * Fields the owner still has to confirm are listed in src/shared/branches.ts.
+ * Nothing here is invented beyond the hours constant; a branch without a
+ * confirmed number falls back to the main line.
  */
 export function LocalBusinessJsonLd({ siteUrl }: { siteUrl: string }) {
   const telephone = `+${SHOP_WHATSAPP_NUMBER}`;
@@ -46,18 +45,20 @@ export function LocalBusinessJsonLd({ siteUrl }: { siteUrl: string }) {
 
   const branch = (b: (typeof BRANCHES)[number]) => ({
     "@type": "MobilePhoneStore",
-    "@id": `${siteUrl}/#branch-${b.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+    "@id": `${siteUrl}/#branch-${b.slug}`,
     name: `Amrit Mobiles — ${b.name}`,
     description: `Authorised mobile phone dealer in ${b.area}, ${CITY}. Sealed stock, GST billing with the IMEI printed on the bill, and 0% EMI approved at the counter.`,
     address: {
       "@type": "PostalAddress",
-      ...(b.street ? { streetAddress: b.street } : {}),
-      addressLocality: b.area,
+      streetAddress: b.address,
+      addressLocality: CITY,
       addressRegion: REGION,
       addressCountry: COUNTRY,
-      ...(b.postalCode ? { postalCode: b.postalCode } : {}),
+      postalCode: b.postalCode,
     },
-    telephone,
+    // Only exact pins are published; approximate ones are just for sorting by distance.
+    ...(b.approximateLocation ? {} : { geo: { "@type": "GeoCoordinates", latitude: b.lat, longitude: b.lng } }),
+    telephone: b.phone ? `+${b.phone}` : telephone,
     hasMap: b.maps,
     url: `${siteUrl}/#stores`,
     parentOrganization: { "@id": `${siteUrl}/#organization` },
@@ -74,7 +75,7 @@ export function LocalBusinessJsonLd({ siteUrl }: { siteUrl: string }) {
         "@id": `${siteUrl}/#organization`,
         name: "Amrit Mobiles & Electronics",
         description:
-          "Authorised mobile phone dealer with six branches across Surat. Every box opened at the counter, IMEI printed on your GST bill, 0% EMI approved in about ten minutes.",
+          `Authorised mobile phone dealer with ${BRANCHES.length} branches across Surat. Every box opened at the counter, IMEI printed on your GST bill, 0% EMI approved in about ten minutes.`,
         url: siteUrl,
         logo: `${siteUrl}/logo.png`,
         image: `${siteUrl}/logo.png`,

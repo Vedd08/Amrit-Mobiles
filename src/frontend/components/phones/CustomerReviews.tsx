@@ -35,7 +35,7 @@ const PLACEHOLDER_REVIEWS: Review[] = [
   {
     name: "Placeholder name",
     branch: "Limbayat branch",
-    bought: "OnePlus 12",
+    bought: "Nothing Phone (2a)",
     stars: 4,
     quote: "Replace with a real Google review. A four-star one in the set reads as more honest than all fives.",
   },

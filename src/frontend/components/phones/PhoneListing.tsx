@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import type { ProductCardData } from "@/frontend/components/shop/ProductCard";
 import {
@@ -43,6 +43,7 @@ export function PhoneListing({
   brand,
   showBrandFilter = false,
   initialFilter,
+  hero,
 }: {
   title: string;
   intro: string;
@@ -50,6 +51,8 @@ export function PhoneListing({
   brand?: PhoneBrand;
   showBrandFilter?: boolean;
   initialFilter?: PhoneFilter;
+  /** Replaces the plain title header (brand pages use the family hero). */
+  hero?: ReactNode;
 }) {
   const [filter, setFilter] = useState<PhoneFilter>(initialFilter || EMPTY);
   const [sort, setSort] = useState<PhoneSort>("featured");
@@ -79,6 +82,9 @@ export function PhoneListing({
 
   return (
     <div className="phones-scope min-h-[100svh] bg-paper pb-16 text-ink">
+      {hero ? (
+        <div className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 md:pb-14 md:pt-12">{hero}</div>
+      ) : (
       <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 md:pt-16">
         <Link
           href="/phones"
@@ -107,6 +113,7 @@ export function PhoneListing({
           )}
         </header>
       </div>
+      )}
 
       <div className="sticky top-[88px] z-30 border-b border-line bg-paper/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
@@ -172,7 +179,7 @@ export function PhoneListing({
         </div>
       )}
 
-      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
+      <div id="shelf" className="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
         <p className="mb-6 text-small text-ink-3 font-semibold">
           {visible.length} {visible.length === 1 ? "result" : "results"}
         </p>

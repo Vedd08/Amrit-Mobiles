@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { formatINR } from "@/frontend/lib/phone-experience-data";
+import { useStoreChatLink } from "@/frontend/store/store-chat-store";
 
 const BRANDS = ["Apple", "Samsung", "OnePlus", "Xiaomi", "Vivo", "Oppo"] as const;
 type Brand = (typeof BRANDS)[number];
@@ -67,16 +68,12 @@ export function TradeInAppraisalPortal() {
     }
   };
 
-  const generateWhatsAppLink = () => {
-    const text = `Hello Amrit Mobiles! I want to trade in my old device at your Surat showroom:
+  const quoteChat = useStoreChatLink(`Hello Amrit Mobiles {store}! I want to trade in my old device at your store:
 *Model:* ${currentModel.name} (${selectedStorage})
 *Condition:* ${currentCond.title}
 *Accessories Included:* ${[hasOriginalBox ? "Original Box" : null, hasOriginalCharger ? "Original Charger" : null].filter(Boolean).join(", ") || "Handset only"}
 *Estimated Valuation:* ${formatINR(finalEstimate)}
-Please confirm spot inspection availability!`;
-
-    return `https://wa.me/919876543210?text=${encodeURIComponent(text)}`;
-  };
+Please confirm spot inspection availability!`);
 
   return (
     <div className="bg-paper-2 min-h-screen py-16 px-4 sm:px-6 lg:px-8 font-sans select-none text-ink">
@@ -360,9 +357,7 @@ Please confirm spot inspection availability!`;
               {/* Instant WhatsApp & Phone Action Buttons */}
               <div className="space-y-3">
                 <a
-                  href={generateWhatsAppLink()}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...quoteChat}
                   className="w-full py-4 px-6 rounded-lg bg-lime-ink hover:bg-lime-ink text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-center"
                 >
                   <span>Lock This Quotation on WhatsApp →</span>

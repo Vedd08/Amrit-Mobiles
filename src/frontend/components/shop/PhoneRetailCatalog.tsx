@@ -355,7 +355,7 @@ export function PhoneRetailCatalog({ initialProducts, initialBrands, category }:
               </h1>
               
               <p className="mt-4 text-sm sm:text-base font-medium text-ink-3 max-w-xl leading-relaxed">
-                Experience authentic Apple iPhone 16 Pro Titanium, Samsung Galaxy S24 Ultra, and OnePlus flagships with untouched sealed retail box integrity. Verify serial &amp; IMEI online directly across our Surat showroom counter before taking delivery.
+                Experience authentic Apple iPhone 16 Pro Titanium, Samsung Galaxy S24 Ultra, and Vivo flagships with untouched sealed retail box integrity. Verify serial &amp; IMEI online directly across our Surat showroom counter before taking delivery.
               </p>
 
               {/* Primary Actions */}

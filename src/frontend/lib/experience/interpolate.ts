@@ -95,6 +95,7 @@ export function resolveKeyframes(progress: number) {
     MathUtils.lerp(prevBeat.phone.rot[2], currentBeat.phone.rot[2], easedP)
   );
   stageState.phone.scale = MathUtils.lerp(prevBeat.phone.scale, currentBeat.phone.scale, easedP);
+  stageState.phone.fold = MathUtils.lerp(prevBeat.phone.fold, currentBeat.phone.fold, easedP);
 
   // Tier-aware post-interpolation phone offset
   if (stageState.tier === 'mobile') {
@@ -103,6 +104,10 @@ export function resolveKeyframes(progress: number) {
     stageState.camera.lookAt.x = 0;
     stageState.phone.pos.y += 0.35;
     stageState.phone.scale *= 0.80;
+  } else if (stageState.tier === 'tablet' && window.innerWidth >= 768) {
+    // md+ tablets lay the copy out in a left column like desktop, so the
+    // (wide, when open) phone keeps to the right; PhoneRig shrinks it to fit.
+    stageState.phone.scale *= 0.92;
   } else if (stageState.tier === 'tablet') {
     stageState.phone.pos.x = 0;
     stageState.camera.pos.x = 0;

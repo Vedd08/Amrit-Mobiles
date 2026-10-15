@@ -12,11 +12,12 @@ import { BrandLogo } from "@/shared/BrandLogo";
 import { brands } from "@/shared/brands";
 import { BRANCHES } from "@/shared/branches";
 import { PHONE_CATEGORIES } from "@/shared/phone-catalog";
-import { SHOP_WHATSAPP_LINK } from "@/shared/whatsapp";
+import { useStoreChatLink } from "@/frontend/store/store-chat-store";
 import { useMounted } from "@/frontend/lib/use-mounted";
 
 const LINKS = [
   { href: "/shop", label: "Shop all", match: (p: string) => p === "/shop" },
+  { href: "/#about", label: "About", match: () => false },
   { href: "/#stores", label: "Stores", match: () => false },
 ];
 
@@ -31,6 +32,7 @@ const isPhonesPath = (p: string) => p.startsWith("/phones") || p.startsWith("/pr
  */
 export function SiteNav() {
   const pathname = usePathname() ?? "/";
+  const chat = useStoreChatLink();
   const mounted = useMounted();
   const cart = useCartStore((s) => s.items);
   const wish = useWishlistStore((s) => s.items);
@@ -169,9 +171,7 @@ export function SiteNav() {
               <CartIcon className="h-[22px] w-[22px]" />
             </IconLink>
             <a
-              href={SHOP_WHATSAPP_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...chat}
               className="group ml-1.5 hidden items-center gap-2 overflow-hidden rounded-full bg-lime py-2.5 pl-3.5 pr-4 text-[14px] font-bold text-[#2A2A2A] shadow-[0_10px_22px_-10px_rgba(95,138,13,0.9)] transition-all duration-300 hover:-translate-y-px hover:shadow-[0_14px_26px_-10px_rgba(95,138,13,0.95)] lg:inline-flex"
             >
               <WhatsAppIcon className="h-[18px] w-[18px]" />
@@ -312,9 +312,7 @@ export function SiteNav() {
 
         <div className="mt-auto grid grid-cols-2 gap-3 pt-10">
           <a
-            href={SHOP_WHATSAPP_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...chat}
             className="col-span-2 flex items-center justify-center gap-2 rounded-full bg-lime py-4 text-[16px] font-bold text-[#2A2A2A] shadow-[0_12px_26px_-12px_rgba(95,138,13,0.9)]"
           >
             <WhatsAppIcon className="h-5 w-5" /> Chat on WhatsApp

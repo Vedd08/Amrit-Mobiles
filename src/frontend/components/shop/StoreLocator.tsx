@@ -1,11 +1,11 @@
 import { Reveal } from "@/frontend/components/motion/Reveal";
-import { SHOP_TEL_LINK } from "@/frontend/lib/phone-experience-data";
-import { BRANCHES, BRANCH_HOURS } from "@/shared/branches";
+import { WhatsAppIcon } from "@/frontend/components/icons";
+import { BranchChatButton } from "@/frontend/components/whatsapp/BranchChatButton";
+import { BRANCHES, BRANCH_HOURS, branchAddress } from "@/shared/branches";
 
-// Branch data moved to @/shared/branches — the homepage emits LocalBusiness
+// Branch data lives in @/shared/branches — the homepage emits LocalBusiness
 // JSON-LD from the same list, and a store list that disagrees with its own
-// structured data is worse than none. The call button is still a shared
-// placeholder counter line until per-branch numbers are wired in.
+// structured data is worse than none.
 
 function PinIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -38,7 +38,7 @@ export function StoreLocator() {
           </span>
           <h2 className="text-3xl font-bold text-ink sm:text-4xl">Find us across Surat</h2>
           <p className="mt-3 text-xs font-semibold leading-relaxed text-ink-3 sm:text-sm">
-            Six counters across the city — same sealed stock, same printed GST bill, same 10-minute EMI
+            {BRANCHES.length} counters across the city — same sealed stock, same printed GST bill, same 10-minute EMI
             desk at every one.
           </p>
         </div>
@@ -46,7 +46,7 @@ export function StoreLocator() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {BRANCHES.map((b, i) => (
-          <Reveal key={b.name} delay={i * 0.05}>
+          <Reveal key={b.slug} delay={i * 0.05}>
             <div className="group flex h-full flex-col rounded-lg border border-line bg-white p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-lime hover:shadow-sh-1 ">
               <div className="flex items-start gap-3">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line bg-paper text-lime-ink transition-transform duration-200 group-hover:scale-110">
@@ -57,10 +57,12 @@ export function StoreLocator() {
                   <p className="mt-0.5 text-micro font-bold uppercase tracking-wider text-ink-3">
                     {b.area} · Surat
                   </p>
+                  {b.note && <p className="mt-0.5 text-xs font-bold text-lime-ink">{b.note}</p>}
                 </div>
               </div>
 
-              <p className="mt-3 text-xs font-semibold leading-relaxed text-ink-3">
+              <p className="mt-3 text-xs font-semibold leading-relaxed text-ink-2">{branchAddress(b)}</p>
+              <p className="mt-2 text-xs font-semibold leading-relaxed text-ink-3">
                 Open {BRANCH_HOURS.days} {BRANCH_HOURS.opens}–{BRANCH_HOURS.closes} · sealed stock,
                 GST billing and the 10-minute EMI desk.
               </p>
@@ -75,14 +77,23 @@ export function StoreLocator() {
                   Open in Maps
                   <span aria-hidden>→</span>
                 </a>
-                <a
-                  href={SHOP_TEL_LINK}
-                  aria-label={`Call the ${b.name} branch`}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-line px-4 py-2 text-micro font-bold uppercase tracking-wider -ink transition-colors duration-200 hover:border-teal hover:bg-paper"
+                <BranchChatButton
+                  branch={b}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full bg-lime/15 px-4 py-2.5 text-micro font-bold uppercase tracking-wider text-lime-ink transition-colors duration-200 hover:bg-lime/25"
                 >
-                  <PhoneIcon />
-                  Call
-                </a>
+                  <WhatsAppIcon className="h-4 w-4" />
+                  Chat
+                </BranchChatButton>
+                {b.phone && (
+                  <a
+                    href={`tel:+${b.phone}`}
+                    aria-label={`Call the ${b.name} branch`}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-line px-4 py-2 text-micro font-bold uppercase tracking-wider -ink transition-colors duration-200 hover:border-teal hover:bg-paper"
+                  >
+                    <PhoneIcon />
+                    Call
+                  </a>
+                )}
               </div>
             </div>
           </Reveal>

@@ -1,17 +1,24 @@
 // Client-safe WhatsApp helpers (no secrets). For sending order notifications
 // via the Meta Cloud API once WABA is approved, see whatsapp-server.ts.
 
+import { DEFAULT_BRANCH, type Branch } from "./branches";
+
+/** The shop's main line (orders, structured data): the city-centre branch unless overridden. */
 export const SHOP_WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "911234567890";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || DEFAULT_BRANCH.phone!;
 
 export function buildWhatsAppLink(number: string, text: string) {
   return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
 }
 
-export const SHOP_WHATSAPP_LINK = buildWhatsAppLink(
-  SHOP_WHATSAPP_NUMBER,
-  "Hi Amrit Mobiles! I have a question about a product."
-);
+/** Default opening line for a chat; `{store}` becomes the branch name. */
+export const DEFAULT_CHAT_MESSAGE = "Hi Amrit Mobiles {store}! I have a question.";
+
+/** A chat link to one branch, with `{store}` in the message filled in. */
+export function branchWhatsAppLink(branch: Branch, template: string = DEFAULT_CHAT_MESSAGE) {
+  const number = branch.phone ?? DEFAULT_BRANCH.phone!;
+  return buildWhatsAppLink(number, template.replaceAll("{store}", branch.name));
+}
 
 export type OrderMessageItem = { name: string; quantity: number; price: number };
 

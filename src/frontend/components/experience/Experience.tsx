@@ -11,10 +11,11 @@ import { Act03Why } from './acts/Act03Why';
 import { Act04Chooser } from './acts/Act04Chooser';
 import { Act05Trending } from './acts/Act05Trending';
 import { Act06Stores } from './acts/Act06Stores';
+import { ActAbout } from './acts/ActAbout';
 import { Act07EnterStore } from './acts/Act07EnterStore';
 import { stageState } from '@/frontend/lib/experience/stageState';
 import { brandsWithCounts } from '@/shared/phone-catalog';
-import { SHOP_WHATSAPP_LINK } from '@/shared/whatsapp';
+import { useStoreChatLink } from '@/frontend/store/store-chat-store';
 import type { ProductCardData } from '@/frontend/components/shop/ProductCard';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -35,6 +36,7 @@ export function Experience({
   showcase?: ProductCardData[];
 }) {
   const [finalActEntered, setFinalActEntered] = useState(false);
+  const chat = useStoreChatLink();
   const finalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -92,6 +94,7 @@ export function Experience({
         <Act03Why />
         <Act04Chooser allPhones={allPhones} />
         <Act05Trending phones={trendingPhones} />
+        <ActAbout />
         <Act06Stores />
         <div ref={finalRef}>
           <Act07EnterStore budgetCounts={budgetCounts} stats={stats} showcase={showcase} />
@@ -100,7 +103,7 @@ export function Experience({
 
       {/* Sticky Mobile Bar - hides when final act enters */}
       <div className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-paper/[0.97] border-t border-line px-4 py-3 pb-[env(safe-area-inset-bottom)] flex gap-4 transition-transform duration-300 ${finalActEntered ? 'translate-y-[150%]' : 'translate-y-0'}`}>
-        <a href={SHOP_WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="flex-1 bg-white border border-line text-ink text-center py-3 rounded-full font-bold text-sm">
+        <a {...chat} className="flex-1 bg-white border border-line text-ink text-center py-3 rounded-full font-bold text-sm">
           WhatsApp
         </a>
         <a href="#stores" className="flex-1 bg-lime text-[#2A2A2A] text-center py-3 rounded-full font-bold text-sm">
@@ -165,15 +168,17 @@ function StaticHeroPoster({ stageReady }: { stageReady: boolean }) {
   return (
     <div 
       ref={wrapperRef}
-      className="hidden md:flex fixed inset-0 z-0 pointer-events-none items-start transition-opacity duration-500 pt-[25vh] pr-[12vw] justify-end"
+      className="hidden md:block fixed inset-0 z-0 pointer-events-none transition-opacity duration-500"
       aria-hidden="true"
     >
+      {/* Placed where the 3D hero phone settles (its size and offset follow the
+          viewport height, like the WebGL camera), so the swap is seamless. */}
       <img 
-        src="/images/phone-hero-poster-v2.webp" 
+        src="/images/phone-hero-poster-fold.webp" 
         alt="" 
-        width={600} 
-        height={1200}
-        className="h-[65vh] w-auto object-contain object-top"
+        width={1362} 
+        height={983}
+        className="absolute left-[min(calc(50%+40vh),calc(100%-min(33vh,21.6vw)-2vw))] top-[49%] h-[min(46vh,30vw)] w-auto max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
         fetchPriority="high"
       />
     </div>

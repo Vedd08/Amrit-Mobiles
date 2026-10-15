@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/frontend/store/cart-store";
-import { buildWhatsAppLink, SHOP_WHATSAPP_NUMBER } from "@/shared/whatsapp";
+import { useStoreChatLink } from "@/frontend/store/store-chat-store";
 import { MinusIcon, PlusIcon, WhatsAppIcon } from "@/frontend/components/icons";
 
 export function AddToCartPanel({
@@ -34,9 +34,8 @@ export function AddToCartPanel({
     setTimeout(() => setAdded(false), 1500);
   }
 
-  const whatsappLink = buildWhatsAppLink(
-    SHOP_WHATSAPP_NUMBER,
-    `Hi! I'd like to buy: ${name} (₹${price}) x${quantity}. Is it available?`
+  const chat = useStoreChatLink(
+    `Hi Amrit Mobiles {store}! I'd like to buy: ${name} (₹${price}) x${quantity}. Is it available?`
   );
 
   return (
@@ -89,9 +88,7 @@ export function AddToCartPanel({
       </div>
 
       <a
-        href={whatsappLink}
-        target="_blank"
-        rel="noopener noreferrer"
+        {...chat}
         className="flex items-center justify-center gap-2 rounded-full border border-success/30 bg-lime/10 py-3.5 text-xs font-bold uppercase tracking-wider text-lime-ink"
       >
         <WhatsAppIcon className="h-4 w-4" />

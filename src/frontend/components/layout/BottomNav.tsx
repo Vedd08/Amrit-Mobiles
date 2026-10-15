@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cartCount, useCartStore } from "@/frontend/store/cart-store";
 import { CartIcon, GridIcon, HomeIcon, WhatsAppIcon } from "@/frontend/components/icons";
-import { SHOP_WHATSAPP_LINK } from "@/shared/whatsapp";
+import { useStoreChatLink } from "@/frontend/store/store-chat-store";
 import { useMounted } from "@/frontend/lib/use-mounted";
 
 export function BottomNav() {
   const pathname = usePathname();
+  const chat = useStoreChatLink();
   const items = useCartStore((s) => s.items);
   const mounted = useMounted();
 
@@ -52,9 +53,7 @@ export function BottomNav() {
           );
         })}
         <a
-          href={SHOP_WHATSAPP_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...chat}
           className="flex flex-1 flex-col items-center gap-0.5 py-2.5 text-micro font-medium text-ink-3"
         >
           <WhatsAppIcon className="h-6 w-6" />

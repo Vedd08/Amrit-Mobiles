@@ -7,6 +7,13 @@ import { BRAND_STAR_PATH } from '@/frontend/lib/brand-star';
 
 type Scene = 'LOCK' | 'BRAND' | 'PICKER' | 'FINAL';
 
+/**
+ * Which display of the foldable this texture feeds: the short cover screen
+ * on the outside (hole-punch camera) or the wide inner screen that appears
+ * when it opens (under-display camera, two-pane layouts).
+ */
+export type ScreenVariant = 'cover' | 'inner';
+
 export class ScreenTexture {
   public static get captureMode() {
     return typeof window !== 'undefined' && Boolean((window as Window & { __CAPTURE_MODE__?: boolean }).__CAPTURE_MODE__);
@@ -34,20 +41,30 @@ export class ScreenTexture {
   private pickerSelectionStart = 0;
   private pickerSelectionLast = 0;
 
+  private variant: ScreenVariant;
+  /** Inner screen: draw at a logical size so px-based type keeps its scale on the bigger canvas. */
+  private pxScale = 1;
+
   private grainCanvas: HTMLCanvasElement | null = null;
   private grainPattern: CanvasPattern | null = null;
 
   // Real photographic wallpapers (public/images/wallpapers), animated like a
   // live wallpaper: slow Ken Burns drift + crossfades.
-  private static readonly LOCK_PLAYLIST = ['samsung', 'oneplus', 'google', 'apple', 'vivo'];
+  private static readonly LOCK_PLAYLIST = ['samsung', 'oppo', 'google', 'apple', 'vivo'];
   private wallpapers = new Map<string, HTMLImageElement>();
   private prevBrandIndex = 0;
 
-  constructor(reducedMotion: boolean, aspect: number = 2.15) {
+  constructor(reducedMotion: boolean, aspect: number = 2.15, variant: ScreenVariant = 'cover') {
     this.canvas = document.createElement('canvas');
     const tier = stageState.tier;
-    this.canvas.width = tier === 'mobile' ? 384 : 512;
-    // Runtime computed aspect ratio passed from plane's world size
+    this.variant = variant;
+    if (variant === 'inner') {
+      this.canvas.width = tier === 'desktop' ? 1024 : 768;
+      this.pxScale = this.canvas.width / 730;
+    } else {
+      this.canvas.width = tier === 'mobile' ? 384 : 512;
+    }
+    // aspect = height / width of the display it is mapped onto
     this.canvas.height = Math.round(this.canvas.width * aspect);
     this.ctx = this.canvas.getContext('2d', { alpha: false })!;
     this.reducedMotion = reducedMotion;
@@ -179,7 +196,9 @@ export class ScreenTexture {
       case 'brands-in': case 'brand-cycle': return 'BRAND';
       case 'chooser': return 'LOCK';
       case 'trending': case 'stores': return null;
-      case 'final': return 'FINAL';
+      // The finale turns the shut phone to its lock screen, then opens it onto
+      // the store's home screen.
+      case 'final': return this.variant === 'inner' ? 'FINAL' : 'LOCK';
       default: return null;
     }
   }
@@ -258,14 +277,14 @@ export class ScreenTexture {
   private paint(t: number) {
     if (this.reducedMotion) t = 0;
     
-    const w = this.canvas.width;
-    const h = this.canvas.height;
-    
     // Draw background outside clip as pure black
     this.ctx.fillStyle = 'rgb(0, 0, 0)';
-    this.ctx.fillRect(0, 0, w, h);
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     
     this.ctx.save();
+    this.ctx.scale(this.pxScale, this.pxScale);
+    const w = this.canvas.width / this.pxScale;
+    const h = this.canvas.height / this.pxScale;
 
     // Wake-up moment scale 1.02 -> 1.00 & fade up over 600ms on first facing
     if (this.wakeUpStart > 0 && !this.reducedMotion) {
@@ -280,7 +299,7 @@ export class ScreenTexture {
     }
     
     // Clip rounded corners
-    const radius = w * 0.135;
+    const radius = this.variant === 'inner' ? h * 0.045 : w * 0.1;
     this.ctx.beginPath();
     this.ctx.moveTo(radius, 0);
     this.ctx.lineTo(w - radius, 0);
@@ -308,25 +327,14 @@ export class ScreenTexture {
     
     this.ctx.globalAlpha = 1;
     
-    // Dynamic Island backstop
-    this.ctx.fillStyle = 'rgb(0, 0, 0)';
-    const islandW = w * 0.32;
-    const islandH = w * 0.095;
-    const islandX = (w - islandW) / 2;
-    const islandY = w * 0.03;
-    const islandR = islandH / 2;
-    
-    this.ctx.beginPath();
-    this.ctx.moveTo(islandX + islandR, islandY);
-    this.ctx.lineTo(islandX + islandW - islandR, islandY);
-    this.ctx.quadraticCurveTo(islandX + islandW, islandY, islandX + islandW, islandY + islandR);
-    this.ctx.lineTo(islandX + islandW, islandY + islandH - islandR);
-    this.ctx.quadraticCurveTo(islandX + islandW, islandY + islandH, islandX + islandW - islandR, islandY + islandH);
-    this.ctx.lineTo(islandX + islandR, islandY + islandH);
-    this.ctx.quadraticCurveTo(islandX, islandY + islandH, islandX, islandY + islandH - islandR);
-    this.ctx.lineTo(islandX, islandY + islandR);
-    this.ctx.quadraticCurveTo(islandX, islandY, islandX + islandR, islandY);
-    this.ctx.fill();
+    // Cover screen: hole-punch front camera. The inner screen's camera sits
+    // under the panel, so nothing is drawn there.
+    if (this.variant === 'cover') {
+      this.ctx.fillStyle = 'rgb(0, 0, 0)';
+      this.ctx.beginPath();
+      this.ctx.arc(w / 2, w * 0.062, w * 0.03, 0, Math.PI * 2);
+      this.ctx.fill();
+    }
 
     this.ctx.restore();
     this.texture.needsUpdate = true;
@@ -341,7 +349,10 @@ export class ScreenTexture {
     if (scene === 'LOCK') this.drawLock(t, w, h);
     else if (scene === 'BRAND') this.drawBrand(t, w, h);
     else if (scene === 'PICKER') this.drawPicker(t, w, h);
-    else if (scene === 'FINAL') this.drawFinal(t, w, h);
+    else if (scene === 'FINAL') {
+      if (this.variant === 'inner') this.drawFinalWide(t, w, h);
+      else this.drawFinal(t, w, h);
+    }
     
     this.ctx.restore();
     
@@ -349,8 +360,11 @@ export class ScreenTexture {
   }
 
   private drawSharedChrome(scene: Scene, w: number, h: number) {
+    // The finale's home screen is light, so its chrome is dark (and reads 9:41,
+    // like the DOM screen that takes over from it).
+    const light = scene === 'FINAL';
     // Bottom home indicator bar
-    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+    this.ctx.fillStyle = light ? 'rgba(42, 44, 40, 0.35)' : 'rgba(255, 255, 255, 0.55)';
     const hiW = w * 0.34;
     const hiH = 5;
     const hiX = (w - hiW) / 2;
@@ -360,8 +374,8 @@ export class ScreenTexture {
     this.ctx.fill();
 
     // Top status bar icons (white 90%)
-    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+    this.ctx.fillStyle = light ? 'rgba(42, 44, 40, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+    this.ctx.strokeStyle = this.ctx.fillStyle;
     const iconY = w * 0.05;
 
     // 1. Battery icon (outline + cap + 80% fill)
@@ -407,6 +421,8 @@ export class ScreenTexture {
     
     if (scene === 'LOCK') {
       this.ctx.fillText("Amrit", w * 0.08, w * 0.07);
+    } else if (light) {
+      this.ctx.fillText("9:41", w * 0.08, w * 0.07);
     } else {
       const now = new Date();
       const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
@@ -436,7 +452,8 @@ export class ScreenTexture {
     }
     if (drewPhoto) {
       this.drawLegibilityShade(w, h);
-      this.drawLockContent(t, w, h, true);
+      if (this.variant === 'inner') this.drawLockContentWide(t, w, h);
+      else this.drawLockContent(t, w, h, true);
       stageState.screenReady = true;
       return;
     }
@@ -478,7 +495,8 @@ export class ScreenTexture {
       this.ctx.globalAlpha = 1;
     }
 
-    this.drawLockContent(t, w, h, false);
+    if (this.variant === 'inner') this.drawLockContentWide(t, w, h);
+    else this.drawLockContent(t, w, h, false);
   }
 
   /** Clock, date, notifications and buttons. `photo` = drawn over a real wallpaper. */
@@ -490,7 +508,7 @@ export class ScreenTexture {
       this.ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
       this.ctx.font = '600 26px Archivo, sans-serif';
       this.ctx.textAlign = 'center';
-      this.ctx.fillText(dateStr, w / 2, h * 0.15);
+      this.ctx.fillText(dateStr, w / 2, h * 0.12);
 
       const timeParts = new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: 'numeric', hour12: true }).formatToParts(now);
       const timeOnly = timeParts.filter(p => p.type !== 'dayPeriod' && p.type !== 'literal').map(p => p.value).join(':');
@@ -499,7 +517,7 @@ export class ScreenTexture {
       this.ctx.font = '800 150px Archivo, sans-serif';
       Object.assign(this.ctx, { letterSpacing: '-0.04em' });
       this.ctx.textBaseline = 'alphabetic';
-      this.ctx.fillText(timeOnly, w / 2, h * 0.30);
+      this.ctx.fillText(timeOnly, w / 2, h * 0.33);
       Object.assign(this.ctx, { letterSpacing: '0px' });
     }
 
@@ -536,12 +554,12 @@ export class ScreenTexture {
     if (this.reducedMotion || notifAge > 900) {
       const nProgress = this.reducedMotion ? 1 : Math.min(1, (notifAge - 900) / 600);
       const easeN = this.easeOutCubic(nProgress);
-      const ny = h * 0.64 + (1 - easeN) * 40;
+      const ny = h * 0.52 + (1 - easeN) * 40;
       this.ctx.globalAlpha = easeN;
       
       const nx = w * 0.055;
       const nw = w - nx * 2;
-      const nh = h * 0.12;
+      const nh = 88;
       this.ctx.fillStyle = photo ? 'rgba(255, 255, 255, 0.24)' : 'rgba(255, 255, 255, 0.10)';
       this.ctx.strokeStyle = photo ? 'rgba(255, 255, 255, 0.35)' : 'rgba(255, 255, 255, 0.18)';
       this.ctx.lineWidth = 1;
@@ -665,6 +683,12 @@ export class ScreenTexture {
 
   private drawBrand(t: number, w: number, h: number) {
     const brand = brands[useExperienceStore.getState().activeBrandIndex] || brands[0];
+    // The wide inner screen has far less height, so its rows sit further apart.
+    const wide = this.variant === 'inner';
+    const kickerY = h * (wide ? 0.3 : 0.38);
+    const nameY = h * (wide ? 0.44 : 0.46);
+    const chipsY = h * (wide ? 0.64 : 0.56);
+    const dotsY = h * (wide ? 0.86 : 0.88);
     
     this.ctx.fillStyle = 'rgb(7, 9, 11)';
     this.ctx.fillRect(0, 0, w, h);
@@ -698,7 +722,7 @@ export class ScreenTexture {
     Object.assign(this.ctx, { letterSpacing: '0.2em' });
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
-    this.ctx.fillText("AT AMRIT MOBILES", w / 2, h * 0.38);
+    this.ctx.fillText("AT AMRIT MOBILES", w / 2, kickerY);
     Object.assign(this.ctx, { letterSpacing: '0px' });
 
     const bProgress = this.reducedMotion ? 1 : Math.min(1, (t - this.brandTransitionStart) / 450);
@@ -717,12 +741,12 @@ export class ScreenTexture {
       size -= 4;
       this.ctx.font = `900 ${size}px Archivo, sans-serif`;
     }
-    this.ctx.fillText(brand.name, w / 2, h * 0.46);
+    this.ctx.fillText(brand.name, w / 2, nameY);
     Object.assign(this.ctx, { letterSpacing: '0px' });
 
     if (brand.specs && brand.specs.length >= 2) {
       const cx = w / 2;
-      const cy = h * 0.56;
+      const cy = chipsY;
       this.ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
       this.ctx.lineWidth = 1;
@@ -763,7 +787,7 @@ export class ScreenTexture {
     const activeW = 24;
     const totalW = (dotsCount - 1) * dotW + activeW + (dotsCount - 1) * dotGap;
     let startX = (w - totalW) / 2;
-    const dotY = h * 0.88;
+    const dotY = dotsY;
 
     for (let i = 0; i < dotsCount; i++) {
       const isActive = i === this.lastBrandIndex;
@@ -907,6 +931,174 @@ export class ScreenTexture {
     ctx.font = '800 26px Archivo, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('Enter store →', w / 2, by + bh / 2);
+  }
+
+  /** One lock-screen notification card. */
+  private drawNotification(x: number, y: number, w: number, h: number, title: string, body: string, alpha: number) {
+    const ctx = this.ctx;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.24)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, 26);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgb(14, 16, 18)';
+    ctx.beginPath();
+    ctx.roundRect(x + 16, y + (h - 44) / 2, 44, 44, 12);
+    ctx.fill();
+
+    const starGrad = ctx.createLinearGradient(0, 0, 100, 100);
+    starGrad.addColorStop(0, 'rgb(185, 217, 226)');
+    starGrad.addColorStop(0.5, 'rgb(85, 194, 205)');
+    starGrad.addColorStop(1, 'rgb(146, 195, 24)');
+    ctx.save();
+    ctx.translate(x + 16 + 22, y + (h - 44) / 2 + 22);
+    ctx.scale(0.24, 0.24);
+    ctx.translate(-50, -50);
+    ctx.fillStyle = starGrad;
+    ctx.fill(new Path2D(BRAND_STAR_PATH));
+    ctx.restore();
+
+    ctx.fillStyle = 'rgb(255, 255, 255)';
+    ctx.font = '700 20px Archivo, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(title, x + 16 + 44 + 14, y + h / 2 - 22);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+    ctx.font = '500 17px Archivo, sans-serif';
+    ctx.fillText(body, x + 16 + 44 + 14, y + h / 2 + 3);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.font = '500 14px "DM Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('now', x + w - 18, y + h / 2 - 20);
+    ctx.globalAlpha = 1;
+  }
+
+  /** Inner screen lock: clock on the left pane, notifications on the right. */
+  private drawLockContentWide(t: number, w: number, h: number) {
+    const ctx = this.ctx;
+    const cx = w * 0.27;
+    {
+      // The static poster is captured from this screen, so it gets Apple's
+      // timeless 9:41 and no date instead of the moment it was captured.
+      const capture = ScreenTexture.captureMode;
+      const now = new Date();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      if (!capture) {
+        const dateStr = new Intl.DateTimeFormat('en-IN', { weekday: 'long', day: 'numeric', month: 'long' }).format(now);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.font = '600 22px Archivo, sans-serif';
+        ctx.fillText(dateStr, cx, h * 0.3);
+      }
+
+      const timeParts = new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: 'numeric', hour12: true }).formatToParts(now);
+      const timeOnly = capture ? '9:41' : timeParts.filter(p => p.type !== 'dayPeriod' && p.type !== 'literal').map(p => p.value).join(':');
+      ctx.fillStyle = 'rgb(255, 255, 255)';
+      ctx.font = '800 120px Archivo, sans-serif';
+      Object.assign(ctx, { letterSpacing: '-0.04em' });
+      ctx.fillText(timeOnly, cx, h * 0.53);
+      Object.assign(ctx, { letterSpacing: '0px' });
+    }
+
+    const age = this.reducedMotion ? Infinity : t - this.sceneEnteredAt;
+    const nx = w * 0.5;
+    const nw = w * 0.45;
+    const nh = 84;
+    const ny = h * 0.25;
+    if (age > 700) {
+      const e = this.reducedMotion ? 1 : this.easeOutCubic(Math.min(1, (age - 700) / 600));
+      this.drawNotification(nx, ny + (1 - e) * 30, nw, nh, 'Amrit Mobiles', 'Sealed box · IMEI on your GST bill', e);
+    }
+    if (age > 1100) {
+      const e = this.reducedMotion ? 1 : this.easeOutCubic(Math.min(1, (age - 1100) / 600));
+      this.drawNotification(nx, ny + nh + 12 + (1 - e) * 30, nw, nh, 'Trade-in valued at the counter', 'Bring your old phone', e * 0.85);
+    }
+
+    if (!this.reducedMotion && stageState.tier === 'desktop') {
+      const sweepT = (t % 7000) / 7000;
+      const sx = w * 2 * sweepT - w * 0.5;
+      const sGrad = ctx.createLinearGradient(sx, 0, sx + w * 0.35, h);
+      sGrad.addColorStop(0, 'rgba(255,255,255,0)');
+      sGrad.addColorStop(0.5, 'rgba(255,255,255,0.06)');
+      sGrad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = sGrad;
+      ctx.fillRect(0, 0, w, h);
+    }
+  }
+
+  /**
+   * Inner screen in the finale: a small preview of the /phones header (copy
+   * and search on the left, the Amrit star on the right). The DOM portal
+   * crossfades in the same layout over it before the dive.
+   */
+  private drawFinalWide(t: number, w: number, h: number) {
+    const ctx = this.ctx;
+    ctx.fillStyle = '#FBFCF9';
+    ctx.fillRect(0, 0, w, h);
+    const top = ctx.createRadialGradient(w * 0.3, 0, 0, w * 0.3, 0, w * 0.75);
+    top.addColorStop(0, 'rgba(146,195,24,0.32)');
+    top.addColorStop(1, 'rgba(146,195,24,0)');
+    ctx.fillStyle = top;
+    ctx.fillRect(0, 0, w, h);
+    const br = ctx.createRadialGradient(w, h, 0, w, h, w * 0.6);
+    br.addColorStop(0, 'rgba(85,194,205,0.28)');
+    br.addColorStop(1, 'rgba(85,194,205,0)');
+    ctx.fillStyle = br;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.translate(w * 0.74, h * 0.5);
+    const s = this.reducedMotion ? 1 : 1 + Math.sin(t / 5500 * Math.PI * 2) * 0.04;
+    const baseS = (0.26 * w) / 100;
+    ctx.scale(baseS * s, baseS * s);
+    ctx.translate(-50, -50);
+    const sg = ctx.createLinearGradient(0, 0, 100, 100);
+    sg.addColorStop(0, 'rgb(221,228,232)');
+    sg.addColorStop(1, 'rgb(168,184,200)');
+    ctx.fillStyle = sg;
+    ctx.fill(new Path2D(BRAND_STAR_PATH));
+    ctx.restore();
+
+    const x0 = w * 0.08;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = 'rgb(95,138,13)';
+    ctx.font = '800 15px Archivo, sans-serif';
+    Object.assign(ctx, { letterSpacing: '0.3em' });
+    ctx.fillText('AMRIT MOBILES', x0, h * 0.3);
+    Object.assign(ctx, { letterSpacing: '-0.03em' });
+    ctx.fillStyle = 'rgb(26,28,25)';
+    ctx.font = '800 48px Archivo, sans-serif';
+    ctx.fillText('Find your', x0, h * 0.42);
+    ctx.fillText('perfect phone', x0, h * 0.52);
+    Object.assign(ctx, { letterSpacing: '0px' });
+
+    const sw = w * 0.42, sh = 40, sy = h * 0.59;
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.strokeStyle = 'rgb(226,228,221)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(x0, sy, sw, sh, sh / 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = 'rgb(154,156,147)';
+    ctx.font = '500 16px Archivo, sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Search phones…', x0 + 22, sy + sh / 2);
+
+    const bw = 170, bh = 42, by = h * 0.74;
+    ctx.fillStyle = 'rgb(146,195,24)';
+    ctx.beginPath();
+    ctx.roundRect(x0, by, bw, bh, bh / 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgb(42,42,42)';
+    ctx.font = '800 17px Archivo, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Enter store →', x0 + bw / 2, by + bh / 2);
   }
 
   /** Previous dark finale screen (unused; kept for reference). */

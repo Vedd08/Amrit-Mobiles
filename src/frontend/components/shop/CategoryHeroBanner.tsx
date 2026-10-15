@@ -46,7 +46,7 @@ export function CategoryHeroBanner({ slug, categoryName }: { slug: string; categ
 
           <p className="mt-4 text-sm sm:text-base font-semibold text-neutral-300 max-w-xl leading-relaxed">
             {isPhones
-              ? "Explore untouched sealed Indian retail boxes of Apple iPhone 16 Pro, Samsung Galaxy S24 Ultra, Vivo Zeiss, and OnePlus flagships. Experience real-time hand feel directly across our verified Surat counter."
+              ? "Explore untouched sealed Indian retail boxes of Apple iPhone 16 Pro, Samsung Galaxy S24 Ultra, Vivo Zeiss, and Nothing flagships. Experience real-time hand feel directly across our verified Surat counter."
               : `Explore our curated selection of verified ${categoryName} with official warranty and instant counter financing.`}
           </p>
 

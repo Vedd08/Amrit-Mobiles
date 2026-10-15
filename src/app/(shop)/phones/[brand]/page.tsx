@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPhones } from "@/backend/lib/queries";
-import { getBrand, phonesForBrand } from "@/shared/phone-catalog";
+import { getBrand, getCategory, phonesForBrand } from "@/shared/phone-catalog";
 import { PhoneListing } from "@/frontend/components/phones/PhoneListing";
+import { BrandFamilyHero } from "@/frontend/components/phones/BrandFamilyHero";
 
 export const dynamic = "force-dynamic";
 
@@ -40,12 +41,22 @@ export default async function BrandPhonesPage({
   const info = getBrand(brand);
   if (!info) notFound();
 
+  const phones = phonesForBrand(all, info);
+  const foldable = getCategory("foldable");
   return (
     <PhoneListing
       title={`${info.name} phones`}
       intro={info.blurb}
-      products={phonesForBrand(all, info)}
+      products={phones}
       brand={info}
+      hero={
+        <BrandFamilyHero
+          brand={info}
+          phoneCount={phones.length}
+          fromPrice={phones.length ? Math.min(...phones.map((p) => p.price)) : 0}
+          foldCount={foldable ? phones.filter(foldable.match).length : 0}
+        />
+      }
     />
   );
 }

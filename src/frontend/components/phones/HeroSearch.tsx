@@ -26,7 +26,7 @@ export function HeroSearch({ initialQuery = "" }: { initialQuery?: string }) {
     const delayBeforeDelete = 2000;
     const initialDelay = 1500;
     
-    const queries = ["iPhone 15 Pro", "Samsung Galaxy S24", "Phones under ₹25,000", "OnePlus 12"];
+    const queries = ["iPhone 15 Pro", "Samsung Galaxy S24", "Phones under ₹25,000", "Nothing Phone"];
     
     const tick = () => {
       if (stopTypingRef.current) return;

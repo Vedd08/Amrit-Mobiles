@@ -14,7 +14,8 @@ export type Beat = {
   id: string;
   at: [number, number];
   camera: { pos: [number, number, number]; lookAt: [number, number, number]; fov: number };
-  phone:  { pos: [number, number, number]; rot: [number, number, number]; scale: number };
+  /** fold: 0 = shut (cover screen), 1 = opened flat. */
+  phone:  { pos: [number, number, number]; rot: [number, number, number]; scale: number; fold: number };
   light:  { key: number; rim: number; rimColor: string };
   bg:     [string, string];
   ease:   keyof typeof EASE;
@@ -36,7 +37,7 @@ export const keyframes: Beat[] = [
     id: "hero",
     at: [0.00, 0.15],
     camera: { pos: [0, 0, 3.20], lookAt: [0, 0, 0], fov: 35 },
-    phone:  { pos: [0.8, 0, 0], rot: [0, -0.3, 0], scale: 1.00 },
+    phone:  { pos: [0.8, 0, 0], rot: [0, -0.3, 0], scale: 0.88, fold: 0.92 },
     light:  { key: 2.6, rim: 3.2, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
@@ -45,7 +46,7 @@ export const keyframes: Beat[] = [
     id: "hero-out",
     at: [0.15, 0.20],
     camera: { pos: [0, 0, 2.62], lookAt: [0, -0.05, 0], fov: 34 },
-    phone:  { pos: [0.8, -0.05, 0], rot: [0.04, -0.3, 0], scale: 1.02 },
+    phone:  { pos: [0.8, -0.05, 0], rot: [0.04, -0.3, 0], scale: 0.9, fold: 0.92 },
     light:  { key: 2.8, rim: 3.4, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
@@ -54,7 +55,7 @@ export const keyframes: Beat[] = [
     id: "brands-in",
     at: [0.20, 0.25],
     camera: { pos: [0, 0, 3.05], lookAt: [0, 0, 0], fov: 35 },
-    phone:  { pos: [0.8, 0, 0], rot: [0, -0.3, 0], scale: 1.00 },
+    phone:  { pos: [0.8, 0, 0], rot: [0, -0.3, 0], scale: 0.9, fold: 1 },
     light:  { key: 2.5, rim: 3.6, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
@@ -63,7 +64,7 @@ export const keyframes: Beat[] = [
     id: "brand-cycle",
     at: [0.25, 0.40],
     camera: { pos: [0, 0.05, 2.95], lookAt: [0, 0, 0], fov: 35 },
-    phone:  { pos: [0.8, 0, 0], rot: [0, 0.3, 0], scale: 1.00 },
+    phone:  { pos: [0.8, 0, 0], rot: [0, 0.3, 0], scale: 0.9, fold: 1 },
     light:  { key: 2.7, rim: 4.0, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
@@ -72,7 +73,8 @@ export const keyframes: Beat[] = [
     id: "why",
     at: [0.40, 0.60],
     camera: { pos: [0, 0.04, 2.85], lookAt: [0, -0.02, 0], fov: 37 },
-    phone:  { pos: [0.86, -0.02, 0], rot: [0.02, 0.82, -0.03], scale: 0.96 },
+    // Half open like a book, both panes angled toward you, hinge at the back.
+    phone:  { pos: [0.86, -0.02, 0], rot: [0.06, -0.72, -0.03], scale: 0.96, fold: 0.55 },
     light:  { key: 2.2, rim: 3.8, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
@@ -81,7 +83,7 @@ export const keyframes: Beat[] = [
     id: "chooser",
     at: [0.60, 0.70],
     camera: { pos: [0, 0, 2.55], lookAt: [0, 0, 0], fov: 33 },
-    phone:  { pos: [0.75, 0, 0], rot: [0, 0, 0], scale: 1.16 },
+    phone:  { pos: [0.75, 0, 0], rot: [0, 0, 0], scale: 1.16, fold: 0 },
     light:  { key: 3.0, rim: 4.4, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
@@ -90,7 +92,7 @@ export const keyframes: Beat[] = [
     id: "trending",
     at: [0.70, 0.85],
     camera: { pos: [0, 0.10, 3.30], lookAt: [0, 0.12, -0.20], fov: 36 },
-    phone:  { pos: [0.50, 0.12, -0.20], rot: [0.06, 3.10, 0], scale: 0.86 },
+    phone:  { pos: [0.50, 0.12, -0.20], rot: [0.06, 3.10, 0], scale: 0.86, fold: 0 },
     light:  { key: 2.4, rim: 3.0, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
@@ -99,7 +101,7 @@ export const keyframes: Beat[] = [
     id: "stores",
     at: [0.85, 0.95],
     camera: { pos: [0, -0.15, 4.20], lookAt: [0, -0.85, -1.10], fov: 40 },
-    phone:  { pos: [0.85, -0.6, -1.2], rot: [0.10, 3.60, 0], scale: 0.70 },
+    phone:  { pos: [0.85, -0.6, -1.2], rot: [0.10, 3.60, 0], scale: 0.70, fold: 0 },
     light:  { key: 1.2, rim: 1.4, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
@@ -108,7 +110,7 @@ export const keyframes: Beat[] = [
     id: "final",
     at: [0.95, 1.00],
     camera: { pos: [0, 0, 2.42], lookAt: [0, 0, 0], fov: 32 },
-    phone:  { pos: [0, 0, 0], rot: [0, 0, 0], scale: 1.06 },
+    phone:  { pos: [0, 0, 0], rot: [0, 0, 0], scale: 1.06, fold: 0 },
     light:  { key: 3.4, rim: 5.0, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"

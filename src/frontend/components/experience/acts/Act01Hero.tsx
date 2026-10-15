@@ -3,12 +3,13 @@
 import { useRef } from 'react';
 import Link from 'next/link';
 import { business, BRANCHES } from '@/shared/business';
-import { SHOP_WHATSAPP_LINK } from '@/shared/whatsapp';
+import { useStoreChatLink } from '@/frontend/store/store-chat-store';
 import { useReducedMotion } from '@/frontend/lib/use-reduced-motion';
 
 export function Act01Hero() {
   const branchCount = BRANCHES.length;
   const reducedMotion = useReducedMotion();
+  const chat = useStoreChatLink();
 
   // Magnetic CTA
   const ctaRef = useRef<HTMLAnchorElement>(null);
@@ -69,9 +70,7 @@ export function Act01Hero() {
           </Link>
 
           <a
-            href={SHOP_WHATSAPP_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...chat}
             className="bg-white border border-line text-ink px-10 py-5 rounded-full font-bold text-sm md:text-base shadow-sm flex items-center justify-center hover:bg-paper-2 transition-colors"
           >
             Chat on WhatsApp
@@ -82,11 +81,11 @@ export function Act01Hero() {
         <div className="md:hidden order-4 w-full flex justify-center mt-8 relative">
           <div className="absolute inset-0 bg-linear-to-r from-lime/20 to-teal/20 blur-2xl rounded-full transform scale-90 -z-10" />
           <img
-            src="/images/phone-hero-poster-v2.webp"
-            alt="Amrit Mobiles Flagship Phone"
-            width={600}
-            height={1200}
-            className="h-[42svh] w-auto object-contain animate-[heroPosterFloat_4s_ease-in-out_infinite] motion-reduce:animate-none"
+            src="/images/phone-hero-poster-fold.webp"
+            alt="The new foldable iPhone, open"
+            width={1362}
+            height={983}
+            className="w-[88vw] max-w-105 h-auto object-contain animate-[heroPosterFloat_4s_ease-in-out_infinite] motion-reduce:animate-none"
             fetchPriority="high"
           />
         </div>

@@ -10,13 +10,15 @@
 const WORDMARK: Record<string, { text: string; className: string }> = {
   samsung: { text: "SAMSUNG", className: "font-semibold " },
   google: { text: "Google", className: "font-semibold " },
-  oneplus: { text: "OnePlus", className: "font-bold " },
   xiaomi: { text: "xiaomi", className: "font-bold " },
   nothing: { text: "NOTHING", className: "font-normal " },
   realme: { text: "realme", className: "font-extrabold " },
   oppo: { text: "OPPO", className: "font-extrabold " },
   vivo: { text: "vivo", className: "font-extrabold " },
   poco: { text: "POCO", className: "font-extrabold " },
+  infinix: { text: "Infinix", className: "font-bold " },
+  tecno: { text: "TECNO", className: "font-extrabold " },
+  itel: { text: "itel", className: "font-extrabold " },
 };
 
 export function BrandMark({ slug, className = "" }: { slug: string; className?: string }) {

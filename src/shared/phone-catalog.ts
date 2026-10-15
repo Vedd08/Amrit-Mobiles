@@ -28,8 +28,6 @@ export const PHONE_BRANDS: PhoneBrand[] = [
     blurb: "iPhone, sealed and IMEI-checked at the counter." },
   { slug: "samsung", name: "Samsung", dbBrand: "Samsung", accent: "rgb(20, 40, 160)",
     blurb: "Galaxy flagships to everyday A and M series — all Indian stock." },
-  { slug: "oneplus", name: "OnePlus", dbBrand: "OnePlus", accent: "rgb(235, 0, 40)",
-    blurb: "Fast, clean Android across the number and Nord series." },
   { slug: "google", name: "Google", dbBrand: "Google", accent: "rgb(26, 115, 232)",
     blurb: "Pixel — Google's cameras and seven years of updates." },
   { slug: "xiaomi", name: "Xiaomi", dbBrand: "Xiaomi", accent: "rgb(255, 105, 0)",
@@ -46,7 +44,16 @@ export const PHONE_BRANDS: PhoneBrand[] = [
     blurb: "V and X series — portrait and low-light specialists." },
   { slug: "poco", name: "POCO", dbBrand: "POCO", accent: "rgb(196, 160, 0)",
     blurb: "POCO — flagship silicon at mid-range money." },
+  { slug: "infinix", name: "Infinix", dbBrand: "Infinix", accent: "rgb(0, 168, 107)",
+    blurb: "NOTE, HOT, ZERO and GT — big screens and fast charging for less." },
+  { slug: "tecno", name: "Tecno", dbBrand: "Tecno", accent: "rgb(0, 102, 204)",
+    blurb: "CAMON for cameras, POVA for power, SPARK for every day." },
+  { slug: "itel", name: "itel", dbBrand: "itel", accent: "rgb(220, 30, 40)",
+    blurb: "Dependable smartphones at the friendliest prices." },
 ];
+
+/** Brands the shop doesn't sell: their products never show on the storefront. */
+export const HIDDEN_BRANDS = ["OnePlus", "Oneplus", "ONEPLUS", "oneplus"];
 
 export function getBrand(slug: string): PhoneBrand | undefined {
   return PHONE_BRANDS.find((b) => b.slug === slug.toLowerCase());

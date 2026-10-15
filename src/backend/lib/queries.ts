@@ -1,5 +1,6 @@
 import { prisma } from "@/backend/lib/prisma";
 import type { ProductCardData } from "@/frontend/components/shop/ProductCard";
+import { HIDDEN_BRANDS } from "@/shared/phone-catalog";
 
 function toCardData(product: {
   id: string;
@@ -37,7 +38,7 @@ export async function getCategories() {
 
 export async function getFeaturedProducts(take = 8) {
   const products = await prisma.product.findMany({
-    where: { isActive: true, category: { slug: { not: "accessories" } } },
+    where: { isActive: true, brand: { notIn: HIDDEN_BRANDS }, category: { slug: { not: "accessories" } } },
     orderBy: { createdAt: "desc" },
     take,
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
@@ -48,7 +49,7 @@ export async function getFeaturedProducts(take = 8) {
 /** Every active phone product. The storefront filters in memory. */
 export async function getAllStorefrontProducts(): Promise<ProductCardData[]> {
   const products = await prisma.product.findMany({
-    where: { isActive: true, category: { slug: { not: "accessories" } } },
+    where: { isActive: true, brand: { notIn: HIDDEN_BRANDS }, category: { slug: { not: "accessories" } } },
     orderBy: { price: "desc" },
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
   });
@@ -64,7 +65,7 @@ export async function getAllStorefrontProducts(): Promise<ProductCardData[]> {
  */
 export async function getStorefrontProducts(take = 12) {
   const products = await prisma.product.findMany({
-    where: { isActive: true, category: { slug: { not: "accessories" } } },
+    where: { isActive: true, brand: { notIn: HIDDEN_BRANDS }, category: { slug: { not: "accessories" } } },
     orderBy: { price: "desc" },
     take,
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
@@ -81,7 +82,7 @@ export async function getStorefrontProducts(take = 12) {
  */
 export async function getAllPhones(): Promise<ProductCardData[]> {
   const products = await prisma.product.findMany({
-    where: { isActive: true, category: { slug: "phones" } },
+    where: { isActive: true, brand: { notIn: HIDDEN_BRANDS }, category: { slug: "phones" } },
     orderBy: { createdAt: "desc" },
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
   });
@@ -106,14 +107,14 @@ export async function getCategoryWithProducts(
     where: {
       categoryId: category.id,
       isActive: true,
-      ...(opts.brand ? { brand: opts.brand } : {}),
+      brand: opts.brand ? { equals: opts.brand, notIn: HIDDEN_BRANDS } : { notIn: HIDDEN_BRANDS },
     },
     orderBy,
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
   });
 
   const allInCategory = await prisma.product.findMany({
-    where: { categoryId: category.id, isActive: true },
+    where: { categoryId: category.id, isActive: true, brand: { notIn: HIDDEN_BRANDS } },
     select: { brand: true },
     distinct: ["brand"],
   });

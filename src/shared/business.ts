@@ -8,6 +8,8 @@ export const business = {
   openingHours: "",       // TODO(owner)
   googleMapsUrl: "",      // TODO(owner)
   instagramUrl: "",       // TODO(owner)
+  // TODO(owner): the owner's name for the About studio card ("Owner" is shown until it's set).
+  ownerName: "",
 } as const;
 
 export const claims = {

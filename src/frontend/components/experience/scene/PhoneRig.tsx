@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import { Group, MathUtils, Vector3 } from 'three';
 import { stageState } from '@/frontend/lib/experience/stageState';
 import { DAMP } from '@/frontend/lib/experience/keyframes';
-import { PhoneModel } from './PhoneModel';
+import { FoldPhoneModel, foldWidth } from './FoldPhoneModel';
 import { useReducedMotion } from '@/frontend/lib/use-reduced-motion';
 
 const ORIGIN = new Vector3();
@@ -13,10 +13,16 @@ const ORIGIN = new Vector3();
 const CONTENT_MAX_PX = 1360;
 /** At most this share of the content width between screen centre and phone centre. */
 const MAX_OFFSET_SHARE = 0.263;
+/** How quickly the foldable opens and shuts between beats. */
+const FOLD_DAMP = 2.6;
+/** Keep the (wide, when open) phone inside this share of the half-viewport. */
+const EDGE_FIT = 0.94;
 
 export function PhoneRig() {
   const groupRef = useRef<Group>(null);
   const reducedMotion = useReducedMotion();
+  // 0 = shut, 1 = open. Starts shut: the phone rises and spins closed, then opens.
+  const foldRef = useRef(0);
   
   const introRef = useRef<{
     startTime: number | null;
@@ -40,6 +46,7 @@ export function PhoneRig() {
       groupRef.current.position.set(0, finale.y, 0);
       groupRef.current.rotation.set(finale.rotX, finale.rotY, 0);
       groupRef.current.scale.setScalar(finale.scale);
+      foldRef.current = finale.fold;
       return;
     }
 
@@ -67,7 +74,12 @@ export function PhoneRig() {
     const xScale = Math.min(1, maxOffsetPx / (0.8 * pxPerUnit));
     const targetX = isMobile ? 0 : pos.x * xScale;
     const baseTargetY = isMobile ? pos.y - 0.4 : pos.y + floatY;
-    const targetScale = isMobile ? scale * 0.75 : scale;
+    let targetScale = isMobile ? scale * 0.75 : scale;
+    // Opened, the foldable is twice as wide: shrink it rather than let it run
+    // off the edge of narrower viewports.
+    const halfWidth = 0.5 * foldWidth(foldRef.current);
+    const room = current.width / 2 * EDGE_FIT - Math.abs(targetX);
+    if (room > 0 && halfWidth * targetScale > room) targetScale = room / halfWidth;
 
     const elapsed = state.clock.elapsedTime - introRef.current.startTime;
     const duration = 1.2;
@@ -89,7 +101,12 @@ export function PhoneRig() {
       groupRef.current.rotation.z = rot.z + floatZ;
 
       groupRef.current.scale.setScalar(targetScale);
+      foldRef.current = 0;
     } else {
+      foldRef.current = reducedMotion
+        ? stageState.phone.fold
+        : MathUtils.damp(foldRef.current, stageState.phone.fold, FOLD_DAMP, delta);
+
       groupRef.current.position.x = MathUtils.damp(groupRef.current.position.x, targetX, DAMP.phone, delta);
       groupRef.current.position.y = MathUtils.damp(groupRef.current.position.y, baseTargetY, DAMP.phone, delta);
       groupRef.current.position.z = MathUtils.damp(groupRef.current.position.z, pos.z, DAMP.phone, delta);
@@ -105,7 +122,7 @@ export function PhoneRig() {
 
   return (
     <group ref={groupRef}>
-      <PhoneModel />
+      <FoldPhoneModel fold={foldRef} />
     </group>
   );
 }

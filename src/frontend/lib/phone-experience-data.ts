@@ -3,14 +3,10 @@
 // Page.html) — placeholder but realistic, structured to be easy to swap for
 // real shop content later.
 
-import { SHOP_WHATSAPP_NUMBER, buildWhatsAppLink } from "@/shared/whatsapp";
+import { SHOP_WHATSAPP_NUMBER } from "@/shared/whatsapp";
 
 export const SHOP_DISPLAY_PHONE = "+91 98765 43210";
 export const SHOP_TEL_LINK = `tel:+${SHOP_WHATSAPP_NUMBER}`;
-export const SHOP_STORY_WHATSAPP_LINK = buildWhatsAppLink(
-  SHOP_WHATSAPP_NUMBER,
-  "Hi Amrit Mobiles! I'm looking at your website and have a question."
-);
 
 
 export type TradeInModel = { name: string; short: string; base: number };

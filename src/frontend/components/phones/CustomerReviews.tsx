@@ -75,7 +75,7 @@ export function CustomerReviews({ reviews = PLACEHOLDER_REVIEWS }: { reviews?: R
   if (reviews.length === 0) return null;
 
   return (
-    <section className="border-t border-line-dark/40 bg-base py-16 md:py-24">
+    <section className="border-t border-line-dark/40 bg-carbon py-16 md:py-24">
       <div className="mx-auto max-w-site px-4 sm:px-6">
         <SectionHeader
           kicker="4.9★ across six branches"

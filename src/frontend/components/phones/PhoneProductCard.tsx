@@ -108,40 +108,48 @@ export function PhoneProductCard({
           )}
         </div>
 
-        <div className="flex flex-col gap-1 p-3.5 pb-2.5 relative z-20">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-micro font-semibold tracking-widest uppercase text-ink-3">{product.brand}</p>
+        {/* Sized for a half-width card on a 320px phone up: nothing may run
+            past the card edge (it clips), so rows wrap instead, and numbers
+            drop the wide letter-spacing that text-micro carries for labels. */}
+        <div className="relative z-20 flex min-w-0 flex-col gap-1 p-3 pb-2 sm:p-3.5 sm:pb-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
+            <p className="truncate text-micro font-semibold uppercase tracking-widest text-ink-3">{product.brand}</p>
             {!outOfStock && product.stock <= 3 && (
-              <div className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-danger"></span>
-                <span className="text-micro font-semibold text-danger uppercase tracking-widest">Only {product.stock} left</span>
+              <div className="flex items-center gap-1">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-danger"></span>
+                <span className="whitespace-nowrap text-micro font-semibold uppercase tracking-wide text-danger">Only {product.stock} left</span>
               </div>
             )}
           </div>
-          <h3 className="line-clamp-2 min-h-[2.75em] text-body font-bold leading-snug text-ink">
+          <h3 className="line-clamp-2 min-h-[2.75em] text-[15px] font-bold leading-snug text-ink sm:text-body">
             {product.name}
           </h3>
-          <div className="mt-1 flex flex-wrap gap-1.5">
+          <div className="mt-1 flex flex-wrap gap-1">
             {specs.map(spec => (
-              <span key={spec} className="rounded-full bg-paper-2 px-2 py-0.5 text-micro text-ink-2">
+              <span key={spec} className="whitespace-nowrap rounded-full bg-paper-2 px-1.5 py-0.5 text-micro tracking-normal text-ink-2 sm:px-2">
                 {spec}
               </span>
             ))}
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-body-lg font-extrabold tabular-nums text-ink">{formatINR(product.price)}</span>
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
+            <span className="whitespace-nowrap text-[16px] font-extrabold tabular-nums text-ink sm:text-body-lg">{formatINR(product.price)}</span>
             {product.mrp && product.mrp > product.price && (
-              <span className="text-micro tabular-nums text-ink-3 line-through">{formatINR(product.mrp)}</span>
-            )}
-            {save >= 1000 && (
-              <span className="rounded-full bg-lime/25 px-1.5 py-0.5 text-micro font-semibold text-ink">Save {formatINR(save)}</span>
+              <span className="whitespace-nowrap text-xs tabular-nums text-ink-3 line-through">{formatINR(product.mrp)}</span>
             )}
           </div>
-          <p className="text-micro text-ink-3">or {formatINR(emi)}/mo on 0% EMI</p>
+          {save >= 1000 && (
+            <span className="w-fit whitespace-nowrap rounded-full bg-lime/25 px-2 py-0.5 text-micro font-semibold tracking-normal text-lime-ink">
+              Save {formatINR(save)}
+            </span>
+          )}
+          <p className="text-xs leading-snug text-ink-3">
+            or <span className="whitespace-nowrap font-semibold text-ink-2">{formatINR(emi)}/mo</span>{" "}
+            <span className="whitespace-nowrap">on 0% EMI</span>
+          </p>
         </div>
       </Link>
 
-      <div className="mt-auto px-3.5 pb-3.5 relative z-20">
+      <div className="relative z-20 mt-auto px-3 pb-3 sm:px-3.5 sm:pb-3.5">
         <button
           type="button"
           onClick={addToCart}

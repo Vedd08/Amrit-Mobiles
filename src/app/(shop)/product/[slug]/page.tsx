@@ -47,7 +47,9 @@ export default async function ProductPage({
           <span className="text-ink">{product.brand}</span>
         </div>
 
-        <div className="grid gap-10 md:grid-cols-2 md:gap-12">
+        {/* *:min-w-0 lets both columns shrink to fit; grid items otherwise keep
+            their content's natural width and pushed a tablet page sideways. */}
+        <div className="grid gap-10 *:min-w-0 md:grid-cols-2 md:gap-12">
           <Reveal>
             <ProductGallery
               images={product.images}

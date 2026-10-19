@@ -256,8 +256,21 @@ export function CinematicFooter() {
           {/* Bottom bar. Extra bottom padding on mobile clears BottomNav,
               which is fixed at the same viewport edge. */}
           <div className="relative z-20 w-full pb-24 md:pb-8 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="text-ink-3 text-micro md:text-xs font-semibold tracking-widest uppercase order-2 md:order-1">
-              © {new Date().getFullYear()} Amrit Mobiles. All rights reserved.
+            <div className="order-2 flex flex-col items-center gap-1.5 text-center md:order-1 md:items-start md:text-left">
+              <p className="text-ink-3 text-micro md:text-xs font-semibold tracking-widest uppercase">
+                © {new Date().getFullYear()} Amrit Mobiles. All rights reserved.
+              </p>
+              <p className="text-ink-3 text-xs">
+                Website designed &amp; developed by{" "}
+                <a
+                  href="https://logicmindsbyparii.com/"
+                  target="_blank"
+                  rel="noopener"
+                  className="font-bold text-ink-2 underline decoration-lime decoration-2 underline-offset-4 transition-colors hover:text-lime-ink"
+                >
+                  LogicMinds by Parii
+                </a>
+              </p>
             </div>
 
             <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2 order-1 md:order-2 cursor-default">

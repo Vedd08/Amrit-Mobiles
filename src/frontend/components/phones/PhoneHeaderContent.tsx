@@ -134,7 +134,7 @@ export function PhoneHeaderContent({
         <HeroAmbient />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-site items-center gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:gap-6 lg:px-8">
+      <div className="relative z-10 mx-auto grid w-full max-w-site items-center gap-8 px-4 *:min-w-0 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:gap-6 lg:px-8">
         {/* Copy + search */}
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
           <p className="hero-stagger-item mb-5 flex items-center gap-2 rounded-full border border-line bg-white/70 px-4 py-1.5 text-micro font-bold uppercase tracking-widest text-ink-2 backdrop-blur">

@@ -192,7 +192,7 @@ export function FeaturedFlagshipShowcase({ products }: { products: ProductCardDa
             className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 cursor-grab active:cursor-grabbing select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {/* Wide EMI promo tile — the shelf's anchor tile */}
-            <div className="shrink-0 snap-start w-[300px] sm:w-[420px] lg:w-[460px] rounded-lg bg-base text-white p-8 sm:p-10 relative overflow-hidden flex flex-col justify-between border border-black/20 shadow-xl min-h-[380px] group transition-all duration-500 hover:-translate-y-1.5">
+            <div className="shrink-0 snap-start w-[300px] sm:w-[420px] lg:w-[460px] rounded-lg bg-carbon text-white p-8 sm:p-10 relative overflow-hidden flex flex-col justify-between border border-black/20 shadow-xl min-h-[380px] group transition-all duration-500 hover:-translate-y-1.5">
               <div className="relative z-10 max-w-[66%] sm:max-w-[54%]">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-lime px-3 py-1 text-micro font-bold uppercase tracking-widest text-[#2A2A2A] mb-4">
                   Special Counter Feature

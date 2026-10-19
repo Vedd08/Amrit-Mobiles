@@ -9,7 +9,7 @@ export function CategoryHeroBanner({ slug, categoryName }: { slug: string; categ
   const isPhones = slug.toLowerCase() === "phones" || slug.toLowerCase().includes("phone");
 
   return (
-    <div className="relative overflow-hidden rounded-lg bg-linear-to-br from-base via-raised to-void border border-raised text-white p-8 sm:p-14 mb-12 shadow-sh-2 select-none group">
+    <div className="relative overflow-hidden rounded-lg bg-linear-to-br from-carbon via-raised to-void border border-raised text-white p-8 sm:p-14 mb-12 shadow-sh-2 select-none group">
 
       {/* Giant Architectural Background Watermark */}
       <span className="absolute right-10 top-1/2 -translate-y-1/2 text-6xl sm:text-display font-bold text-white/4 pointer-events-none uppercase tracking-tighter select-none font-mono">

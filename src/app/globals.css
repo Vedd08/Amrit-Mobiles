@@ -40,7 +40,8 @@
 
   /* DARK SCOPE */
   --color-void: #0C0E11;
-  --color-base: #14171B;
+  /* "carbon", not "base": a color named base collided with the text-base font size */
+  --color-carbon: #14171B;
   --color-raised: #1C2025;
   --color-line-dark: #272C31;
   --color-ink-hi: #F4F6F3;

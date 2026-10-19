@@ -18,7 +18,7 @@ export default function WishlistPage() {
         {!mounted ? (
           <div className="mt-8 h-40" aria-hidden />
         ) : items.length === 0 ? (
-          <div className="mt-8 rounded-lg border border-line-dark bg-base/60 backdrop-blur-md px-6 py-16 text-center">
+          <div className="mt-8 rounded-lg border border-line-dark bg-carbon/60 backdrop-blur-md px-6 py-16 text-center">
             <p className="text-body font-bold uppercase tracking-wider text-ink-hi">Nothing saved yet</p>
             <p className="mx-auto mt-2 max-w-[36ch] text-small text-ink-mid">
               Tap the heart on any phone to keep it here for later.

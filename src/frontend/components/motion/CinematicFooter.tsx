@@ -256,39 +256,44 @@ export function CinematicFooter() {
           {/* Bottom bar. Extra bottom padding on mobile clears BottomNav,
               which is fixed at the same viewport edge. */}
           <div className="relative z-20 w-full pb-24 md:pb-8 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="order-2 flex flex-col items-center gap-1.5 text-center md:order-1 md:items-start md:text-left">
-              <p className="text-ink-3 text-micro md:text-xs font-semibold tracking-widest uppercase">
-                © {new Date().getFullYear()} Amrit Mobiles. All rights reserved.
-              </p>
-              <p className="text-ink-3 text-xs">
-                Website designed &amp; developed by{" "}
-                <a
-                  href="https://logicmindsbyparii.com/"
-                  target="_blank"
-                  rel="noopener"
-                  className="font-bold text-ink-2 underline decoration-lime decoration-2 underline-offset-4 transition-colors hover:text-lime-ink"
-                >
-                  LogicMinds by Parii
-                </a>
-              </p>
+            <div className="text-ink-3 text-micro md:text-xs font-semibold tracking-widest uppercase order-2 md:order-1 md:flex-1">
+              © {new Date().getFullYear()} Amrit Mobiles. All rights reserved.
             </div>
 
-            <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2 order-1 md:order-2 cursor-default">
-              <span className="text-ink-3 text-micro md:text-xs font-bold uppercase tracking-widest">Made with</span>
-              <span className="animate-footer-heartbeat text-sm md:text-base text-danger" aria-hidden="true">❤</span>
-              <span className="text-ink-3 text-micro md:text-xs font-bold uppercase tracking-widest">in Surat</span>
-            </div>
-
-            <MagneticButton
-              as="button"
-              onClick={scrollToTop}
-              aria-label="Back to top"
-              className="w-12 h-12 rounded-full footer-glass-pill flex items-center justify-center text-ink-3 hover:text-ink group order-3"
+            {/* The studio that built the site, front and centre */}
+            <a
+              href="https://logicmindsbyparii.com/"
+              target="_blank"
+              rel="noopener"
+              className="group order-1 md:order-2 flex items-center gap-3 rounded-full border border-lime/50 bg-white/85 py-2 pl-2 pr-5 shadow-[0_12px_30px_-14px_rgba(95,138,13,0.55)] ring-4 ring-lime/10 backdrop-blur-md transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-14px_rgba(95,138,13,0.7)]"
             >
-              <svg className="w-5 h-5 transform group-hover:-translate-y-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-              </svg>
-            </MagneticButton>
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-lime text-[15px] text-[#2A2A2A]" aria-hidden="true">
+                ✦
+              </span>
+              <span className="flex flex-col leading-tight">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-3">Designed &amp; developed by</span>
+                <span className="flex items-center gap-1 text-sm font-extrabold text-ink md:text-base">
+                  LogicMinds by Parii
+                  <span className="text-lime-ink transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true">
+                    ↗
+                  </span>
+                </span>
+              </span>
+            </a>
+
+            {/* Same flex-1 as the copyright, so the credit sits dead centre */}
+            <div className="order-3 flex md:flex-1 md:justify-end">
+              <MagneticButton
+                as="button"
+                onClick={scrollToTop}
+                aria-label="Back to top"
+                className="w-12 h-12 rounded-full footer-glass-pill flex items-center justify-center text-ink-3 hover:text-ink group"
+              >
+                <svg className="w-5 h-5 transform group-hover:-translate-y-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+              </MagneticButton>
+            </div>
           </div>
         </footer>
       </div>

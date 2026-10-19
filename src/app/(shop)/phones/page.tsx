@@ -44,7 +44,7 @@ const GridSection = ({
   action?: { href: string; label: string };
   products: ProductCardData[];
 }) => (
-  <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 border-t border-line first:border-0">
+  <section className="mx-auto max-w-site px-4 py-16 md:py-24 border-t border-line first:border-0">
     <SectionHeader kicker={kicker} title={title} sub={sub} action={action} />
     <Stagger as="ul" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {products.map((p) => (
@@ -109,9 +109,10 @@ export default async function PhonesPage({
   };
 
   return (
-    <div className="phones-scope bg-paper text-ink">
+    // -mt/pt: paint the paper background behind the floating navbar too.
+    <div className="phones-scope -mt-[96px] bg-paper pt-[96px] text-ink">
       {results ? (
-        <section className="mx-auto max-w-7xl px-4 pb-4 pt-16 sm:px-6 md:pt-24">
+        <section className="mx-auto max-w-site px-4 pb-4 pt-16 sm:px-6 md:pt-24">
           <p className="text-micro font-bold tracking-widest uppercase text-ink-3">✦ Search results</p>
           <h1 className="mb-0 mt-2 text-3xl md:text-5xl font-extrabold tracking-tighter text-ink">&ldquo;{q}&rdquo;</h1>
           <p className="mt-3 text-small text-ink-3">
@@ -163,7 +164,7 @@ export default async function PhonesPage({
 
       <CategoryGrid categories={categoryTiles} />
 
-      <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 border-t border-line">
+      <section className="mx-auto max-w-site px-4 py-16 md:py-24 border-t border-line">
         <SectionHeader title="New arrivals" sub="Just landed on the Surat shelves." />
         <ProductRail products={newArrivals} badge="new" />
       </section>
@@ -171,7 +172,7 @@ export default async function PhonesPage({
       <PhonePromo />
 
       {deals.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 border-t border-line">
+        <section className="mx-auto max-w-site px-4 py-16 md:py-24 border-t border-line">
           <SectionHeader
             title="Today's best deals"
             sub="The largest discounts off MRP right now."

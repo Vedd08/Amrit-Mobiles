@@ -67,7 +67,7 @@ export function Header() {
     <>
       <header className="fixed top-[14px] left-[16px] right-[16px] z-[60] pointer-events-none">
         <div 
-          className={`mx-auto max-w-7xl w-full pointer-events-auto flex items-center justify-between rounded-full border border-line pl-4 pr-3 sm:pl-[28px] sm:pr-[12px] ${pillHeight} ${pillBg} ${pillShadow} ${transition}`}
+          className={`mx-auto max-w-site w-full pointer-events-auto flex items-center justify-between rounded-full border border-line pl-4 pr-3 sm:pl-[28px] sm:pr-[12px] ${pillHeight} ${pillBg} ${pillShadow} ${transition}`}
         >
           {/* LEFT: Wordmark */}
           <Link href="/" className="flex items-center hover:opacity-80 transition-opacity" aria-label="Amrit Mobiles Home">

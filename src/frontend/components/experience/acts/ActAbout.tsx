@@ -8,6 +8,7 @@ import { BranchChatButton } from '@/frontend/components/whatsapp/BranchChatButto
 import { WhatsAppIcon } from '@/frontend/components/icons';
 import { useReducedMotion } from '@/frontend/lib/use-reduced-motion';
 import { OwnerStudio } from '@/frontend/components/experience/ui/OwnerStudio';
+import { CompanyJourney } from '@/frontend/components/experience/ui/CompanyJourney';
 
 /*
  * About: Amrit told through the city. A light map of Surat with the real
@@ -101,10 +102,13 @@ export function ActAbout() {
 
   return (
     <section id="about" className="relative z-10 px-4 py-20 sm:px-6 md:py-32">
-      <div className="mx-auto mb-16 max-w-[1360px] md:mb-24 md:px-4">
+      <div className="mx-auto mb-16 max-w-site md:mb-24 md:px-4">
         <OwnerStudio />
       </div>
-      <div ref={sectionRef} className="mx-auto grid max-w-[1360px] items-center gap-12 md:px-4 lg:grid-cols-12 lg:gap-16 [&>*]:min-w-0">
+      <div className="mx-auto mb-20 max-w-site md:mb-32 md:px-4">
+        <CompanyJourney />
+      </div>
+      <div ref={sectionRef} className="mx-auto grid max-w-site items-center gap-12 md:px-4 lg:grid-cols-12 lg:gap-16 [&>*]:min-w-0">
         {/* Story */}
         <div className="lg:col-span-5">
           <h2 className="text-4xl font-bold leading-[1.02] tracking-tight text-ink md:text-6xl">

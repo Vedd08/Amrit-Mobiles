@@ -3,6 +3,8 @@ import { BRANCHES } from "./branches";
 export const business = {
   name: "Amrit Mobiles",
   tagline: "Your next phone starts here.",
+  /** The family's own tagline, shown on the hero phone and the About card. */
+  promise: { lead: "Amrit hai toh", key: "bharosa hai." },
   phone: "",              // TODO(owner) — leave empty until confirmed
   address: "",            // TODO(owner)
   openingHours: "",       // TODO(owner)

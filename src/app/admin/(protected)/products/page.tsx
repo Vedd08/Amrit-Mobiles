@@ -1,161 +1,178 @@
 import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/backend/lib/prisma";
-import { deleteProduct } from "./actions";
-import { ConfirmSubmitButton } from "@/admin/components/ConfirmSubmitButton";
-import { PlusIcon, SearchIcon, TrashIcon, ImageIcon } from "@/admin/components/icons";
+import type { Prisma } from "@/backend/generated/prisma/client";
+import { EmptyState, PageHeader, btn, input } from "@/admin/components/ui";
+import { ImageIcon, PlusIcon, SearchIcon, UploadIcon } from "@/admin/components/icons";
+import { QuickEdit } from "./QuickEdit";
+
+const LOW_STOCK = 5;
 
 export default async function AdminProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; brand?: string; stock?: string; show?: string }>;
 }) {
-  const { q, category } = await searchParams;
+  const { q, category, brand, stock, show } = await searchParams;
 
-  const [products, categories] = await Promise.all([
+  const where: Prisma.ProductWhereInput = {
+    AND: [
+      q ? { OR: [{ name: { contains: q } }, { brand: { contains: q } }] } : {},
+      category ? { categoryId: category } : {},
+      brand ? { brand } : {},
+      stock === "low" ? { stock: { lte: LOW_STOCK } } : stock === "out" ? { stock: 0 } : {},
+      show === "visible" ? { isActive: true } : show === "hidden" ? { isActive: false } : {},
+    ],
+  };
+
+  const [products, categories, brands, total] = await Promise.all([
     prisma.product.findMany({
-      where: {
-        AND: [
-          q ? { name: { contains: q } } : {},
-          category ? { categoryId: category } : {},
-        ],
-      },
-      orderBy: { createdAt: "desc" },
-      include: { category: true, images: { orderBy: { position: "asc" }, take: 1 } },
+      where,
+      orderBy: [{ brand: "asc" }, { name: "asc" }],
+      include: { category: { select: { name: true } }, images: { orderBy: { position: "asc" }, take: 1 } },
     }),
-    prisma.category.findMany({ orderBy: { name: "asc" } }),
+    prisma.category.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.product.findMany({ distinct: ["brand"], orderBy: { brand: "asc" }, select: { brand: true } }),
+    prisma.product.count(),
   ]);
+
+  const filtered = Boolean(q || category || brand || stock || show);
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-ink">Products</h1>
-          <p className="mt-1 text-sm text-ink-3">
-            {products.length} product{products.length === 1 ? "" : "s"}
-            {q || category ? " matching your filters" : " in the catalog"}
-          </p>
-        </div>
-        <Link
-          href="/admin/products/new"
-          className="inline-flex items-center gap-1.5 rounded-full bg-lime px-4 py-2.5 text-sm font-semibold text-ink shadow-sm hover:hover:bg-lime-ink"
-        >
-          <PlusIcon className="h-4 w-4" />
-          Add product
-        </Link>
-      </div>
+      <PageHeader
+        title="Products"
+        description={
+          filtered
+            ? `${products.length} of ${total} products match`
+            : `${total} products. Change price, stock or visibility right here and press Save.`
+        }
+        actions={
+          <>
+            <Link href="/admin/products/import" className={btn.secondary}>
+              <UploadIcon className="h-4 w-4" />
+              Update from Excel
+            </Link>
+            <Link href="/admin/products/new" className={btn.primary}>
+              <PlusIcon className="h-4 w-4" />
+              Add product
+            </Link>
+          </>
+        }
+      />
 
-      <form className="mt-5 flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-55 max-w-sm">
-          <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-3" />
-          <input
-            type="text"
-            name="q"
-            defaultValue={q}
-            placeholder="Search products…"
-            className="w-full rounded-full border border-line bg-paper py-2 pl-9 pr-3 text-sm outline-none focus:border-lime"
-          />
+      <form className="mb-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))_auto]">
+        <label className="relative sm:col-span-2 lg:col-span-1">
+          <span className="sr-only">Search products</span>
+          <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-4" />
+          <input name="q" defaultValue={q} placeholder="Search name or brand" className={`${input} pl-10`} />
+        </label>
+        <Select name="brand" value={brand} label="Brand" options={brands.map((b) => [b.brand, b.brand])} all="All brands" />
+        <Select name="category" value={category} label="Category" options={categories.map((c) => [c.id, c.name])} all="All categories" />
+        <Select
+          name="stock"
+          value={stock}
+          label="Stock"
+          options={[
+            ["low", `Low (${LOW_STOCK} or fewer)`],
+            ["out", "Out of stock"],
+          ]}
+          all="Any stock"
+        />
+        <Select
+          name="show"
+          value={show}
+          label="Visibility"
+          options={[
+            ["visible", "Visible"],
+            ["hidden", "Hidden"],
+          ]}
+          all="Visible + hidden"
+        />
+        <div className="flex gap-2">
+          <button type="submit" className={`${btn.secondary} flex-1`}>
+            Filter
+          </button>
+          {filtered && (
+            <Link href="/admin/products" className={btn.ghost}>
+              Clear
+            </Link>
+          )}
         </div>
-        <select
-          name="category"
-          defaultValue={category ?? ""}
-          className="rounded-full border border-line bg-paper px-3.5 py-2 text-sm font-medium text-ink outline-none focus:border-lime"
-        >
-          <option value="">All categories</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <button
-          type="submit"
-          className="rounded-full border border-line bg-paper px-4 py-2 text-sm font-semibold text-ink hover:bg-paper"
-        >
-          Filter
-        </button>
-        {(q || category) && (
-          <Link href="/admin/products" className="text-sm font-semibold text-lime-ink hover:underline">
-            Clear
-          </Link>
-        )}
       </form>
 
-      <div className="mt-6 overflow-x-auto rounded-lg border border-line bg-paper shadow-xs">
-        <table className="w-full text-sm">
-          <thead className="bg-paper text-left text-ink-3">
-            <tr>
-              <th className="px-4 py-3 font-semibold">Product</th>
-              <th className="px-4 py-3 font-semibold">Category</th>
-              <th className="px-4 py-3 font-semibold">Price</th>
-              <th className="px-4 py-3 font-semibold">Stock</th>
-              <th className="px-4 py-3 font-semibold">Status</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
+      {products.length === 0 ? (
+        <EmptyState title={filtered ? "No products match" : "No products yet"}>
+          {filtered ? "Try a different filter." : <Link href="/admin/products/new" className="font-bold text-lime-ink">Add the first one</Link>}
+        </EmptyState>
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-line bg-white">
+          <div className="hidden grid-cols-[minmax(0,2.4fr)_110px_110px_84px_72px_110px] items-center gap-3 border-b border-line bg-paper px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-ink-3 lg:grid">
+            <span>Product</span>
+            <span className="text-right">Price ₹</span>
+            <span className="text-right">MRP ₹</span>
+            <span className="text-right">Stock</span>
+            <span className="text-center">Visible</span>
+            <span className="sr-only">Save</span>
+          </div>
+          <ul>
             {products.map((p) => (
-              <tr key={p.id} className="border-t border-line transition-colors hover:bg-paper/60">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-line bg-paper">
-                      {p.images[0] ? (
-                        <Image src={p.images[0].url} alt="" fill sizes="48px" className="object-cover" />
-                      ) : (
-                        <ImageIcon className="h-5 w-5 text-ink-3" />
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="truncate font-semibold text-ink">{p.name}</p>
-                      <p className="text-xs text-ink-3">{p.brand}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-ink-3">{p.category.name}</td>
-                <td className="px-4 py-3 font-medium text-ink">₹{p.price.toLocaleString("en-IN")}</td>
-                <td className="px-4 py-3">
-                  <span className={p.stock === 0 ? "font-semibold text-danger" : p.stock <= 5 ? "font-semibold text-ink-2" : "text-ink"}>
-                    {p.stock}
+              <li
+                key={p.id}
+                className="grid grid-cols-2 items-center gap-x-3 gap-y-2 border-b border-line px-4 py-4 last:border-0 sm:grid-cols-4 lg:grid-cols-[minmax(0,2.4fr)_110px_110px_84px_72px_110px] lg:px-5 lg:py-3"
+              >
+                <div className="col-span-2 flex min-w-0 items-center gap-3 sm:col-span-4 lg:col-span-1">
+                  <span className="relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl border border-line bg-paper">
+                    {p.images[0] ? (
+                      <Image src={p.images[0].url} alt="" fill sizes="48px" className="object-cover" />
+                    ) : (
+                      <ImageIcon className="h-5 w-5 text-ink-4" />
+                    )}
                   </span>
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                      p.isActive ? "bg-lime/10 text-lime-ink" : "bg-paper-2/10 text-ink-3"
-                    }`}
-                  >
-                    {p.isActive ? "Active" : "Hidden"}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center justify-end gap-4">
-                    <Link href={`/admin/products/${p.id}/edit`} className="text-sm font-semibold text-lime-ink hover:underline">
-                      Edit
+                  <div className="min-w-0">
+                    <Link href={`/admin/products/${p.id}/edit`} className="block truncate font-semibold text-ink hover:underline">
+                      {p.name}
                     </Link>
-                    <form action={deleteProduct}>
-                      <input type="hidden" name="id" value={p.id} />
-                      <ConfirmSubmitButton
-                        confirmMessage={`Delete "${p.name}"? This can't be undone.`}
-                        className="inline-flex items-center gap-1 text-sm font-semibold text-danger hover:underline"
-                      >
-                        <TrashIcon className="h-3.5 w-3.5" />
-                        Delete
-                      </ConfirmSubmitButton>
-                    </form>
+                    <p className="truncate text-xs text-ink-3">
+                      {p.brand} · {p.category.name}
+                      {!p.isActive && <span className="ml-1.5 rounded bg-paper-2 px-1.5 py-px font-semibold text-ink-3">Hidden</span>}
+                    </p>
                   </div>
-                </td>
-              </tr>
+                </div>
+                <QuickEdit id={p.id} name={p.name} initial={{ price: p.price, mrp: p.mrp, stock: p.stock, isActive: p.isActive }} />
+              </li>
             ))}
-            {products.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-4 py-10 text-center text-ink-3">
-                  {q || category ? "No products match your filters." : "No products yet."}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          </ul>
+        </div>
+      )}
     </div>
+  );
+}
+
+function Select({
+  name,
+  value,
+  label,
+  options,
+  all,
+}: {
+  name: string;
+  value?: string;
+  label: string;
+  options: [string, string][];
+  all: string;
+}) {
+  return (
+    <label>
+      <span className="sr-only">{label}</span>
+      <select name={name} defaultValue={value ?? ""} className={input}>
+        <option value="">{all}</option>
+        {options.map(([v, text]) => (
+          <option key={v} value={v}>
+            {text}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

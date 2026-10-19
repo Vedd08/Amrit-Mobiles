@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { prisma } from "@/backend/lib/prisma";
 import { requireAdminSession } from "@/backend/lib/auth";
 import { productSchema, slugify } from "@/backend/lib/validation";
@@ -109,11 +110,44 @@ export async function updateProduct(id: string, formData: FormData) {
   redirect("/admin/products");
 }
 
+export type QuickEditState = { status: "idle" } | { status: "saved"; at: number } | { status: "error"; message: string };
+
+const quickEditSchema = z
+  .object({
+    price: z.coerce.number().int("Price must be in whole rupees").min(1, "Price must be at least ₹1"),
+    mrp: z
+      .string()
+      .transform((v) => (v.trim() === "" ? null : Number(v)))
+      .refine((v) => v === null || (Number.isInteger(v) && v >= 1), "MRP must be blank or a whole amount"),
+    stock: z.coerce.number().int("Stock must be a whole number").min(0, "Stock can't be negative"),
+    isActive: z.boolean(),
+  })
+  .refine((v) => v.mrp === null || v.mrp >= v.price, { message: "MRP can't be lower than the price" });
+
+/** Inline price / stock / visibility edit from the products list. */
+export async function quickUpdateProduct(id: string, _prev: QuickEditState, formData: FormData): Promise<QuickEditState> {
+  await requireAdminSession();
+  const parsed = quickEditSchema.safeParse({
+    price: formData.get("price"),
+    mrp: String(formData.get("mrp") ?? ""),
+    stock: formData.get("stock"),
+    isActive: formData.get("isActive") === "on",
+  });
+  if (!parsed.success) return { status: "error", message: parsed.error.issues[0].message };
+
+  const product = await prisma.product.update({ where: { id }, data: parsed.data, select: { slug: true } });
+  revalidatePath("/admin", "layout");
+  revalidatePath(`/product/${product.slug}`);
+  revalidatePath("/phones", "layout");
+  return { status: "saved", at: Date.now() };
+}
+
 export async function deleteProduct(formData: FormData) {
   await requireAdminSession();
   const id = String(formData.get("id") || "");
   await prisma.product.delete({ where: { id } });
   revalidatePath("/admin/products");
+  redirect("/admin/products");
 }
 
 export async function deleteProductImage(formData: FormData) {

@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { prisma } from "@/backend/lib/prisma";
 import { ProductForm } from "@/admin/components/ProductForm";
+import { PageHeader } from "@/admin/components/ui";
 import { createProduct } from "../actions";
 
 export default async function NewProductPage({
@@ -9,17 +9,21 @@ export default async function NewProductPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
-  const categories = await prisma.category.findMany({ orderBy: { name: "asc" } });
+  const [categories, brands] = await Promise.all([
+    prisma.category.findMany({ orderBy: { name: "asc" } }),
+    prisma.product.findMany({ distinct: ["brand"], orderBy: { brand: "asc" }, select: { brand: true } }),
+  ]);
 
   return (
-    <div>
-      <Link href="/admin/products" className="text-sm font-semibold text-ink-3 hover:text-ink">
-        ← Products
-      </Link>
-      <h1 className="mt-2 text-2xl font-bold text-ink">Add product</h1>
-      <div className="mt-6">
-        <ProductForm action={createProduct} categories={categories} error={error} submitLabel="Create product" />
-      </div>
+    <div className="max-w-3xl">
+      <PageHeader back={{ href: "/admin/products", label: "Products" }} title="Add product" />
+      <ProductForm
+        action={createProduct}
+        categories={categories}
+        brands={brands.map((b) => b.brand)}
+        error={error}
+        submitLabel="Create product"
+      />
     </div>
   );
 }

@@ -29,7 +29,7 @@ const STEPS: Array<{ title: string; body: string }> = [
 
 export function HowItWorks() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 border-t border-line">
+    <section className="mx-auto max-w-site px-4 py-16 md:py-24 border-t border-line">
       <SectionHeader
         kicker="At the counter"
         title="How buying works here"

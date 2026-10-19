@@ -16,7 +16,7 @@ export function Act02Brands({ brandData = [] }: { brandData?: BrandWithCount[] }
     <section
       id="brands"
       data-act="brands"
-      className="md:min-h-[230vh] py-16 md:py-0 relative flex flex-col md:items-start items-center px-6 md:mx-auto md:w-full md:max-w-[1360px] md:px-10 overflow-hidden"
+      className="md:min-h-[230vh] py-16 md:py-0 relative flex flex-col md:items-start items-center px-6 md:mx-auto md:w-full md:max-w-site md:px-10 overflow-hidden"
     >
       {/* Huge steel-outlined brand name crossfade watermark */}
       <div

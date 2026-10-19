@@ -35,9 +35,9 @@ export const PHONE_BRANDS: PhoneBrand[] = [
   { slug: "nothing", name: "Nothing", dbBrand: "Nothing", accent: "rgb(32, 32, 32)",
     blurb: "Nothing Phone — Glyph lights and a see-through back." },
   { slug: "motorola", name: "Motorola", dbBrand: "Motorola", accent: "rgb(59, 108, 240)",
-    blurb: "Edge and G series, kept close to stock Android." },
+    blurb: "Edge, Signature and moto g, kept close to stock Android." },
   { slug: "realme", name: "realme", dbBrand: "realme", accent: "rgb(232, 179, 0)",
-    blurb: "realme and Narzo — fast charging, loud value." },
+    blurb: "realme number, P and C series — fast charging, loud value." },
   { slug: "oppo", name: "Oppo", dbBrand: "Oppo", accent: "rgb(45, 125, 70)",
     blurb: "Reno and A series, designed around the portrait camera." },
   { slug: "vivo", name: "Vivo", dbBrand: "Vivo", accent: "rgb(65, 80, 230)",
@@ -45,11 +45,13 @@ export const PHONE_BRANDS: PhoneBrand[] = [
   { slug: "poco", name: "POCO", dbBrand: "POCO", accent: "rgb(196, 160, 0)",
     blurb: "POCO — flagship silicon at mid-range money." },
   { slug: "infinix", name: "Infinix", dbBrand: "Infinix", accent: "rgb(0, 168, 107)",
-    blurb: "NOTE, HOT, ZERO and GT — big screens and fast charging for less." },
+    blurb: "The NOTE series — big screens and fast charging for less." },
   { slug: "tecno", name: "Tecno", dbBrand: "Tecno", accent: "rgb(0, 102, 204)",
-    blurb: "CAMON for cameras, POVA for power, SPARK for every day." },
+    blurb: "POVA for power and Spark for every day." },
   { slug: "itel", name: "itel", dbBrand: "itel", accent: "rgb(220, 30, 40)",
     blurb: "Dependable smartphones at the friendliest prices." },
+  { slug: "alcatel", name: "Alcatel", dbBrand: "Alcatel", accent: "rgb(42, 98, 196)",
+    blurb: "Alcatel V3 — NXTPAPER screens that are easy on the eyes." },
 ];
 
 /** Brands the shop doesn't sell: their products never show on the storefront. */

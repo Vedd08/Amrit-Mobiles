@@ -5,8 +5,9 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import { business } from '@/shared/business';
 import { BRANCHES } from '@/shared/branches';
+import { JOURNEY_PEOPLE } from '@/shared/journey';
+import { PromiseLine } from '@/frontend/components/brand/PromiseLine';
 import { WhatsAppIcon } from '@/frontend/components/icons';
 import { useStoreChatLink } from '@/frontend/store/store-chat-store';
 import { useReducedMotion } from '@/frontend/lib/use-reduced-motion';
@@ -16,11 +17,11 @@ if (typeof window !== 'undefined') {
 }
 
 /*
- * The owner as an editorial portrait: a seamless studio sweep with one soft
- * key light and fine grain, the brand name set huge and tone-on-tone behind
- * him, and the photo fading into the studio floor. The photo is a green-screen
- * shot keyed to a transparent cutout (public/images/about/amrit-owner.webp;
- * original in src/frontend/assets).
+ * The founder as an editorial portrait: a seamless studio sweep with one soft
+ * key light and fine grain, the brand name set huge and tone-on-tone behind,
+ * and his photo (src/frontend/assets/Owner1.jpeg, cropped to
+ * public/images/about/journey-founder.webp) hung matted on the wall in front.
+ * His son appears in the Journey section below.
  *
  * Motion: one reveal when it scrolls into view (the light comes up, the word
  * settles, the portrait rises), then the word drifts slightly with scroll.
@@ -34,7 +35,7 @@ export function OwnerStudio() {
   const rootRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const chat = useStoreChatLink('Hi Amrit Mobiles {store}! ');
-  const credit = business.ownerName || 'The owner';
+  const [founder] = JOURNEY_PEOPLE;
 
   useGSAP(
     () => {
@@ -99,11 +100,11 @@ export function OwnerStudio() {
         className="relative z-10 order-2 px-6 pb-9 pt-2 sm:px-10 sm:pb-12 lg:order-1 lg:col-span-5 lg:flex lg:flex-col lg:justify-center lg:py-16 lg:pl-14 lg:pr-0"
       >
         <h2 className="text-4xl font-bold leading-[1.02] tracking-tight text-ink md:text-6xl">
-          The face behind Amrit Mobiles.
+          Where Amrit Mobiles began.
         </h2>
+        <PromiseLine className="mt-6 text-2xl md:text-3xl" />
         <p className="mt-5 max-w-[40ch] text-lg leading-relaxed text-ink-2">
-          {BRANCHES.length} branches across Surat, one way of doing things. Come and say hello at any counter, or
-          message the store nearest you.
+          {`Amrit Mobiles started with him, and his promise still runs every counter. Today ${BRANCHES.length} branches across Surat work the same way. Come and say hello, or message the store nearest you.`}
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
@@ -134,37 +135,34 @@ export function OwnerStudio() {
           </span>
         </div>
 
-        {/* Contact shadow on the floor */}
-        <div
-          aria-hidden
-          className="absolute bottom-[3%] left-1/2 h-[7%] w-[52cqw] -translate-x-1/2 rounded-[50%]"
-          style={{ background: 'radial-gradient(closest-side, rgba(26,28,25,0.20), rgba(26,28,25,0))' }}
-        />
-
-        <div className="absolute inset-x-0 bottom-0 top-[7%] flex justify-center">
-          <div data-s="portrait" className="relative h-full">
+        {/* The founder's portrait, matted and hung on the studio wall in front
+            of the word, with its caption underneath (so nothing overlaps on a
+            phone). */}
+        <figure className="absolute inset-x-0 bottom-[6%] top-[11%] z-1 flex flex-col items-center">
+          <div
+            data-s="portrait"
+            className="min-h-0 flex-1 bg-white p-[1.3cqw] shadow-[0_40px_60px_-34px_rgba(26,28,25,0.6),0_4px_10px_-4px_rgba(26,28,25,0.18)] ring-1 ring-steel-lo"
+          >
             <Image
-              src="/images/about/amrit-owner.webp"
-              alt="The owner of Amrit Mobiles"
-              width={609}
-              height={764}
-              sizes="(min-width: 1024px) 40vw, 80vw"
-              className="h-full w-auto max-w-none object-contain object-bottom"
-              style={{
-                // Melt the cropped legs into the studio floor.
-                maskImage: 'linear-gradient(180deg, #000 80%, transparent 99%)',
-                WebkitMaskImage: 'linear-gradient(180deg, #000 80%, transparent 99%)',
-              }}
+              src={founder.photo.src}
+              alt={founder.photo.alt}
+              width={founder.photo.width}
+              height={founder.photo.height}
+              sizes="(min-width: 1024px) 30vw, 60vw"
+              className="h-full w-auto max-w-none object-cover"
             />
           </div>
-        </div>
-
-        {/* Credit line, as in a magazine portrait */}
-        <div data-s="credit" className="absolute bottom-[5%] left-[5%] max-w-[44%]">
-          <span className="mb-2 block h-0.5 w-8 bg-lime" />
-          <p className="text-[max(13px,1.9cqw)] font-bold leading-tight text-ink">{credit}</p>
-          <p className="text-[max(11px,1.45cqw)] leading-snug text-ink-3">Amrit Mobiles &amp; Electronics, Surat</p>
-        </div>
+          <figcaption data-s="credit" className="mt-[2.2cqw] text-center">
+            <span className="mx-auto mb-[1cqw] block h-0.5 w-8 bg-lime" />
+            <span className="block text-[max(10px,1.2cqw)] font-bold uppercase tracking-[0.16em] text-lime-ink">
+              {founder.role}
+            </span>
+            <span className="mt-0.5 block text-[max(14px,2cqw)] font-bold leading-tight text-ink">
+              {founder.name || 'The founder'}
+            </span>
+            <span className="block text-[max(11px,1.4cqw)] leading-snug text-ink-3">Amrit Mobiles &amp; Electronics, Surat</span>
+          </figcaption>
+        </figure>
       </div>
     </div>
   );

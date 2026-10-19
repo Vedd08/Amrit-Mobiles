@@ -12,7 +12,11 @@ export type NotifyResult = { method: "link"; url: string } | { method: "api"; se
  * switches to sending the message server-side automatically. No caller needs
  * to change when that happens.
  */
-export async function notifyNewOrder(order: OrderMessageDetails): Promise<NotifyResult> {
+export async function notifyNewOrder(
+  order: OrderMessageDetails,
+  /** The chosen branch's WhatsApp number (digits with country code). */
+  toNumber: string = SHOP_WHATSAPP_NUMBER,
+): Promise<NotifyResult> {
   const message = buildOrderMessage(order);
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
@@ -28,7 +32,7 @@ export async function notifyNewOrder(order: OrderMessageDetails): Promise<Notify
         },
         body: JSON.stringify({
           messaging_product: "whatsapp",
-          to: SHOP_WHATSAPP_NUMBER,
+          to: toNumber,
           type: "text",
           text: { body: message },
         }),
@@ -37,5 +41,5 @@ export async function notifyNewOrder(order: OrderMessageDetails): Promise<Notify
     return { method: "api", sent: res.ok };
   }
 
-  return { method: "link", url: buildWhatsAppLink(SHOP_WHATSAPP_NUMBER, message) };
+  return { method: "link", url: buildWhatsAppLink(toNumber, message) };
 }

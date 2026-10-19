@@ -9,6 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { formatINR } from '@/frontend/lib/phone-experience-data';
 import type { ProductCardData } from '@/frontend/components/shop/ProductCard';
 import { useReducedMotion } from '@/frontend/lib/use-reduced-motion';
+import { BRANCHES } from '@/shared/branches';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -22,33 +23,48 @@ export function Act05Trending({ phones }: { phones: ProductCardData[] }) {
   useGSAP(
     () => {
       if (!sectionRef.current || !railRef.current || reducedMotion) return;
-      if (window.innerWidth < 768) return;
-
+      const section = sectionRef.current;
       const rail = railRef.current;
-      const totalScroll = rail.scrollWidth - rail.clientWidth;
+      const cards = gsap.utils.toArray<HTMLElement>('[data-card]', rail);
 
-      if (totalScroll > 0) {
-        gsap.to(rail, {
-          x: -totalScroll,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: () => `+=${totalScroll + 200}`,
-            pin: true,
-            // Lenis already smooths the scroll; an extra GSAP lag made the rail
-            // trail the page by ~1s and feel out of sync.
-            scrub: true,
-            invalidateOnRefresh: true,
-            refreshPriority: 1,
-          },
-        });
-      }
+      // Cards rise in one after another as the section arrives (the 3D phone
+      // is fading out above them at the same moment, so the hand-off reads as
+      // one move). Opacity/transform only.
+      gsap.from(cards.slice(0, 6), {
+        y: 56,
+        opacity: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.07,
+        scrollTrigger: { trigger: rail, start: 'top 88%', once: true },
+      });
+
+      if (window.innerWidth < 768) return; // phones swipe the rail natively
+
+      // Desktop: pin for exactly as long as the rail needs to slide its last
+      // card into place, plus a short beat to rest on it.
+      const distance = () => Math.max(0, rail.scrollWidth - rail.clientWidth);
+      if (distance() <= 0) return;
+      gsap.to(rail, {
+        x: () => -distance(),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: () => `+=${distance() + window.innerHeight * 0.25}`,
+          pin: true,
+          // Lenis already smooths the scroll; an extra GSAP lag made the rail
+          // trail the page by ~1s and feel out of sync.
+          scrub: true,
+          invalidateOnRefresh: true,
+          refreshPriority: 1,
+        },
+      });
     },
     { scope: sectionRef, dependencies: [phones, reducedMotion] }
   );
 
-  const marqueeText = "0% EMI in 10 minutes ✦ IMEI on your GST bill ✦ Trade-in valued on the spot ✦ 6 branches in Surat";
+  const marqueeText = `0% EMI in 10 minutes ✦ IMEI on your GST bill ✦ Trade-in valued on the spot ✦ ${BRANCHES.length} branches in Surat`;
 
   return (
     <>
@@ -60,13 +76,16 @@ export function Act05Trending({ phones }: { phones: ProductCardData[] }) {
         </div>
       </div>
 
+      {/* One screen tall on desktop, content centred: while pinned, the
+          heading and rail sit in the middle with even space above and below
+          (the top padding clears the floating nav). */}
       <section
         id="trending"
         data-act="trending"
         ref={sectionRef}
-        className="relative md:min-h-[120vh] py-16 md:py-24 z-10 flex flex-col justify-center overflow-hidden"
+        className="relative z-10 flex flex-col justify-center overflow-hidden py-16 md:h-screen md:min-h-160 md:pb-10 md:pt-28"
       >
-        <div className="max-w-7xl mx-auto px-6 w-full mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="max-w-site mx-auto px-6 w-full mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="text-micro font-semibold uppercase text-lime-ink mb-2">
               Hot off the counter
@@ -75,21 +94,24 @@ export function Act05Trending({ phones }: { phones: ProductCardData[] }) {
               New arrivals
             </h2>
           </div>
-          <p className="text-ink-3 text-base md:text-lg max-w-md">
+          <p className="text-ink-3 md:text-lg max-w-md">
             Sealed, in stock, and ready across our Surat stores.
           </p>
         </div>
 
-        {/* Horizontal Card Rail */}
+        {/* Horizontal card rail. Its side padding matches the heading's edges
+            (centred site width + px-6), so the first card starts under
+            "New arrivals" and the last one stops under the copy on the right. */}
         <div
           ref={railRef}
-          className="flex gap-6 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scroll-smooth px-6 md:px-12 py-4 no-scrollbar max-w-full"
+          className="flex gap-6 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scroll-smooth py-4 no-scrollbar max-w-full scroll-pl-6 pl-[max(1.5rem,calc((100vw-var(--container-site))/2+1.5rem))]"
         >
           {phones.map((p) => (
             <Link
               key={p.id}
               href={`/product/${p.slug}`}
-              className="group shrink-0 snap-start w-[280px] sm:w-[320px] bg-white border border-line rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between relative overflow-hidden"
+              data-card
+              className="group shrink-0 snap-start w-70 sm:w-[320px] bg-white border border-line rounded-3xl p-6 shadow-sm hover:shadow-md transition-[box-shadow,translate] duration-300 hover:-translate-y-1.5 flex flex-col justify-between relative overflow-hidden"
             >
               <div className="relative h-48 w-full mb-6 rounded-2xl bg-paper flex items-center justify-center p-4">
                 {p.image ? (
@@ -99,7 +121,6 @@ export function Act05Trending({ phones }: { phones: ProductCardData[] }) {
                     fill
                     sizes="(max-width: 768px) 280px, 320px"
                     className="object-contain transition-transform duration-500 group-hover:scale-105 p-2"
-                    onLoad={() => ScrollTrigger.refresh()}
                   />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-line flex items-center justify-center text-ink-4">
@@ -135,6 +156,10 @@ export function Act05Trending({ phones }: { phones: ProductCardData[] }) {
               </div>
             </Link>
           ))}
+          {/* The right margin: the gap before this spacer plus its width equals
+              the left padding. (A right padding isn't counted in a flex row's
+              scroll width in every browser; a spacer always is.) */}
+          <span aria-hidden className="shrink-0 w-px md:w-[max(0px,calc((100vw-var(--container-site))/2))]" />
         </div>
       </section>
 

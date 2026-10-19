@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 import { prefersReducedMotion } from "@/frontend/lib/motion";
 import Image from "next/image";
 import { SHOP_TEL_LINK } from "@/frontend/lib/phone-experience-data";
+import { BRANCHES } from "@/shared/branches";
 
 /**
  * The storefront hero.
@@ -68,7 +69,7 @@ export function TinkerScrollHero({ totalProducts = 42 }: { totalProducts?: numbe
       />
 
       {/* Main content — centred, fills the height between top and the strip */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-center px-5 pt-24 pb-10 sm:px-8 lg:px-10 lg:pt-28">
+      <div className="relative z-10 mx-auto flex w-full max-w-site flex-1 items-center px-5 pt-24 pb-10 sm:px-8 lg:px-10 lg:pt-28">
         <div className="grid w-full items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-6">
           {/* Copy */}
           <div className="max-w-xl">
@@ -79,7 +80,7 @@ export function TinkerScrollHero({ totalProducts = 42 }: { totalProducts?: numbe
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-danger" />
               </span>
               <span className="text-micro font-semibold uppercase text-ink-4">
-                Open counter · 6 branches in Surat
+                {`Open counter · ${BRANCHES.length} branches in Surat`}
               </span>
             </div>
 

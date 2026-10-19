@@ -12,6 +12,7 @@ import { useLenis } from "@/frontend/components/motion/SmoothScrollProvider";
 import { usePauseOffscreen } from "@/frontend/lib/use-pause-offscreen";
 import { CartIcon, WhatsAppIcon } from "@/frontend/components/icons";
 import { useStoreChatLink } from "@/frontend/store/store-chat-store";
+import { BRANCHES } from "@/shared/branches";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -107,7 +108,7 @@ const MarqueeItem = () => (
     <span>100% Genuine Sealed Stock</span> <span className="text-lime" aria-hidden="true">✦</span>
     <span>10-Minute Counter Approval</span> <span className="text-teal" aria-hidden="true">✦</span>
     <span>GST Billed Invoice</span> <span className="text-lime" aria-hidden="true">✦</span>
-    <span>6 Branches Across Surat</span> <span className="text-teal" aria-hidden="true">✦</span>
+    <span>{BRANCHES.length} Branches Across Surat</span> <span className="text-teal" aria-hidden="true">✦</span>
   </div>
 );
 

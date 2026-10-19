@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { business, BRANCHES } from '@/shared/business';
 import { useStoreChatLink } from '@/frontend/store/store-chat-store';
 import { useReducedMotion } from '@/frontend/lib/use-reduced-motion';
+import { PromiseLine } from '@/frontend/components/brand/PromiseLine';
 
 export function Act01Hero() {
   const branchCount = BRANCHES.length;
@@ -28,7 +29,7 @@ export function Act01Hero() {
   const taglineWords = business.tagline.split(' ');
 
   return (
-    <section data-act="hero" className="md:min-h-[150vh] py-16 md:py-0 relative pt-[20vh] px-6 md:mx-auto md:w-full md:max-w-[1360px] md:px-10 flex flex-col md:items-start items-center">
+    <section data-act="hero" className="md:min-h-[150vh] py-16 md:py-0 relative pt-[20vh] px-6 md:mx-auto md:w-full md:max-w-site md:px-10 flex flex-col md:items-start items-center">
       <div className="md:sticky top-1/4 flex flex-col items-center md:items-start text-center md:text-left z-10 w-full md:w-[45%] xl:w-[50%]">
         
         {/* Word-by-word clip mask reveal */}
@@ -44,6 +45,12 @@ export function Act01Hero() {
             </span>
           ))}
         </h1>
+
+        {/* The family's tagline, right under the headline */}
+        <PromiseLine
+          className="mb-4 text-2xl md:text-4xl animate-[wordReveal_0.8s_cubic-bezier(0.16,1,0.3,1)_both] motion-reduce:animate-none"
+          style={{ animationDelay: reducedMotion ? '0s' : `${taglineWords.length * 60 + 120}ms` }}
+        />
 
         <p className="text-lg md:text-xl text-ink-2 mb-10 max-w-2xl">
           Phones and trade-ins across Surat.

@@ -11,7 +11,7 @@ const ITEMS: Array<{ Icon: IconType; title: string; desc: string }> = [
 
 export function TrustRow() {
   return (
-    <ul className="flex flex-wrap items-center justify-center gap-3 md:gap-4 px-4 py-6 md:py-8 w-full max-w-7xl mx-auto">
+    <ul className="flex flex-wrap items-center justify-center gap-3 md:gap-4 px-4 py-6 md:py-8 w-full max-w-site mx-auto">
       {ITEMS.map(({ Icon, title }) => (
         <li 
           key={title} 

@@ -1,4 +1,6 @@
 import { ImageIcon } from "./icons";
+import { Card, Notice, btn, input } from "./ui";
+import { ConfirmSubmitButton } from "./ConfirmSubmitButton";
 
 type CategoryOption = { id: string; name: string };
 
@@ -31,139 +33,111 @@ export function ProductForm({
   product,
   error,
   submitLabel,
+  brands = [],
 }: {
   action: (formData: FormData) => void;
   categories: CategoryOption[];
   product?: ProductDefaults;
   error?: string;
   submitLabel: string;
+  /** Existing brands, suggested while typing so spellings stay consistent. */
+  brands?: string[];
 }) {
   return (
-    <form action={action} className="max-w-2xl space-y-6">
-      {error && (
-        <p className="rounded-lg border border-danger/30 bg-danger/10 px-4 py-2 text-sm text-danger">
-          {error}
-        </p>
-      )}
+    <form action={action} className="space-y-5">
+      {error && <Notice tone="error">{error}</Notice>}
 
-      <Section title="Basic info">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Name">
-            <input name="name" defaultValue={product?.name} required className={inputClass} />
+      <Card title="Basic info">
+        <div className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Name">
+              <input name="name" defaultValue={product?.name} required placeholder="e.g. Galaxy S25 Ultra 12+256GB" className={input} />
+            </Field>
+            <Field label="Brand">
+              <input name="brand" defaultValue={product?.brand} required list="brand-options" className={input} />
+              <datalist id="brand-options">
+                {brands.map((b) => (
+                  <option key={b} value={b} />
+                ))}
+              </datalist>
+            </Field>
+          </div>
+          <Field label="Description">
+            <textarea name="description" defaultValue={product?.description} required rows={3} className={input} />
           </Field>
-          <Field label="Brand">
-            <input name="brand" defaultValue={product?.brand} required className={inputClass} />
+          <Field label="Category">
+            <select name="categoryId" defaultValue={product?.categoryId ?? ""} required className={input}>
+              <option value="" disabled>
+                Select a category
+              </option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
           </Field>
         </div>
+      </Card>
 
-        <Field label="Description">
-          <textarea
-            name="description"
-            defaultValue={product?.description}
-            required
-            rows={3}
-            className={inputClass}
-          />
-        </Field>
-
-        <Field label="Category">
-          <select name="categoryId" defaultValue={product?.categoryId} required className={inputClass}>
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </Field>
-      </Section>
-
-      <Section title="Pricing & stock">
+      <Card title="Price and stock">
         <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="Price (₹)">
-            <input
-              name="price"
-              type="number"
-              min={1}
-              defaultValue={product?.price}
-              required
-              className={inputClass}
-            />
+          <Field label="Selling price (₹)">
+            <input name="price" type="number" min={1} defaultValue={product?.price} required className={input} />
           </Field>
-          <Field label="MRP (₹, optional)">
-            <input name="mrp" type="number" min={1} defaultValue={product?.mrp ?? undefined} className={inputClass} />
+          <Field label="MRP (₹)" hint="Optional. Shown struck through.">
+            <input name="mrp" type="number" min={1} defaultValue={product?.mrp ?? undefined} className={input} />
           </Field>
           <Field label="Stock">
-            <input
-              name="stock"
-              type="number"
-              min={0}
-              defaultValue={product?.stock ?? 0}
-              required
-              className={inputClass}
-            />
+            <input name="stock" type="number" min={0} defaultValue={product?.stock ?? 0} required className={input} />
           </Field>
         </div>
-      </Section>
+      </Card>
 
-      <Section title="Specs">
+      <Card title="Specs">
         <Field label="One per line, e.g. RAM: 8GB">
           <textarea
             name="specs"
             defaultValue={product ? specsToLines(product.specs) : ""}
-            rows={4}
-            className={`${inputClass} font-mono text-small`}
+            rows={5}
+            className={`${input} font-mono text-[13px]`}
             placeholder={"RAM: 8GB\nStorage: 128GB\nColor: Black"}
           />
         </Field>
-      </Section>
+      </Card>
 
-      <Section title="Photos">
+      <Card title="Photos">
         <label
           htmlFor="images"
-          className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-border px-6 py-8 text-center transition-colors hover:border-primary hover:bg-primary/5"
+          className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-line px-6 py-8 text-center transition-colors hover:border-lime-ink hover:bg-lime/5"
         >
-          <ImageIcon className="h-6 w-6 text-muted" />
-          <span className="text-sm font-semibold text-foreground">Click to add photos</span>
-          <span className="text-xs text-muted">PNG or JPG, multiple files supported</span>
-          <input id="images" name="images" type="file" accept="image/*" multiple className="hidden" />
+          <ImageIcon className="h-6 w-6 text-ink-4" />
+          <span className="text-sm font-bold text-ink">Add photos</span>
+          <span className="text-xs text-ink-3">PNG, JPG or WebP. You can pick several at once.</span>
+          <input id="images" name="images" type="file" accept="image/*" multiple className="sr-only" />
         </label>
-      </Section>
+      </Card>
 
-      <label className="flex items-center gap-2.5 rounded-lg border border-border bg-surface/60 px-4 py-3 text-sm font-medium">
-        <input type="checkbox" name="isActive" defaultChecked={product?.isActive ?? true} className="h-4 w-4 accent-primary" />
-        Visible on storefront
+      <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-line bg-white px-5 py-4 text-sm font-semibold text-ink">
+        <input type="checkbox" name="isActive" defaultChecked={product?.isActive ?? true} className="h-4.5 w-4.5 accent-lime-ink" />
+        Visible on the website
       </label>
 
-      <button
-        type="submit"
-        className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover"
-      >
-        {submitLabel}
-      </button>
+      <div className="sticky bottom-20 z-10 flex justify-end lg:bottom-4">
+        <ConfirmSubmitButton className={`${btn.primary} px-6 py-3`} pendingLabel="Saving…">
+          {submitLabel}
+        </ConfirmSubmitButton>
+      </div>
     </form>
   );
 }
 
-const inputClass =
-  "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium text-foreground">{label}</span>
+      <span className="mb-1.5 block text-sm font-semibold text-ink">{label}</span>
       {children}
+      {hint && <span className="mt-1 block text-xs text-ink-3">{hint}</span>}
     </label>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-lg border border-border bg-background p-5 shadow-xs">
-      <h2 className="text-xs font-bold uppercase tracking-wide text-muted">{title}</h2>
-      <div className="mt-4 space-y-4">{children}</div>
-    </div>
   );
 }

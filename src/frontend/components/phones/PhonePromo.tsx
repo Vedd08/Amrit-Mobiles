@@ -11,7 +11,7 @@ export function PhonePromo() {
 
   return (
     <section className="w-full py-16 md:py-24 my-16 border-y border-line bg-lime">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-site px-4 sm:px-6">
         <Reveal>
           <div className="max-w-2xl mx-auto text-center">
             <p className="text-micro font-bold tracking-widest text-[#2A2A2A] uppercase mb-4">Exchange</p>

@@ -278,7 +278,7 @@ export function Storefront({ allProducts }: { allProducts: ProductCardData[] }) 
   );
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 bg-paper">
+    <section className="mx-auto max-w-site px-4 sm:px-6 lg:px-8 py-16 sm:py-24 bg-paper">
       {/* Section Header */}
       <div className="mb-6">
         <SectionHeader 

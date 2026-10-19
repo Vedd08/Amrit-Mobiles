@@ -69,7 +69,7 @@ export function BrandGrid({ brands }: { brands: BrandTile[] }) {
 
   return (
     <section id="brands" className="scroll-mt-20 border-t border-line bg-paper py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-site px-4 sm:px-6">
         <div className="flex items-end justify-between gap-6">
           <SectionHeader
             title="Shop by brand"

@@ -170,7 +170,7 @@ export function MasonryShowcase() {
 
   return (
     <section ref={sectionRef} id="features" className="py-20 bg-paper -ink border-t-2 border-line">
-      <div className="mx-auto max-w-6xl px-4 sm:px-10">
+      <div className="mx-auto max-w-site px-4 sm:px-10">
         {/* Section header */}
         <div className="flex flex-col sm:flex-row sm:items-end gap-4 mb-10">
           <div>

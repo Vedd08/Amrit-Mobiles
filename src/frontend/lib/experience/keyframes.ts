@@ -89,20 +89,26 @@ export const keyframes: Beat[] = [
     ease:   "cinematic"
   },
   {
+    // The phone bows out while the New arrivals rail scrolls in (the canvas
+    // fades over the start of this band, see ScrollDirector). It keeps facing
+    // you and drifts up and back, out of the cards' way, instead of spinning
+    // round: a half-faded phone turning its back read as a glitch.
     id: "trending",
     at: [0.70, 0.85],
-    camera: { pos: [0, 0.10, 3.30], lookAt: [0, 0.12, -0.20], fov: 36 },
-    phone:  { pos: [0.50, 0.12, -0.20], rot: [0.06, 3.10, 0], scale: 0.86, fold: 0 },
-    light:  { key: 2.4, rim: 3.0, rimColor: STEEL },
+    camera: { pos: [0, 0.02, 2.62], lookAt: [0, 0.02, 0], fov: 33 },
+    phone:  { pos: [1.02, 0.5, -0.45], rot: [-0.1, 0.26, 0.04], scale: 1.02, fold: 0 },
+    light:  { key: 2.8, rim: 4.2, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
   },
   {
+    // Hidden from Trending on (the finale brings the phone back itself), so it
+    // just holds the exit pose: nothing can spin if it ever shows for a frame.
     id: "stores",
     at: [0.85, 0.95],
-    camera: { pos: [0, -0.15, 4.20], lookAt: [0, -0.85, -1.10], fov: 40 },
-    phone:  { pos: [0.85, -0.6, -1.2], rot: [0.10, 3.60, 0], scale: 0.70, fold: 0 },
-    light:  { key: 1.2, rim: 1.4, rimColor: STEEL },
+    camera: { pos: [0, 0.02, 2.62], lookAt: [0, 0.02, 0], fov: 33 },
+    phone:  { pos: [1.02, 0.5, -0.45], rot: [-0.1, 0.26, 0.04], scale: 1.02, fold: 0 },
+    light:  { key: 2.8, rim: 4.2, rimColor: STEEL },
     bg:     LIGHT_BG,
     ease:   "cinematic"
   },

@@ -3,6 +3,7 @@ import { stageState } from '@/frontend/lib/experience/stageState';
 import { useExperienceStore } from '@/frontend/lib/experience/store';
 import { brands } from '@/shared/brands';
 import { BRANCHES } from '@/shared/branches';
+import { business } from '@/shared/business';
 import { BRAND_STAR_PATH } from '@/frontend/lib/brand-star';
 
 type Scene = 'LOCK' | 'BRAND' | 'PICKER' | 'FINAL';
@@ -549,6 +550,30 @@ export class ScreenTexture {
       this.ctx.restore();
     }
 
+    // The family's tagline, between the clock and the notifications.
+    if (this.reducedMotion || age > 400) {
+      const e = this.reducedMotion ? 1 : this.easeOutCubic(Math.min(1, (age - 400) / 700));
+      const ctx = this.ctx;
+      ctx.save();
+      ctx.globalAlpha = e;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      const lift = (1 - e) * 20;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.font = '700 30px Archivo, sans-serif';
+      ctx.fillText(business.promise.lead, w / 2, h * 0.405 + lift);
+      ctx.shadowColor = 'rgba(146, 195, 24, 0.6)';
+      ctx.shadowBlur = 20;
+      ctx.fillStyle = 'rgb(169, 217, 63)';
+      ctx.font = '800 48px Archivo, sans-serif';
+      Object.assign(ctx, { letterSpacing: '-0.02em' });
+      ctx.fillText(business.promise.key, w / 2, h * 0.47 + lift);
+      Object.assign(ctx, { letterSpacing: '0px' });
+      ctx.restore();
+    }
+
     // Notif card 1
     const notifAge = t - this.sceneEnteredAt;
     if (this.reducedMotion || notifAge > 900) {
@@ -962,14 +987,21 @@ export class ScreenTexture {
     ctx.fill(new Path2D(BRAND_STAR_PATH));
     ctx.restore();
 
+    // Text shrinks to fit the card (the title leaves room for "now").
+    const textX = x + 16 + 44 + 14;
+    const fit = (text: string, weight: number, size: number, room: number) => {
+      ctx.font = `${weight} ${size}px Archivo, sans-serif`;
+      const width = ctx.measureText(text).width;
+      if (width > room) ctx.font = `${weight} ${Math.floor((size * room) / width)}px Archivo, sans-serif`;
+    };
     ctx.fillStyle = 'rgb(255, 255, 255)';
-    ctx.font = '700 20px Archivo, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText(title, x + 16 + 44 + 14, y + h / 2 - 22);
+    fit(title, 700, 20, x + w - 52 - textX);
+    ctx.fillText(title, textX, y + h / 2 - 22);
     ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
-    ctx.font = '500 17px Archivo, sans-serif';
-    ctx.fillText(body, x + 16 + 44 + 14, y + h / 2 + 3);
+    fit(body, 500, 17, x + w - 18 - textX);
+    ctx.fillText(body, textX, y + h / 2 + 3);
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.font = '500 14px "DM Mono", monospace';
     ctx.textAlign = 'right';
@@ -977,7 +1009,61 @@ export class ScreenTexture {
     ctx.globalAlpha = 1;
   }
 
-  /** Inner screen lock: clock on the left pane, notifications on the right. */
+  /**
+   * "Amrit hai toh / bharosa hai." as a lock-screen widget: dark glass (so
+   * lime stays readable over any photo wallpaper), the Amrit star, and the
+   * key words big in the logo's lime with a soft glow.
+   */
+  private drawTaglineCard(x: number, y: number, w: number, h: number, alpha: number) {
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = 'rgba(10, 12, 14, 0.46)';
+    ctx.strokeStyle = 'rgba(169, 217, 63, 0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, 28);
+    ctx.fill();
+    ctx.stroke();
+
+    // Star mark, top right
+    const starGrad = ctx.createLinearGradient(0, 0, 100, 100);
+    starGrad.addColorStop(0, 'rgb(185, 217, 226)');
+    starGrad.addColorStop(0.5, 'rgb(85, 194, 205)');
+    starGrad.addColorStop(1, 'rgb(146, 195, 24)');
+    ctx.save();
+    ctx.translate(x + w - 26 - 22, y + 26 + 6);
+    ctx.scale(0.44, 0.44);
+    ctx.translate(-50, -50);
+    ctx.fillStyle = starGrad;
+    ctx.fill(new Path2D(BRAND_STAR_PATH));
+    ctx.restore();
+
+    const { lead, key } = business.promise;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+    ctx.font = '700 28px Archivo, sans-serif';
+    ctx.fillText(lead, x + 24, y + 50);
+    ctx.shadowColor = 'rgba(146, 195, 24, 0.55)';
+    ctx.shadowBlur = 18;
+    ctx.fillStyle = 'rgb(169, 217, 63)';
+    Object.assign(ctx, { letterSpacing: '-0.02em' });
+    // As big as the card allows (up to 46px), never overflowing it.
+    let size = 46;
+    ctx.font = `800 ${size}px Archivo, sans-serif`;
+    const room = w - 48;
+    const width = ctx.measureText(key).width;
+    if (width > room) {
+      size = Math.floor((size * room) / width);
+      ctx.font = `800 ${size}px Archivo, sans-serif`;
+    }
+    ctx.fillText(key, x + 22, y + 104);
+    Object.assign(ctx, { letterSpacing: '0px' });
+    ctx.restore();
+  }
+
+  /** Inner screen lock: clock on the left pane, tagline and notifications on the right. */
   private drawLockContentWide(t: number, w: number, h: number) {
     const ctx = this.ctx;
     const cx = w * 0.27;
@@ -1008,13 +1094,20 @@ export class ScreenTexture {
     const nx = w * 0.5;
     const nw = w * 0.45;
     const nh = 84;
-    const ny = h * 0.25;
-    if (age > 700) {
-      const e = this.reducedMotion ? 1 : this.easeOutCubic(Math.min(1, (age - 700) / 600));
+    // The family's tagline leads the right pane, then the two notifications.
+    const ty = h * 0.17;
+    const th = 136;
+    if (age > 350) {
+      const e = this.reducedMotion ? 1 : this.easeOutCubic(Math.min(1, (age - 350) / 700));
+      this.drawTaglineCard(nx, ty + (1 - e) * 30, nw, th, e);
+    }
+    const ny = ty + th + 14;
+    if (age > 800) {
+      const e = this.reducedMotion ? 1 : this.easeOutCubic(Math.min(1, (age - 800) / 600));
       this.drawNotification(nx, ny + (1 - e) * 30, nw, nh, 'Amrit Mobiles', 'Sealed box · IMEI on your GST bill', e);
     }
-    if (age > 1100) {
-      const e = this.reducedMotion ? 1 : this.easeOutCubic(Math.min(1, (age - 1100) / 600));
+    if (age > 1200) {
+      const e = this.reducedMotion ? 1 : this.easeOutCubic(Math.min(1, (age - 1200) / 600));
       this.drawNotification(nx, ny + nh + 12 + (1 - e) * 30, nw, nh, 'Trade-in valued at the counter', 'Bring your old phone', e * 0.85);
     }
 

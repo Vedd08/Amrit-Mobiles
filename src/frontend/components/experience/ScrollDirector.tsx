@@ -23,7 +23,14 @@ function measureActs() {
   const actMap = new Map<string, { enter: number; pinStart: number; pinEnd: number; settle: number; mid: number; exit: number }>();
 
   actElements.forEach((el) => {
-    const top = el.getBoundingClientRect().top + window.scrollY;
+    // A GSAP-pinned act (Trending) is position: fixed while it's pinned, so its
+    // own rect says "top of the viewport" wherever the page is. A refresh that
+    // lands mid-pin would then record it far too low and the 3D phone's fade
+    // would start late, leaving it floating over the cards. Its pin-spacer
+    // never moves, so measure that instead.
+    const parent = el.parentElement;
+    const anchor = parent?.classList.contains('pin-spacer') ? parent : el;
+    const top = anchor.getBoundingClientRect().top + window.scrollY;
     const enter    = Math.max(0, (top - vh) / scrollable);
     const pinStart = top / scrollable;
     const pinEnd   = (top + el.offsetHeight - vh) / scrollable;
@@ -113,10 +120,17 @@ export function ScrollDirector() {
       const trendingBounds = actBounds.trending;
       if (stageState.finale.active) {
         // Act07 brings the phone back and owns its opacity during the finale.
-      } else if (trendingBounds && p >= trendingBounds.enter) {
-        const fadeStart = trendingBounds.enter;
-        const fadeEnd = trendingBounds.enter + (trendingBounds.pinStart - trendingBounds.enter) * 0.6;
-        stageState.canvasOpacity = Math.max(0, 1 - (p - fadeStart) / (fadeEnd - fadeStart || 0.01));
+      } else if (trendingBounds) {
+        // One viewport of scroll = the act's top travelling from the bottom of
+        // the screen to the top. Start fading just before it appears (with the
+        // marquee) and be fully gone by the time its top is ~60% up the screen,
+        // before the heading and cards reach the phone. Eased both ends so it
+        // melts away rather than dimming linearly.
+        const span = trendingBounds.pinStart - trendingBounds.enter;
+        const fadeStart = trendingBounds.enter - span * 0.1;
+        const fadeEnd = trendingBounds.enter + span * 0.4;
+        const t = Math.min(1, Math.max(0, (p - fadeStart) / (fadeEnd - fadeStart || 0.01)));
+        stageState.canvasOpacity = 1 - t * t * (3 - 2 * t);
       } else {
         stageState.canvasOpacity = 1;
       }

@@ -55,6 +55,9 @@
   --color-steel: #A8B8C8;
   --color-steel-lo: #DDE4E8;
 
+  /* LAYOUT: page width for the navbar and every section (max-w-site) */
+  --container-site: 1440px;
+
   /* RADIUS */
   --radius-sm: 8px;
   --radius-md: 16px;

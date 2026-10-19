@@ -78,7 +78,7 @@ export function AddToCartPanel({
           type="button"
           onClick={() => {
             addItem({ productId, slug, name, price, image, stock }, quantity);
-            router.push("/cart");
+            router.push("/checkout");
           }}
           disabled={outOfStock}
           className="flex-1 rounded-full bg-ink py-3.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:-ink disabled:cursor-not-allowed disabled:opacity-50"

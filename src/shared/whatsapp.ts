@@ -29,19 +29,37 @@ export type OrderMessageDetails = {
   address: string;
   items: OrderMessageItem[];
   total: number;
+  /** Branch the customer chose to buy from. */
+  store?: string;
+  note?: string;
 };
 
+const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+
+/** Short, human order reference shown to the customer and the store. */
+export function orderRef(id: string) {
+  return id.slice(-8).toUpperCase();
+}
+
+/**
+ * The order as a WhatsApp message, sent by the customer to their chosen store
+ * until online payment is live. *bold* is WhatsApp formatting.
+ */
 export function buildOrderMessage(order: OrderMessageDetails) {
   const lines = [
-    `New order #${order.id.slice(-8).toUpperCase()}`,
+    `Hi Amrit Mobiles${order.store ? ` ${order.store}` : ""}! I'd like to place this order.`,
     "",
-    ...order.items.map((i) => `• ${i.name} x${i.quantity} — ₹${i.price * i.quantity}`),
+    `*Order #${orderRef(order.id)}*`,
+    ...order.items.map((i) => `• ${i.name} × ${i.quantity} = ${inr(i.price * i.quantity)}`),
+    `*Total: ${inr(order.total)}*`,
     "",
-    `Total: ₹${order.total}`,
+    `*Name:* ${order.customerName}`,
+    `*Mobile:* ${order.phone}`,
+    `*Address:* ${order.address}`,
+    ...(order.store ? [`*Store:* ${order.store}`] : []),
+    ...(order.note ? [`*Note:* ${order.note}`] : []),
     "",
-    `Name: ${order.customerName}`,
-    `Phone: ${order.phone}`,
-    `Address: ${order.address}`,
+    "Please confirm availability and the next steps.",
   ];
   return lines.join("\n");
 }

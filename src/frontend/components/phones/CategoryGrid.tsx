@@ -25,7 +25,7 @@ export type CategoryTile = {
 
 export function CategoryGrid({ categories }: { categories: CategoryTile[] }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 border-t border-line">
+    <section className="mx-auto max-w-site px-4 py-16 md:py-24 border-t border-line">
       <SectionHeader
         title="Shop by need"
         sub="Not sure of the model yet? Start from what the phone has to be good at."

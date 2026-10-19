@@ -25,13 +25,23 @@ export const productSchema = z.object({
   isActive: z.coerce.boolean(),
 });
 
+/** Indian mobile number -> 10 digits (accepts spaces, dashes, +91 or a leading 0). */
+export function normalizeIndianMobile(raw: string) {
+  let d = raw.replace(/\D/g, "");
+  if (d.length === 12 && d.startsWith("91")) d = d.slice(2);
+  if (d.length === 11 && d.startsWith("0")) d = d.slice(1);
+  return d;
+}
+
 export const checkoutSchema = z.object({
-  customerName: z.string().trim().min(1, "Name is required"),
+  customerName: z.string().trim().min(2, "Enter your name").max(80, "That name is too long"),
   phone: z
     .string()
-    .trim()
-    .min(10, "Enter a valid phone number")
-    .max(15, "Enter a valid phone number"),
-  address: z.string().trim().min(1, "Delivery address is required"),
-  checkoutMethod: z.enum(["WHATSAPP", "ONLINE_PAYMENT"]),
+    .transform(normalizeIndianMobile)
+    .refine((v) => /^[6-9]\d{9}$/.test(v), "Enter a 10-digit mobile number"),
+  address: z.string().trim().min(5, "Enter your address or area").max(300, "That address is too long"),
+  // Online payment isn't live yet: every order is completed on WhatsApp.
+  checkoutMethod: z.literal("WHATSAPP"),
+  branchSlug: z.string().min(1, "Choose a store"),
+  note: z.string().trim().max(300, "That note is too long").optional().default(""),
 });

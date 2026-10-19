@@ -30,7 +30,7 @@ function PhoneIcon({ className = "w-4 h-4" }: { className?: string }) {
 
 export function StoreLocator() {
   return (
-    <section id="stores" className="mx-auto max-w-7xl scroll-mt-24 px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section id="stores" className="mx-auto max-w-site scroll-mt-24 px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <Reveal>
         <div className="mb-8 max-w-2xl">
           <span className="mb-1.5 block text-xs font-extrabold uppercase text-lime-ink">

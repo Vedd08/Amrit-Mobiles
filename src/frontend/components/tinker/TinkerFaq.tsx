@@ -46,7 +46,7 @@ export function TinkerFaq() {
 
   return (
     <section id="faq" className="py-12 sm:py-16 bg-white -ink">
-      <div className="mx-auto max-w-6xl px-4 sm:px-10">
+      <div className="mx-auto max-w-site px-4 sm:px-10">
         <Reveal>
           <span className="mb-1.5 block text-xs font-extrabold uppercase text-lime-ink">
             Store &amp; support

@@ -105,7 +105,7 @@ export function BeforeAfterSlider({
 
   return (
     <section id="exchange" className="py-20 bg-white -ink border-t-2 border-line">
-      <div className="mx-auto max-w-6xl px-4 sm:px-10">
+      <div className="mx-auto max-w-site px-4 sm:px-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
           {/* LEFT: Text & Stats */}
           <div>

@@ -86,7 +86,7 @@ export function AuthorizedBrandPartners() {
   ];
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section className="mx-auto max-w-site px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {/* Header Section */}
       <div className="text-center max-w-2xl mx-auto mb-8 relative z-20">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ink-hi border border-line mb-3 shadow-2xs">

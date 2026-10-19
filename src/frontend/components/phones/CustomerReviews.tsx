@@ -76,7 +76,7 @@ export function CustomerReviews({ reviews = PLACEHOLDER_REVIEWS }: { reviews?: R
 
   return (
     <section className="border-t border-line-dark/40 bg-base py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-site px-4 sm:px-6">
         <SectionHeader
           kicker="4.9★ across six branches"
           title="What people say at the counter"

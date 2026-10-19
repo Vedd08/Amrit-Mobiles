@@ -47,7 +47,7 @@ function wallpaper(brand: string) {
 /** Real photographic lock-screen wallpaper per brand (Unsplash, stored locally). */
 function wallpaperSrc(brand: string) {
   const slug = PHONE_BRANDS.find((b) => b.dbBrand.toLowerCase() === brand.toLowerCase())?.slug;
-  const known = ["apple", "samsung", "google", "xiaomi", "vivo", "oppo", "realme", "nothing", "motorola", "poco", "infinix", "tecno", "itel"];
+  const known = ["apple", "samsung", "google", "xiaomi", "vivo", "oppo", "realme", "nothing", "motorola", "poco", "infinix", "tecno", "itel", "alcatel"];
   return `/images/wallpapers/${slug && known.includes(slug) ? slug : "default"}.webp`;
 }
 

@@ -12,7 +12,7 @@ export default function WishlistPage() {
 
   return (
     <div className="phones-scope cinematic-catalog-wrapper min-h-screen bg-void px-4 pb-16 pt-16 md:pt-24 text-ink-hi sm:px-6">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-site">
         <h1 className="mb-0 text-3xl md:text-5xl font-bold uppercase tracking-tight leading-none text-ink-hi">Wishlist</h1>
 
         {!mounted ? (

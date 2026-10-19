@@ -293,7 +293,7 @@ export function PhoneRetailCatalog({ initialProducts, initialBrands, category }:
       
       {/* ── TOP EXECUTIVE FINANCIAL ANNOUNCEMENT STRIP ── */}
       <div className="bg-white/80 backdrop-blur-xl text-ink py-2.5 px-4 sm:px-8 border-b border-line shadow-sm sticky top-0 z-40">
-        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-2 text-xs font-bold tracking-wider uppercase">
+        <div className="mx-auto max-w-site flex flex-wrap items-center justify-between gap-2 text-xs font-bold tracking-wider uppercase">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-lime-ink animate-ping" />
             <span className="bg-danger text-white px-2 py-0.5 rounded text-micro font-bold">
@@ -312,7 +312,7 @@ export function PhoneRetailCatalog({ initialProducts, initialBrands, category }:
       </div>
 
       {/* ── MAIN SHOWCASE CONTAINER ── */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
         
         {/* Breadcrumb Bar */}
         <nav className="text-micro font-extrabold text-ink-3 uppercase tracking-wider mb-6 flex items-center gap-2">

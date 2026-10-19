@@ -27,7 +27,7 @@ export default async function ProductPage({
 
   return (
     <div className="pb-8">
-      <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="mx-auto max-w-site px-4 py-8">
         <div className="mb-6 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ink-3">
           <Link href="/shop" className="hover:text-ink">
             Shop

@@ -77,7 +77,7 @@ Please confirm spot inspection availability!`);
 
   return (
     <div className="bg-paper-2 min-h-screen py-16 px-4 sm:px-6 lg:px-8 font-sans select-none text-ink">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-site mx-auto">
         
         {/* Top Flagship Hero Banner (Clean, Bright & High Contrast!) */}
         <div className="rounded-lg bg-linear-to-r from-base via-teal to-teal text-white p-8 sm:p-14 mb-14 shadow-sh-1 relative overflow-hidden">

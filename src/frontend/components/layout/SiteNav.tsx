@@ -112,7 +112,7 @@ export function SiteNav() {
       >
         <div
           onMouseLeave={closeMegaSoon}
-          className={`relative mx-auto flex max-w-7xl items-center justify-between rounded-full border pl-4 pr-2 transition-[height,background-color,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:pl-6 ${
+          className={`relative mx-auto flex max-w-site items-center justify-between rounded-full border pl-5 pr-2 transition-[height,background-color,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:pl-7 ${
             scrolled ? "h-16" : "h-[68px] sm:h-[80px]"
           } ${
             scrolled || megaOpen
@@ -123,9 +123,9 @@ export function SiteNav() {
           {/* Logo */}
           <Link href="/" onClick={closeAll} aria-label="Amrit Mobiles home" className="flex shrink-0 items-center rounded-full transition-opacity hover:opacity-80">
             <BrandLogo
-              variant="compact"
+              variant="full"
               className={`w-auto transition-[height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                scrolled ? "h-10 sm:h-11" : "h-12 sm:h-[60px]"
+                scrolled ? "h-12 sm:h-13" : "h-13 sm:h-16"
               }`}
             />
           </Link>

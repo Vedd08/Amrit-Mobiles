@@ -3,7 +3,7 @@ import { BRANCHES } from "@/shared/branches";
 
 export function BranchStrip() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 border-t border-line">
+    <section className="mx-auto max-w-site px-4 py-16 md:py-24 border-t border-line">
       <SectionHeader title={`${BRANCHES.length} branches across Surat`} sub="Always a short drive away. Always genuine stock." />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {BRANCHES.map((b) => (

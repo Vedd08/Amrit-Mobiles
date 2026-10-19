@@ -16,7 +16,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-16 text-center">
+      <div className="mx-auto max-w-site px-4 py-16 text-center">
         <h1 className="text-xl font-bold">Your cart is empty</h1>
         <p className="mt-2 text-ink-3">Browse our phones to get started.</p>
         <Link
@@ -32,7 +32,7 @@ export default function CartPage() {
   const total = cartTotal(items);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="mx-auto max-w-site px-4 py-8">
       <h1 className="text-xl font-bold">Your cart</h1>
 
       <div className="mt-6 grid gap-8 md:grid-cols-3">
@@ -96,12 +96,12 @@ export default function CartPage() {
             <span className="text-ink-3">Subtotal</span>
             <span className="font-semibold">₹{total.toLocaleString("en-IN")}</span>
           </div>
-          <p className="mt-1 text-xs text-ink-3">Delivery charges, if any, are confirmed at checkout.</p>
+          <p className="mt-1 text-xs text-ink-3">No payment online: the store confirms your order on WhatsApp.</p>
           <Link
             href="/checkout"
             className="mt-4 block rounded-lg bg-lime py-3 text-center text-sm font-semibold text-ink hover:hover:bg-lime-ink"
           >
-            Proceed to checkout
+            Place order
           </Link>
         </div>
       </div>

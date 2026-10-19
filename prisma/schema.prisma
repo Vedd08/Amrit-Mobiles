@@ -62,21 +62,30 @@ model ProductImage {
   @@index([productId])
 }
 
-// status: "PENDING" | "AWAITING_PAYMENT" | "PAID" | "CONFIRMED_WHATSAPP" | "FULFILLED" | "CANCELLED"
+// status: "NEW" | "CONTACTED" | "COMPLETED" | "CANCELLED" (see src/backend/lib/order-status.ts)
 // checkoutMethod: "WHATSAPP" | "ONLINE_PAYMENT"
 model Order {
-  id             String @id @default(cuid())
+  id             String  @id @default(cuid())
   customerName   String
   phone          String
   address        String
   total          Int
-  status         String @default("PENDING")
+  status         String  @default("NEW")
   checkoutMethod String
+  /// Slug of the branch the customer chose (src/shared/branches.ts).
+  branch         String?
+  /// The customer's note from the order form.
+  note           String?
+  /// Internal note for the team; never shown to the customer.
+  staffNote      String?
 
   items OrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
 }
 
 model OrderItem {

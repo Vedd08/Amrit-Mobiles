@@ -135,7 +135,7 @@ export function FeaturedFlagshipShowcase({ products }: { products: ProductCardDa
   };
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <section className="mx-auto max-w-site px-4 sm:px-6 lg:px-8 py-10">
       {/* Top Header & Interactive Filter Tabs */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6 border-b border-line pb-8">
         <div>

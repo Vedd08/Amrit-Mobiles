@@ -16,6 +16,8 @@ import { PhoneProductCard } from "./PhoneProductCard";
 import { FilterSheet } from "./FilterSheet";
 import { BrandMark } from "./BrandMark";
 import { ArrowLeftIcon, SlidersIcon } from "./icons";
+import { StoreChatLink } from "@/frontend/components/whatsapp/StoreChatLink";
+import { WhatsAppIcon } from "@/frontend/components/icons";
 
 const EMPTY: PhoneFilter = {};
 
@@ -81,11 +83,13 @@ export function PhoneListing({
   const nActive = activeCount(filter);
 
   return (
-    <div className="phones-scope min-h-[100svh] bg-paper pb-16 text-ink">
+    // -mt pulls the paper background up behind the floating navbar (the shop
+    // layout pads <main> by 96px), so there's no white band beside the pill.
+    <div className={`phones-scope -mt-[96px] min-h-[100svh] bg-paper pb-16 text-ink ${hero ? "" : "pt-[96px]"}`}>
       {hero ? (
-        <div className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 md:pb-14 md:pt-12">{hero}</div>
+        hero
       ) : (
-      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 md:pt-16">
+      <div className="mx-auto max-w-site px-4 pt-8 sm:px-6 md:pt-16">
         <Link
           href="/phones"
           className="inline-flex items-center gap-1.5 text-small font-semibold tracking-wide text-ink-3 hover:text-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
@@ -116,7 +120,7 @@ export function PhoneListing({
       )}
 
       <div className="sticky top-[88px] z-30 border-b border-line bg-paper/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-site items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
@@ -149,7 +153,7 @@ export function PhoneListing({
       </div>
 
       {nActive > 0 && (
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 flex flex-wrap gap-2 items-center border-b border-line">
+        <div className="mx-auto max-w-site px-4 py-3 sm:px-6 flex flex-wrap gap-2 items-center border-b border-line">
           {filter.maxPrice != null && (
             <button onClick={() => setFilter({ ...filter, maxPrice: undefined })} className="flex items-center gap-1.5 rounded-full border border-lime bg-lime px-3 py-1 text-micro font-semibold text-[#2A2A2A] hover:bg-lime-lo">
               Under {formatINR(filter.maxPrice)} &times;
@@ -179,7 +183,7 @@ export function PhoneListing({
         </div>
       )}
 
-      <div id="shelf" className="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
+      <div id="shelf" className="mx-auto max-w-site px-4 pt-6 sm:px-6">
         <p className="mb-6 text-small text-ink-3 font-semibold">
           {visible.length} {visible.length === 1 ? "result" : "results"}
         </p>
@@ -192,11 +196,25 @@ export function PhoneListing({
               </li>
             ))}
           </ul>
+        ) : products.length === 0 ? (
+          // Nothing of this brand / category on the website yet: point to the stores, not to filters.
+          <div className="rounded-lg border border-line bg-surface shadow-sh-1 px-6 py-14 text-center mt-6">
+            <p className="text-body font-bold text-ink">{brand ? `${brand.name} phones are coming to the website soon` : "Nothing here yet"}</p>
+            <p className="mx-auto mt-2 max-w-[40ch] text-small text-ink-3">
+              Our stores get new stock every week. Ask the nearest one what&apos;s in right now.
+            </p>
+            <StoreChatLink
+              message={`Hi Amrit Mobiles {store}! Which ${brand ? brand.name + " " : ""}phones do you have in stock?`}
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-lime px-6 py-3 text-small font-bold text-[#2A2A2A] hover:bg-lime-lo transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-ink"
+            >
+              <WhatsAppIcon className="h-4 w-4" /> Ask the nearest store
+            </StoreChatLink>
+          </div>
         ) : (
           <div className="rounded-lg border border-line bg-surface shadow-sh-1 px-6 py-14 text-center mt-6">
             <p className="text-body font-bold text-ink">No phones match those filters</p>
             <p className="mx-auto mt-2 max-w-[36ch] text-small text-ink-3">
-              Loosen a filter, or ask us on WhatsApp — the shelf turns over weekly.
+              Loosen a filter, or ask us on WhatsApp. The shelf turns over weekly.
             </p>
             <button
               type="button"

@@ -4,7 +4,12 @@ import { getAllPhones } from "@/backend/lib/queries";
 import { getCategory, phonesForCategory } from "@/shared/phone-catalog";
 import { PhoneListing } from "@/frontend/components/phones/PhoneListing";
 
-export const dynamic = "force-dynamic";
+// Each category page is cached the first time it's visited, then refreshed
+// every 5 minutes or when the catalogue changes (refreshCatalog).
+export const revalidate = 300;
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,

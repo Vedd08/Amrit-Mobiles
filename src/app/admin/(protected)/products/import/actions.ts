@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { refreshCatalog } from "@/backend/lib/catalog-cache";
 import { z } from "zod";
 import { prisma } from "@/backend/lib/prisma";
 import { requireAdminSession } from "@/backend/lib/auth";
@@ -137,6 +138,6 @@ export async function applyPriceList(_prev: ApplyState, formData: FormData): Pro
   );
 
   revalidatePath("/admin", "layout");
-  revalidatePath("/", "layout"); // prices and stock show across the shop
+  refreshCatalog(); // prices and stock show across the shop
   return { status: "done", updated: changes.length };
 }

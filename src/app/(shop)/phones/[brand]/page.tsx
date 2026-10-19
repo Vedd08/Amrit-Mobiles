@@ -5,7 +5,12 @@ import { getBrand, getCategory, phonesForBrand } from "@/shared/phone-catalog";
 import { PhoneListing } from "@/frontend/components/phones/PhoneListing";
 import { BrandFamilyHero } from "@/frontend/components/phones/BrandFamilyHero";
 
-export const dynamic = "force-dynamic";
+// Each brand page is cached the first time it's visited, then refreshed every
+// 5 minutes or when the catalogue changes (refreshCatalog).
+export const revalidate = 300;
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,

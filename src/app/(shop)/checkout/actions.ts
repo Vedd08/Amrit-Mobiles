@@ -4,6 +4,7 @@ import { prisma } from "@/backend/lib/prisma";
 import { checkoutSchema } from "@/backend/lib/validation";
 import { notifyNewOrder } from "@/backend/lib/whatsapp-server";
 import { CHAT_BRANCHES } from "@/shared/branches";
+import { refreshCatalog } from "@/backend/lib/catalog-cache";
 
 export type CheckoutItemInput = { productId: string; quantity: number };
 
@@ -79,6 +80,8 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
     }
     return created;
   });
+  // The order took stock: cached shop pages must show the new counts.
+  refreshCatalog();
 
   const result = await notifyNewOrder(
     { id: order.id, customerName, phone: `+91 ${phone}`, address, items: orderItemsData, total, store: branch.name, note },

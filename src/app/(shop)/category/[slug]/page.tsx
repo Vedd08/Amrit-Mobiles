@@ -4,7 +4,7 @@ import { AuthorizedBrandPartners } from "@/frontend/components/shop/AuthorizedBr
 import { TinkerFaq } from "@/frontend/components/tinker/TinkerFaq";
 import { getCategoryWithProducts } from "@/backend/lib/queries";
 
-export const dynamic = "force-dynamic";
+// Rendered per request (it reads ?brand / ?sort), but its catalogue read is cached.
 
 export default async function CategoryPage({
   params,

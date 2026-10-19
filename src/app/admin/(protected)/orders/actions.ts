@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/backend/lib/prisma";
 import { requireAdminSession } from "@/backend/lib/auth";
 import { HOLDS_STOCK, isOrderStatus } from "@/backend/lib/order-status";
+import { refreshCatalog } from "@/backend/lib/catalog-cache";
 
 /**
  * Moves an order to a new status. Placing an order takes its phones off the
@@ -34,7 +35,7 @@ export async function updateOrderStatus(id: string, formData: FormData) {
   });
 
   revalidatePath("/admin", "layout");
-  revalidatePath("/(shop)/product/[slug]", "page");
+  refreshCatalog(); // stock may have changed
 }
 
 export async function saveStaffNote(id: string, formData: FormData) {

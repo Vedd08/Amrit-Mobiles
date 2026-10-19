@@ -9,6 +9,13 @@ import { MobileBuyBar } from "@/frontend/components/shop/MobileBuyBar";
 import { Reveal } from "@/frontend/components/motion/Reveal";
 import { formatINR } from "@/frontend/lib/phone-experience-data";
 
+// Each product page is cached the first time it's visited, then refreshed every
+// 5 minutes or when the catalogue changes (refreshCatalog).
+export const revalidate = 300;
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function ProductPage({
   params,
 }: {

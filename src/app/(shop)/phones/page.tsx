@@ -24,7 +24,7 @@ import { SectionHeader } from "@/frontend/components/phones/SectionHeader";
 import { PhoneProductCard } from "@/frontend/components/phones/PhoneProductCard";
 import { Stagger } from "@/frontend/components/motion/Stagger";
 
-export const dynamic = "force-dynamic";
+// Rendered per request (it reads ?q=), but its catalogue read is cached.
 
 export const metadata: Metadata = {
   title: "Phones — Amrit Mobiles",

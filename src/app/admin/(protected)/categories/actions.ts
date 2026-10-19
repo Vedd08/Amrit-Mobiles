@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/backend/lib/prisma";
 import { requireAdminSession } from "@/backend/lib/auth";
 import { categorySchema, slugify } from "@/backend/lib/validation";
+import { refreshCatalog } from "@/backend/lib/catalog-cache";
 
 async function uniqueSlug(base: string) {
   let slug = slugify(base) || "category";
@@ -27,6 +28,7 @@ export async function createCategory(formData: FormData) {
   await prisma.category.create({ data: { name: parsed.data.name, slug } });
 
   revalidatePath("/admin/categories");
+  refreshCatalog();
   redirect("/admin/categories");
 }
 
@@ -45,5 +47,6 @@ export async function deleteCategory(formData: FormData) {
   }
 
   revalidatePath("/admin/categories");
+  refreshCatalog();
   redirect("/admin/categories");
 }

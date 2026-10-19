@@ -7,6 +7,7 @@ import { prisma } from "@/backend/lib/prisma";
 import { requireAdminSession } from "@/backend/lib/auth";
 import { productSchema, slugify } from "@/backend/lib/validation";
 import { uploadProductImage } from "@/backend/lib/storage";
+import { refreshCatalog } from "@/backend/lib/catalog-cache";
 
 function parseSpecs(raw: string): Record<string, string> {
   const specs: Record<string, string> = {};
@@ -73,6 +74,7 @@ export async function createProduct(formData: FormData) {
   await uploadNewImages(formData, product.id);
 
   revalidatePath("/admin/products");
+  refreshCatalog();
   redirect("/admin/products");
 }
 
@@ -106,7 +108,7 @@ export async function updateProduct(id: string, formData: FormData) {
   await uploadNewImages(formData, id);
 
   revalidatePath("/admin/products");
-  revalidatePath(`/product/${slug}`);
+  refreshCatalog();
   redirect("/admin/products");
 }
 
@@ -135,10 +137,9 @@ export async function quickUpdateProduct(id: string, _prev: QuickEditState, form
   });
   if (!parsed.success) return { status: "error", message: parsed.error.issues[0].message };
 
-  const product = await prisma.product.update({ where: { id }, data: parsed.data, select: { slug: true } });
+  await prisma.product.update({ where: { id }, data: parsed.data });
   revalidatePath("/admin", "layout");
-  revalidatePath(`/product/${product.slug}`);
-  revalidatePath("/phones", "layout");
+  refreshCatalog();
   return { status: "saved", at: Date.now() };
 }
 
@@ -147,6 +148,7 @@ export async function deleteProduct(formData: FormData) {
   const id = String(formData.get("id") || "");
   await prisma.product.delete({ where: { id } });
   revalidatePath("/admin/products");
+  refreshCatalog();
   redirect("/admin/products");
 }
 
@@ -156,4 +158,5 @@ export async function deleteProductImage(formData: FormData) {
   const productId = String(formData.get("productId") || "");
   await prisma.productImage.delete({ where: { id } });
   revalidatePath(`/admin/products/${productId}/edit`);
+  refreshCatalog();
 }

@@ -249,8 +249,8 @@ export function PhoneShowcase({
         </div>
       )}
 
-      {/* Live stat pills */}
-      {stats && (
+      {/* Live stat pills: hidden while the catalogue is empty ("From ₹∞") */}
+      {stats && stats.phonesInStock > 0 && (
         <>
           <StatPill className="left-0 top-[6%] sm:left-[1%]" style={{ animationDelay: "0.2s" }}>
             <span className="h-2 w-2 rounded-full bg-lime" /> {stats.phonesInStock} phones in stock

@@ -106,6 +106,10 @@ export const BRAND_FAMILIES: Record<string, BrandFamily> = {
     tagline: "Alcatel V3, easy on the eyes.",
     members: [{ kind: "phone", name: "Alcatel V3", line: "Alcatel V3 Ultra, V3 Pro and V3 Classic." }],
   },
+  "ai-plus": {
+    tagline: "Ai+ Nova, a big battery for less.",
+    members: [{ kind: "phone", name: "Nova", line: "Ai+ Nova 2 Neo 5G." }],
+  },
 };
 
 export const KIND_LABEL: Record<DeviceKind, string> = {

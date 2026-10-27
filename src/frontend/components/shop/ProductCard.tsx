@@ -14,6 +14,26 @@ export type ProductCardData = {
   specs?: string | null;
   createdAt: string;
   category: string;
+  /**
+   * Set when this card stands for a whole model (groupVariants): every
+   * colour and memory option, cheapest in-stock first. The card's own
+   * slug / image / price are the lead variant's, price being the "from".
+   */
+  variants?: PhoneVariant[];
+};
+
+/** One colour + memory option of a model; each is its own Product row. */
+export type PhoneVariant = {
+  id: string;
+  slug: string;
+  name: string;
+  colour: string;
+  ram: string;
+  storage: string;
+  price: number;
+  mrp: number | null;
+  stock: number;
+  image: string | null;
 };
 
 export function ProductCard({ product }: { product: ProductCardData }) {

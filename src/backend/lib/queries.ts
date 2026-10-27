@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/backend/lib/prisma";
 import type { ProductCardData } from "@/frontend/components/shop/ProductCard";
-import { HIDDEN_BRANDS } from "@/shared/phone-catalog";
+import { HIDDEN_BRANDS, byLeadVariant, groupVariants, parseSpecs } from "@/shared/phone-catalog";
 import { CATALOG_TAG } from "@/backend/lib/catalog-cache";
 
 // Catalogue reads are cached (tag "catalog"): the database is in Mumbai and
@@ -46,14 +46,17 @@ export async function getCategories() {
   return prisma.category.findMany({ orderBy: { name: "asc" } });
 }
 
+// Every list below returns one card per model: the colour / memory variants
+// of a phone are separate rows, folded together by groupVariants. That is why
+// lists with a `take` slice after grouping, not in the query.
+
 export const getFeaturedProducts = cached("featured-products", async (take: number = 8) => {
   const products = await prisma.product.findMany({
     where: { isActive: true, brand: { notIn: HIDDEN_BRANDS }, category: { slug: { not: "accessories" } } },
     orderBy: { createdAt: "desc" },
-    take,
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
   });
-  return products.map(toCardData);
+  return groupVariants(products.map(toCardData)).slice(0, take);
 });
 
 /** Every active phone product. The storefront filters in memory. */
@@ -63,7 +66,7 @@ export const getAllStorefrontProducts = cached("storefront-products", async (): 
     orderBy: { price: "desc" },
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
   });
-  return products.map(toCardData);
+  return groupVariants(products.map(toCardData));
 });
 
 /**
@@ -77,10 +80,9 @@ export const getStorefrontProducts = cached("storefront-top", async (take: numbe
   const products = await prisma.product.findMany({
     where: { isActive: true, brand: { notIn: HIDDEN_BRANDS }, category: { slug: { not: "accessories" } } },
     orderBy: { price: "desc" },
-    take,
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
   });
-  return products.map(toCardData);
+  return groupVariants(products.map(toCardData)).slice(0, take);
 });
 
 /**
@@ -96,7 +98,7 @@ export const getAllPhones = cached("all-phones", async (): Promise<ProductCardDa
     orderBy: { createdAt: "desc" },
     include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
   });
-  return products.map(toCardData);
+  return groupVariants(products.map(toCardData));
 });
 
 export const getCategoryWithProducts = cached(
@@ -131,7 +133,7 @@ export const getCategoryWithProducts = cached(
     return {
       // Plain fields only: the cached copy goes through JSON.
       category: { id: category.id, name: category.name, slug: category.slug },
-      products: products.map(toCardData),
+      products: groupVariants(products.map(toCardData)),
       brands: allInCategory.map((p) => p.brand).sort(),
     };
   },
@@ -144,12 +146,38 @@ export async function getProductBySlug(slug: string) {
   });
   if (!product) return null;
 
-  let specs: Record<string, string> = {};
-  try {
-    specs = JSON.parse(product.specs);
-  } catch {
-    specs = {};
-  }
+  const specs = parseSpecs(product.specs);
 
-  return { ...product, parsedSpecs: specs };
+  // The model's other colour / memory options, for the pickers. Matched on the
+  // exact "Model" value inside the specs JSON (same brand, visible only).
+  const siblings = specs.Model
+    ? await prisma.product.findMany({
+        where: {
+          brand: product.brand,
+          isActive: true,
+          specs: { contains: JSON.stringify({ Model: specs.Model }).slice(1, -1) },
+        },
+        include: { images: { orderBy: { position: "asc" }, take: 1 } },
+      })
+    : [];
+  const variants = siblings
+    .filter((s) => parseSpecs(s.specs).Model === specs.Model)
+    .map((s) => {
+      const v = parseSpecs(s.specs);
+      return {
+        id: s.id,
+        slug: s.slug,
+        name: s.name,
+        colour: v.Colour ?? v.Color ?? "",
+        ram: v.RAM ?? "",
+        storage: v.Storage ?? "",
+        price: s.price,
+        mrp: s.mrp,
+        stock: s.stock,
+        image: s.images[0]?.url ?? null,
+      };
+    })
+    .sort(byLeadVariant);
+
+  return { ...product, parsedSpecs: specs, variants };
 }

@@ -6,7 +6,7 @@
 // per-request round-trip and sidesteps SQLite matching "realme" against
 // "Realme" — brand identity lives in `dbBrand` below, not in the URL.
 
-import type { ProductCardData } from "@/frontend/components/shop/ProductCard";
+import type { PhoneVariant, ProductCardData } from "@/frontend/components/shop/ProductCard";
 
 export type PhoneBrand = {
   /** URL segment: /phones/<slug> */
@@ -52,6 +52,8 @@ export const PHONE_BRANDS: PhoneBrand[] = [
     blurb: "Dependable smartphones at the friendliest prices." },
   { slug: "alcatel", name: "Alcatel", dbBrand: "Alcatel", accent: "rgb(42, 98, 196)",
     blurb: "Alcatel V3 — NXTPAPER screens that are easy on the eyes." },
+  { slug: "ai-plus", name: "Ai+", dbBrand: "Ai+", accent: "rgb(120, 60, 200)",
+    blurb: "Ai+ Nova — big batteries and clean Android at an easy price." },
 ];
 
 /** Brands the shop doesn't sell: their products never show on the storefront. */
@@ -63,7 +65,7 @@ export function getBrand(slug: string): PhoneBrand | undefined {
 
 // ---------------------------------------------------------------------------
 // Spec parsing — Product.specs is a JSON string like
-// {"RAM":"8GB","Storage":"256GB","Color":"Onyx Black"}
+// {"Model":"Alcatel V3 Ultra 5G","Colour":"Hyper Blue","RAM":"8GB","Storage":"128GB",...}
 // ---------------------------------------------------------------------------
 
 export function parseSpecs(specs: string | null | undefined): Record<string, string> {
@@ -88,6 +90,95 @@ export function ramGB(p: ProductCardData): number | null {
 
 export function storageGB(p: ProductCardData): number | null {
   return firstNumber(parseSpecs(p.specs).Storage);
+}
+
+const uniqueSorted = (xs: (number | null)[]) =>
+  [...new Set(xs.filter((x): x is number => x != null))].sort((a, b) => a - b);
+
+/** Every RAM size the model comes in (one entry for a single-variant phone). */
+export function ramOptions(p: ProductCardData): number[] {
+  return p.variants ? uniqueSorted(p.variants.map((v) => firstNumber(v.ram))) : uniqueSorted([ramGB(p)]);
+}
+
+export function storageOptions(p: ProductCardData): number[] {
+  return p.variants ? uniqueSorted(p.variants.map((v) => firstNumber(v.storage))) : uniqueSorted([storageGB(p)]);
+}
+
+// ---------------------------------------------------------------------------
+// Variants — each colour + memory option is its own Product row (so the cart,
+// orders and WhatsApp messages name the exact phone), tied together by the
+// same "Model" spec. Listings show one card per model.
+// ---------------------------------------------------------------------------
+
+export const memoryLabel = (v: Pick<PhoneVariant, "ram" | "storage">) =>
+  [v.ram, v.storage].filter(Boolean).join(" + ");
+
+function toVariant(p: ProductCardData): PhoneVariant {
+  const s = parseSpecs(p.specs);
+  return {
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    colour: s.Colour ?? s.Color ?? "",
+    ram: s.RAM ?? "",
+    storage: s.Storage ?? "",
+    price: p.price,
+    mrp: p.mrp,
+    stock: p.stock,
+    image: p.image,
+  };
+}
+
+/** In stock first, then cheapest: the variant a card or a picker leads with. */
+export function byLeadVariant<T extends { stock: number; price: number }>(a: T, b: T): number {
+  return Number(b.stock > 0) - Number(a.stock > 0) || a.price - b.price;
+}
+
+/**
+ * Collapses variant rows into one card per model, kept where the model's
+ * first row was. Rows without a "Model" spec pass through unchanged.
+ */
+export function groupVariants(rows: ProductCardData[]): ProductCardData[] {
+  const groups = new Map<string, ProductCardData[]>();
+  const order: (ProductCardData | string)[] = [];
+  for (const p of rows) {
+    const model = parseSpecs(p.specs).Model;
+    if (!model) {
+      order.push(p);
+      continue;
+    }
+    const key = `${p.brand.toLowerCase()}|${model.toLowerCase()}`;
+    if (!groups.has(key)) {
+      groups.set(key, []);
+      order.push(key);
+    }
+    groups.get(key)!.push(p);
+  }
+  return order.map((entry) => {
+    if (typeof entry !== "string") return entry;
+    const members = [...groups.get(entry)!].sort(byLeadVariant);
+    const lead = members[0];
+    return {
+      ...lead,
+      name: parseSpecs(lead.specs).Model!,
+      stock: members.reduce((n, m) => n + m.stock, 0),
+      variants: members.map(toVariant),
+    };
+  });
+}
+
+/** True when the model's options don't all cost the same: show "From". */
+export function hasPriceRange(p: ProductCardData): boolean {
+  return Boolean(p.variants && p.variants.some((v) => v.price !== p.price));
+}
+
+/** Distinct colours of a model, in the order the variants lead. */
+export function colourOptions(p: ProductCardData): { colour: string; slug: string; image: string | null }[] {
+  const seen = new Map<string, { colour: string; slug: string; image: string | null }>();
+  for (const v of p.variants ?? []) {
+    if (v.colour && !seen.has(v.colour)) seen.set(v.colour, { colour: v.colour, slug: v.slug, image: v.image });
+  }
+  return [...seen.values()];
 }
 
 export function discountPct(p: ProductCardData): number | null {
@@ -184,7 +275,7 @@ export const PHONE_CATEGORIES: PhoneCategory[] = [
     tagline: "Big cells that last the day out",
     pageTitle: "Long-battery phones",
     intro: "5,000 mAh and up — the phones that make it to bedtime without a top-up.",
-    match: (p) => /6000\s?mah|5500\s?mah|5000\s?mah|massive battery|all-day battery/.test(text(p)),
+    match: (p) => /\b[5-9],?\d{3}\s?mah|massive battery|all-day battery/.test(text(p)),
   },
   {
     slug: "compact",
@@ -241,13 +332,13 @@ export type PhoneFilter = {
 export function filterPhones(list: ProductCardData[], f: PhoneFilter): ProductCardData[] {
   return list.filter((p) => {
     if (f.maxPrice != null && p.price > f.maxPrice) return false;
+    // A model matches when any of its variants does.
     if (f.ram && f.ram.length) {
-      const r = ramGB(p);
-      if (r == null || !f.ram.some((min) => r >= min && r < min + 2)) return false;
+      const rams = ramOptions(p);
+      if (!rams.some((r) => f.ram!.some((min) => r >= min && r < min + 2))) return false;
     }
     if (f.storage && f.storage.length) {
-      const s = storageGB(p);
-      if (s == null || !f.storage.includes(s)) return false;
+      if (!storageOptions(p).some((s) => f.storage!.includes(s))) return false;
     }
     if (f.brands && f.brands.length) {
       const slug = PHONE_BRANDS.find((b) => b.dbBrand.toLowerCase() === p.brand.toLowerCase())?.slug;

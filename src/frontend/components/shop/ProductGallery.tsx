@@ -59,32 +59,37 @@ export function ProductGallery({
     <div>
       <div
         ref={stageRef}
-        className="relative aspect-square overflow-hidden rounded-lg border border-raised bg-linear-to-br from-carbon via-raised to-void shadow-sh-2 "
+        className="relative aspect-square overflow-hidden rounded-lg border border-line bg-linear-to-br from-surface via-paper to-paper-2 shadow-sh-1"
       >
-        <span className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none text-display font-bold uppercase leading-none tracking-tighter text-white/[0.04] sm:text-display">
+        <span className="pointer-events-none absolute -right-4 top-1/2 -translate-y-1/2 select-none text-display font-bold uppercase leading-none tracking-tighter text-ink/[0.04] sm:text-display">
           {brand}
         </span>
-        <div className="pointer-events-none absolute right-1/4 top-0 h-72 w-72 rounded-full bg-teal/10 blur-[90px]" />
-        <div className="pointer-events-none absolute bottom-0 left-8 h-64 w-64 rounded-full bg-danger/10 blur-[80px]" />
+        <div className="pointer-events-none absolute right-1/4 top-0 h-72 w-72 rounded-full bg-lime/15 blur-[90px]" />
+        <div className="pointer-events-none absolute bottom-0 left-8 h-64 w-64 rounded-full bg-teal/10 blur-[80px]" />
 
         {current ? (
-          <div className="absolute inset-8 sm:inset-12">
+          // The first photo is a cut-out and gets room to breathe; the
+          // brand's feature slides are square artwork and fill the stage.
+          <div className={`absolute ${active === 0 ? "inset-6 sm:inset-10" : "inset-0"}`}>
             <Image
               src={current.url}
-              alt={name}
+              alt={active === 0 ? name : `${name}, photo ${active + 1}`}
               fill
               sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-contain drop-"
-              priority
+              className="object-contain"
+              priority={active === 0}
             />
           </div>
         ) : (
-          <div className="flex h-full items-center justify-center text-sm font-semibold text-white/40">
+          <div className="flex h-full items-center justify-center text-sm font-semibold text-ink-3">
             No image
           </div>
         )}
 
-        <div ref={tagRef} className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8">
+        {/* Hidden (not unmounted) on the feature slides, whose artwork it would
+            cover, and on phones, where it sat on the photo and the price is
+            just below anyway. */}
+        <div ref={tagRef} className={`absolute bottom-6 left-6 max-sm:hidden sm:bottom-8 sm:left-8 ${active === 0 ? "" : "invisible"}`}>
           <PriceTag price={price} mrp={mrp} discount={discount} />
         </div>
       </div>
@@ -98,11 +103,11 @@ export function ProductGallery({
               onClick={() => setActive(i)}
               aria-label={`Show photo ${i + 1}`}
               aria-current={i === active}
-              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 bg-paper transition-all ${
-                i === active ? "border-ink" : "border-transparent opacity-60 hover:opacity-100"
+              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 bg-surface transition-all ${
+                i === active ? "border-ink" : "border-line opacity-70 hover:opacity-100"
               }`}
             >
-              <Image src={img.url} alt="" fill sizes="64px" className="object-cover" />
+              <Image src={img.url} alt="" fill sizes="64px" className="object-contain" />
             </button>
           ))}
         </div>

@@ -34,4 +34,5 @@ export const FAMILY_IMAGES: Record<string, FamilyImage> = {
   "tecno-phone": { src: "/images/brand-family/tecno-phone.webp", width: 780, height: 900, model: "TECNO POVA Curve 2", source: "https://m.media-amazon.com/images/I/61NANHVTk4L._SL1200_.jpg" },
   "itel-phone": { src: "/images/brand-family/itel-phone.webp", width: 669, height: 900, model: "itel Vision 2S", source: "https://m.media-amazon.com/images/I/81ZHVxchTZL._SL1500_.jpg" },
   "alcatel-phone": { src: "/images/brand-family/alcatel-phone.webp", width: 713, height: 900, model: "Alcatel V3 Ultra", source: "https://m.media-amazon.com/images/I/71jVMWftJnL._SL1500_.jpg" },
+  "ai-plus-phone": { src: "/images/brand-family/ai-plus-phone.webp", width: 678, height: 900, model: "Ai+ Nova 2 Neo 5G", source: "https://rukminim2.flixcart.com/image/1200/1600/xif0q/mobile/u/2/r/-original-imahzm49ck6sv6zw.jpeg" },
 };

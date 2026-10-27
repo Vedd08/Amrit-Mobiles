@@ -20,6 +20,7 @@ const WORDMARK: Record<string, { text: string; className: string }> = {
   tecno: { text: "TECNO", className: "font-extrabold " },
   itel: { text: "itel", className: "font-extrabold " },
   alcatel: { text: "alcatel", className: "font-bold " },
+  "ai-plus": { text: "Ai+", className: "font-extrabold " },
 };
 
 export function BrandMark({ slug, className = "" }: { slug: string; className?: string }) {

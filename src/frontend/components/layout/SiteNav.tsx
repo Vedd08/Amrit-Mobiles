@@ -106,14 +106,14 @@ export function SiteNav() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-3 z-[60] px-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-4 sm:px-4 ${
-          show ? "translate-y-0" : "-translate-y-[140%]"
+        className={`fixed inset-x-0 top-3 z-60 px-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-4 sm:px-4 ${
+          show ? "translate-y-0" : "translate-y-[-140%]"
         }`}
       >
         <div
           onMouseLeave={closeMegaSoon}
           className={`relative mx-auto flex max-w-site items-center justify-between rounded-full border pl-5 pr-2 transition-[height,background-color,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:pl-7 ${
-            scrolled ? "h-16" : "h-[68px] sm:h-[80px]"
+            scrolled ? "h-16" : "h-17 sm:h-20"
           } ${
             scrolled || megaOpen
               ? "border-white/70 bg-white/95 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_18px_40px_-18px_rgba(26,28,25,0.28),0_2px_6px_-2px_rgba(26,28,25,0.08)] lg:bg-white/80 lg:backdrop-blur-xl lg:backdrop-saturate-150"
@@ -165,16 +165,16 @@ export function SiteNav() {
           <div className="flex items-center gap-0.5 sm:gap-1">
             <PhoneSearch />
             <IconLink href="/wishlist" label="Wishlist" count={wishN} onClick={closeAll}>
-              <HeartIcon className="h-[22px] w-[22px]" />
+              <HeartIcon className="h-5.5 w-5.5" />
             </IconLink>
             <IconLink href="/cart" label="Cart" count={cartN} onClick={closeAll}>
-              <CartIcon className="h-[22px] w-[22px]" />
+              <CartIcon className="h-5.5 w-5.5" />
             </IconLink>
             <a
               {...chat}
               className="group ml-1.5 hidden items-center gap-2 overflow-hidden rounded-full bg-lime py-2.5 pl-3.5 pr-4 text-[14px] font-bold text-[#2A2A2A] shadow-[0_10px_22px_-10px_rgba(95,138,13,0.9)] transition-all duration-300 hover:-translate-y-px hover:shadow-[0_14px_26px_-10px_rgba(95,138,13,0.95)] lg:inline-flex"
             >
-              <WhatsAppIcon className="h-[18px] w-[18px]" />
+              <WhatsAppIcon className="h-4.5 w-4.5" />
               Chat with us
             </a>
             <button
@@ -186,11 +186,11 @@ export function SiteNav() {
               aria-label={sheetOpen ? "Close menu" : "Open menu"}
               aria-expanded={sheetOpen}
               aria-controls="nav-mobile-sheet"
-              className="ml-1 flex h-11 w-11 flex-col items-center justify-center gap-[5px] rounded-full bg-ink/[0.04] transition-colors hover:bg-ink/[0.08] lg:hidden"
+              className="ml-1 flex h-11 w-11 flex-col items-center justify-center gap-1.25 rounded-full bg-ink/4 transition-colors hover:bg-ink/8 lg:hidden"
             >
-              <span className={`block h-0.5 w-5 rounded-full bg-ink transition-transform duration-300 ${sheetOpen ? "translate-y-[7px] rotate-45" : ""}`} />
+              <span className={`block h-0.5 w-5 rounded-full bg-ink transition-transform duration-300 ${sheetOpen ? "translate-y-1.75 rotate-45" : ""}`} />
               <span className={`block h-0.5 w-5 rounded-full bg-ink transition-opacity duration-200 ${sheetOpen ? "opacity-0" : ""}`} />
-              <span className={`block h-0.5 w-5 rounded-full bg-ink transition-transform duration-300 ${sheetOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
+              <span className={`block h-0.5 w-5 rounded-full bg-ink transition-transform duration-300 ${sheetOpen ? "-translate-y-1.75 -rotate-45" : ""}`} />
             </button>
           </div>
 
@@ -203,7 +203,7 @@ export function SiteNav() {
               megaOpen ? "pointer-events-auto translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-2 scale-[0.98] opacity-0"
             }`}
           >
-            <div className="grid grid-cols-[1fr_1.4fr_0.95fr] gap-2 rounded-[28px] border border-line/70 bg-white p-2.5 shadow-[0_30px_60px_-24px_rgba(26,28,25,0.35)]">
+            <div className="grid grid-cols-[1fr_1.4fr_0.95fr] gap-2 rounded-lg border border-line/70 bg-white p-2.5 shadow-[0_30px_60px_-24px_rgba(26,28,25,0.35)]">
               <div className="rounded-[22px] p-5">
                 <p className="mb-3 text-micro font-bold uppercase tracking-[0.18em] text-ink-4">Shop by brand</p>
                 <ul className="grid grid-cols-2 gap-1">
@@ -270,7 +270,7 @@ export function SiteNav() {
       <div
         id="nav-mobile-sheet"
         inert={!sheetOpen}
-        className={`fixed inset-0 z-[55] flex flex-col overflow-y-auto bg-paper px-6 pb-8 pt-28 transition-[opacity,visibility] duration-300 lg:hidden ${
+        className={`fixed inset-0 z-55 flex flex-col overflow-y-auto bg-paper px-6 pb-8 pt-28 transition-[opacity,visibility] duration-300 lg:hidden ${
           sheetOpen ? "visible opacity-100" : "invisible opacity-0"
         }`}
         style={{
@@ -352,11 +352,11 @@ function IconLink({
       href={href}
       onClick={onClick}
       aria-label={count > 0 ? `${label} (${count})` : label}
-      className="relative flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-ink/[0.05]"
+      className="relative flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-ink/5"
     >
       {children}
       {count > 0 && (
-        <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-lime px-1 text-[10px] font-bold leading-none text-[#2A2A2A] ring-2 ring-white">
+        <span className="absolute right-1 top-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-lime px-1 text-[10px] font-bold leading-none text-[#2A2A2A] ring-2 ring-white">
           {count}
         </span>
       )}

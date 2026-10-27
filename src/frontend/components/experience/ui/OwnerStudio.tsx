@@ -75,7 +75,7 @@ export function OwnerStudio() {
   return (
     <div
       ref={rootRef}
-      className="relative flex flex-col overflow-hidden rounded-[32px] border border-line lg:grid lg:grid-cols-12 lg:items-stretch"
+      className="relative flex flex-col overflow-hidden rounded-4xl border border-line lg:grid lg:grid-cols-12 lg:items-stretch"
       style={{
         // Seamless paper sweep: wall, the soft curve, then the floor.
         background: 'linear-gradient(180deg, #EEF0EA 0%, #F5F6F2 52%, #ECEEE8 74%, #E2E5DD 100%)',
@@ -123,7 +123,7 @@ export function OwnerStudio() {
       </div>
 
       {/* Portrait */}
-      <div className="relative order-1 aspect-100/96 w-full [container-type:inline-size] lg:order-2 lg:col-span-7 lg:aspect-auto lg:min-h-[min(80vh,720px)]">
+      <div className="relative order-1 aspect-100/96 w-full @container lg:order-2 lg:col-span-7 lg:aspect-auto lg:min-h-[min(80vh,720px)]">
         {/* The brand, huge and tone-on-tone, behind him */}
         <div data-s="word-drift" aria-hidden className="pointer-events-none absolute inset-x-0 top-[9%] flex justify-center">
           <span

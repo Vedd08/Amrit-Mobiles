@@ -85,9 +85,9 @@ export const MagneticButton = React.forwardRef<HTMLElement, MagneticButtonProps>
       Component,
       {
         ref: (node: HTMLElement) => {
-          (localRef as React.MutableRefObject<HTMLElement | null>).current = node;
+          (localRef as React.RefObject<HTMLElement | null>).current = node;
           if (typeof forwardedRef === "function") forwardedRef(node);
-          else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLElement | null>).current = node;
+          else if (forwardedRef) (forwardedRef as React.RefObject<HTMLElement | null>).current = node;
         },
         className: cn("cursor-pointer", className),
         ...props,
@@ -187,15 +187,15 @@ export function CinematicFooter() {
       */}
       <div
         ref={wrapperRef}
-        className="relative md:h-[100svh] w-full md:[clip-path:polygon(0%_0,100%_0%,100%_100%,0_100%)]"
+        className="relative md:h-svh w-full md:[clip-path:polygon(0%_0,100%_0%,100%_100%,0_100%)]"
       >
-        <footer className="relative min-h-[100svh] md:fixed md:bottom-0 md:left-0 flex md:h-[100svh] md:min-h-0 w-full flex-col justify-between overflow-hidden bg-paper text-ink cinematic-footer-wrapper">
+        <footer className="relative min-h-svh md:fixed md:bottom-0 md:left-0 flex md:h-svh md:min-h-0 w-full flex-col justify-between overflow-hidden bg-paper text-ink cinematic-footer-wrapper">
           <div className="footer-aurora absolute left-1/2 top-1/2 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px] pointer-events-none z-0" />
           <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
 
           <div
             ref={giantTextRef}
-            className="footer-giant-bg-text absolute -bottom-[5vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none"
+            className="footer-giant-bg-text absolute bottom-[-5vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none"
           >
             AMRIT
           </div>

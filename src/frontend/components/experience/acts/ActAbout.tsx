@@ -108,7 +108,7 @@ export function ActAbout() {
       <div className="mx-auto mb-20 max-w-site md:mb-32 md:px-4">
         <CompanyJourney />
       </div>
-      <div ref={sectionRef} className="mx-auto grid max-w-site items-center gap-12 md:px-4 lg:grid-cols-12 lg:gap-16 [&>*]:min-w-0">
+      <div ref={sectionRef} className="mx-auto grid max-w-site items-center gap-12 md:px-4 lg:grid-cols-12 lg:gap-16 *:min-w-0">
         {/* Story */}
         <div className="lg:col-span-5">
           <h2 className="text-4xl font-bold leading-[1.02] tracking-tight text-ink md:text-6xl">
@@ -133,7 +133,7 @@ export function ActAbout() {
         {/* The map */}
         <div className="lg:col-span-7">
           <div
-            className="relative overflow-hidden rounded-[28px] border border-line bg-white shadow-[0_30px_60px_-40px_rgba(26,28,25,0.45)]"
+            className="relative overflow-hidden rounded-lg border border-line bg-white shadow-[0_30px_60px_-40px_rgba(26,28,25,0.45)]"
             style={{ aspectRatio: `${SURAT_VIEW.w} / ${SURAT_VIEW.h}` }}
           >
             <svg
@@ -180,7 +180,7 @@ export function ActAbout() {
                 </textPath>
               </text>
               {/* North */}
-              <g transform={`translate(${SURAT_VIEW.w - 70} 70)`} className="fill-[#9A9C93]">
+              <g transform={`translate(${SURAT_VIEW.w - 70} 70)`} className="fill-ink-4">
                 <path d="M0 -26 L10 6 L0 0 L-10 6 Z" />
                 <text y="34" textAnchor="middle" className="text-[22px] font-bold">
                   N
@@ -297,7 +297,7 @@ export function ActAbout() {
           </div>
 
           {/* Branch chips (the way in on small screens, where pins are small) */}
-          <div className="-mx-6 mt-4 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0">
+          <div className="-mx-6 mt-4 flex gap-2 overflow-x-auto px-6 pb-1 scrollbar-none sm:mx-0 sm:flex-wrap sm:px-0">
             {pins.map((pin) => (
               <button
                 key={pin.id}

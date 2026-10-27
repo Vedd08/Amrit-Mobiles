@@ -429,7 +429,7 @@ export function Act07EnterStore({
           }}
         >
           <div className="absolute inset-[2.5px] rounded-[inherit] bg-[#0B0C0D]" />
-          <span className="absolute -right-[2px] top-[22%] h-[16%] w-[3px] rounded-r-sm bg-[#9AA9B7]" />
+          <span className="absolute -right-0.5 top-[22%] h-[16%] w-0.75 rounded-r-sm bg-[#9AA9B7]" />
         </div>
 
         {/* The screen: full-viewport layer clipped to the phone, then to the whole viewport */}
@@ -441,7 +441,7 @@ export function Act07EnterStore({
           aria-hidden="true"
           inert
         >
-          <div ref={headerRef} className="absolute inset-0 flex flex-col justify-start pt-[96px]" style={{ opacity: 0 }}>
+          <div ref={headerRef} className="absolute inset-0 flex flex-col justify-start pt-24" style={{ opacity: 0 }}>
             <PhoneHeaderContent as="h2" interactiveSearch={false} stats={stats} showcase={showcase}>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3 lg:justify-start pointer-events-none">
                 {budgetCounts.under15 > 0 && (
@@ -530,7 +530,7 @@ export function Act07EnterStore({
               <div ref={lockRef} data-flap-screen="cover" className="absolute overflow-hidden text-white">
                 <Image src="/images/wallpapers/samsung.webp" alt="" fill sizes="200px" className="object-cover" />
                 <div className="absolute inset-0 bg-linear-to-b from-black/35 via-black/0 via-45% to-black/40" />
-                <span className="absolute left-1/2 top-[3.5%] h-[9px] w-[9px] -translate-x-1/2 rounded-full bg-black" />
+                <span className="absolute left-1/2 top-[3.5%] h-2.25 w-2.25 -translate-x-1/2 rounded-full bg-black" />
                 <div className="relative flex items-center justify-between px-[9%] pt-[5%] text-[9px] font-semibold">
                   <span>Amrit</span>
                   <span className="tracking-tight">5G ▮▮▮</span>
@@ -551,7 +551,7 @@ export function Act07EnterStore({
                     </div>
                   </div>
                 </div>
-                <div className="absolute bottom-[2.5%] left-1/2 h-[3px] w-[34%] -translate-x-1/2 rounded-full bg-white/90" />
+                <div className="absolute bottom-[2.5%] left-1/2 h-0.75 w-[34%] -translate-x-1/2 rounded-full bg-white/90" />
               </div>
             </div>
             <div

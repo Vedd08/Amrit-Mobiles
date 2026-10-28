@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -34,19 +35,21 @@ async function uniqueSlug(base: string, excludeId?: string) {
 
 async function uploadNewImages(formData: FormData, productId: string) {
   const files = formData.getAll("images").filter((f): f is File => f instanceof File && f.size > 0);
+  if (files.length === 0) return;
   const existingCount = await prisma.productImage.count({ where: { productId } });
 
-  // Uploaded in parallel, not one at a time — a handful of full-resolution
-  // phone photos submitted together otherwise serializes their disk I/O
-  // (or Blob round-trips) into a wall-clock time long enough to trip a
-  // connection reset before the request ever finishes.
   const urls = await Promise.all(files.map((file) => uploadProductImage(file)));
   await prisma.productImage.createMany({
-    data: urls.map((url, i) => ({ productId, url, position: existingCount + i })),
+    data: urls.map((url, i) => ({
+      id: `c${randomUUID().replace(/-/g, "").slice(0, 24)}`,
+      productId,
+      url,
+      position: existingCount + i,
+    })),
   });
 }
 
-export async function createProduct(formData: FormData) {
+export async function createProduct(formData: FormData): Promise<{ error?: string } | void> {
   await requireAdminSession();
 
   const parsed = productSchema.safeParse({
@@ -61,24 +64,35 @@ export async function createProduct(formData: FormData) {
   });
 
   if (!parsed.success) {
-    redirect(`/admin/products/new?error=${encodeURIComponent(parsed.error.issues[0].message)}`);
+    return { error: parsed.error.issues[0].message };
   }
 
   const slug = await uniqueSlug(parsed.data.name);
   const specs = JSON.stringify(parseSpecs(String(formData.get("specs") || "")));
 
-  const product = await prisma.product.create({
-    data: { ...parsed.data, slug, specs },
-  });
+  let product;
+  try {
+    product = await prisma.product.create({
+      data: { ...parsed.data, slug, specs },
+    });
+  } catch (err: any) {
+    return { error: err?.message || "Failed to create product in database." };
+  }
 
-  await uploadNewImages(formData, product.id);
+  try {
+    await uploadNewImages(formData, product.id);
+  } catch (err: any) {
+    // Clean up created product so an incomplete product isn't left behind
+    await prisma.product.delete({ where: { id: product.id } }).catch(() => {});
+    return { error: "Failed to save photos: " + (err?.message || "Upload error") };
+  }
 
   revalidatePath("/admin/products");
   refreshCatalog();
   redirect("/admin/products");
 }
 
-export async function updateProduct(id: string, formData: FormData) {
+export async function updateProduct(id: string, formData: FormData): Promise<{ error?: string } | void> {
   await requireAdminSession();
 
   const parsed = productSchema.safeParse({
@@ -93,19 +107,27 @@ export async function updateProduct(id: string, formData: FormData) {
   });
 
   if (!parsed.success) {
-    redirect(`/admin/products/${id}/edit?error=${encodeURIComponent(parsed.error.issues[0].message)}`);
+    return { error: parsed.error.issues[0].message };
   }
 
   const current = await prisma.product.findUniqueOrThrow({ where: { id } });
   const slug = current.name === parsed.data.name ? current.slug : await uniqueSlug(parsed.data.name, id);
   const specs = JSON.stringify(parseSpecs(String(formData.get("specs") || "")));
 
-  await prisma.product.update({
-    where: { id },
-    data: { ...parsed.data, slug, specs },
-  });
+  try {
+    await prisma.product.update({
+      where: { id },
+      data: { ...parsed.data, slug, specs },
+    });
+  } catch (err: any) {
+    return { error: err?.message || "Failed to update product in database." };
+  }
 
-  await uploadNewImages(formData, id);
+  try {
+    await uploadNewImages(formData, id);
+  } catch (err: any) {
+    return { error: "Failed to save photos: " + (err?.message || "Upload error") };
+  }
 
   revalidatePath("/admin/products");
   refreshCatalog();

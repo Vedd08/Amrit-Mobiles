@@ -11,19 +11,24 @@ export const categorySchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
 });
 
-export const productSchema = z.object({
-  name: z.string().trim().min(1, "Name is required"),
-  brand: z.string().trim().min(1, "Brand is required"),
-  description: z.string().trim().min(1, "Description is required"),
-  price: z.coerce.number().int().positive("Price must be a positive number"),
-  mrp: z.preprocess(
-    (v) => (v === "" || v === null || v === undefined ? undefined : v),
-    z.coerce.number().int().positive().optional()
-  ),
-  stock: z.coerce.number().int().min(0, "Stock cannot be negative"),
-  categoryId: z.string().trim().min(1, "Category is required"),
-  isActive: z.coerce.boolean(),
-});
+export const productSchema = z
+  .object({
+    name: z.string().trim().min(1, "Name is required"),
+    brand: z.string().trim().min(1, "Brand is required"),
+    description: z.string().trim().min(1, "Description is required"),
+    price: z.coerce.number().int("Price must be a whole rupee amount").positive("Price must be a positive number"),
+    mrp: z.preprocess(
+      (v) => (v === "" || v === null || v === undefined ? undefined : v),
+      z.coerce.number().int("MRP must be a whole rupee amount").positive("MRP must be a positive number").optional()
+    ),
+    stock: z.coerce.number().int("Stock must be a whole number").min(0, "Stock cannot be negative"),
+    categoryId: z.string().trim().min(1, "Category is required"),
+    isActive: z.coerce.boolean(),
+  })
+  .refine((data) => data.mrp === undefined || data.mrp >= data.price, {
+    message: "MRP cannot be lower than the selling price",
+    path: ["mrp"],
+  });
 
 /** Indian mobile number -> 10 digits (accepts spaces, dashes, +91 or a leading 0). */
 export function normalizeIndianMobile(raw: string) {

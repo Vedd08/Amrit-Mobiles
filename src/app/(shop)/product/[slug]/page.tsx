@@ -117,6 +117,14 @@ export default async function ProductPage({
             <p className="mt-1 text-xs font-bold text-ink-3">
               Inclusive of all taxes · or {formatINR(Math.round(product.price / 12))}/mo on 0% EMI
             </p>
+            {specs.Offer && (
+              <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-ink-2">
+                <span className="rounded bg-lime/20 px-1.5 py-0.5 text-micro font-bold uppercase tracking-wider text-lime-ink">
+                  Offer
+                </span>
+                <span>{specs.Offer}</span>
+              </p>
+            )}
 
             <div className="mt-6">
               <VariantPicker variants={product.variants} currentSlug={product.slug} />

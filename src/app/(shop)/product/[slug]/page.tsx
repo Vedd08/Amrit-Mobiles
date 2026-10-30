@@ -2,7 +2,9 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProductBySlug } from "@/backend/lib/queries";
+import { getProductBySlug, getVisibleOffers } from "@/backend/lib/queries";
+import { ProductOffers } from "@/frontend/components/shop/ProductOffers";
+import { offersFor } from "@/shared/offers";
 import { AddToCartPanel } from "@/frontend/components/shop/AddToCartPanel";
 import { ProductGallery } from "@/frontend/components/shop/ProductGallery";
 import { ProductSpecSheet } from "@/frontend/components/shop/ProductSpecSheet";
@@ -42,7 +44,7 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = await loadProduct(slug);
+  const [product, allOffers] = await Promise.all([loadProduct(slug), getVisibleOffers()]);
   if (!product) notFound();
 
   const discount =
@@ -53,6 +55,7 @@ export default async function ProductPage({
   const mainImage = product.images[0]?.url ?? null;
   const specs = product.parsedSpecs;
   const brand = PHONE_BRANDS.find((b) => b.dbBrand.toLowerCase() === product.brand.toLowerCase());
+  const offers = offersFor(allOffers, brand?.slug, product.price);
   const variant = product.variants.find((v) => v.slug === product.slug);
   // With options, the title is the model and the chosen option sits under it.
   const title = product.variants.length > 1 && specs.Model ? specs.Model : product.name;
@@ -129,6 +132,12 @@ export default async function ProductPage({
             <div className="mt-6">
               <VariantPicker variants={product.variants} currentSlug={product.slug} />
             </div>
+
+            {offers.length > 0 && (
+              <div className="mt-8">
+                <ProductOffers offers={offers} />
+              </div>
+            )}
 
             {highlights.length > 0 && (
               <dl className="mt-6 grid grid-cols-2 gap-2.5">

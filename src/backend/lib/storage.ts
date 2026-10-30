@@ -11,13 +11,13 @@ import path from "path";
  * development — files are written to public/uploads and served as static
  * assets. Callers don't need to change when the token is added.
  */
-export async function uploadProductImage(file: File): Promise<string> {
+export async function uploadProductImage(file: File, folder = "products"): Promise<string> {
   const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
   const filename = `${randomUUID()}.${ext}`;
 
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     const { put } = await import("@vercel/blob");
-    const blob = await put(`products/${filename}`, file, { access: "public" });
+    const blob = await put(`${folder}/${filename}`, file, { access: "public" });
     return blob.url;
   }
 

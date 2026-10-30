@@ -242,6 +242,13 @@
 }
 @keyframes amTicker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
+/* Bottom sheets (store picker, offer details): light backdrop fades, panel rises. */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sheetUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
 /* Hero backdrop drift. Transform-only and on its own layer, so it stays on
    the compositor and costs nothing while the pinned hero is scrubbing. */
 @keyframes heroOrb {

@@ -101,6 +101,34 @@ model OrderItem {
   @@index([orderId])
 }
 
+// Bank, card, EMI and UPI offers shown as "Super Savings" on product pages.
+// kind: "BANK" | "CREDIT_CARD" | "DEBIT_CARD" | "EMI" | "UPI" (see src/shared/offers.ts)
+model Offer {
+  id        String    @id @default(cuid())
+  kind      String
+  /// Who gives it: "HDFC Bank", "Bajaj Finserv", "Tata Neu UPI".
+  provider  String
+  logoUrl   String?
+  /// The headline on the card: "Up to ₹4,000 instant discount".
+  title     String
+  /// Full terms, shown when the shopper taps View more.
+  details   String
+  /// Comma-separated brand slugs (PHONE_BRANDS); empty means every brand.
+  brands    String    @default("")
+  /// Shown only on phones priced at least this much (rupees).
+  minPrice  Int?
+  startsAt  DateTime?
+  endsAt    DateTime?
+  isActive  Boolean   @default(true)
+  /// Lower shows first.
+  position  Int       @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
 model AdminUser {
   id           String @id @default(cuid())
   email        String @unique

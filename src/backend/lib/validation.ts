@@ -30,6 +30,40 @@ export const productSchema = z
     path: ["mrp"],
   });
 
+const blankToUndefined = (v: unknown) => (v === "" || v === null || v === undefined ? undefined : v);
+
+// <input type="date"> gives YYYY-MM-DD; offers start and end on Indian days.
+const istDay = (edge: "start" | "end") =>
+  z.preprocess(
+    blankToUndefined,
+    z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Pick a valid date")
+      .transform((d) => new Date(`${d}T${edge === "start" ? "00:00:00.000" : "23:59:59.999"}+05:30`))
+      .optional()
+  );
+
+export const offerSchema = z
+  .object({
+    kind: z.enum(["BANK", "CREDIT_CARD", "DEBIT_CARD", "EMI", "UPI"], "Choose the offer type"),
+    provider: z.string().trim().min(1, "Enter the bank or company name").max(60, "Keep the name under 60 characters"),
+    title: z.string().trim().min(1, "Enter a headline").max(90, "Keep the headline under 90 characters"),
+    details: z.string().trim().min(1, "Enter the offer details").max(2000, "The details are too long"),
+    brands: z.array(z.string()),
+    minPrice: z.preprocess(
+      blankToUndefined,
+      z.coerce.number().int("Minimum price must be a whole rupee amount").positive("Minimum price must be positive").optional()
+    ),
+    startsAt: istDay("start"),
+    endsAt: istDay("end"),
+    position: z.preprocess(blankToUndefined, z.coerce.number().int("Display order must be a whole number").default(0)),
+    isActive: z.coerce.boolean(),
+  })
+  .refine((d) => !d.startsAt || !d.endsAt || d.startsAt <= d.endsAt, {
+    message: "The end date is before the start date",
+    path: ["endsAt"],
+  });
+
 /** Indian mobile number -> 10 digits (accepts spaces, dashes, +91 or a leading 0). */
 export function normalizeIndianMobile(raw: string) {
   let d = raw.replace(/\D/g, "");

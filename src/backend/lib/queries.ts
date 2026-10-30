@@ -3,6 +3,7 @@ import { prisma } from "@/backend/lib/prisma";
 import type { ProductCardData } from "@/frontend/components/shop/ProductCard";
 import { HIDDEN_BRANDS, byLeadVariant, groupVariants, parseSpecs } from "@/shared/phone-catalog";
 import { CATALOG_TAG } from "@/backend/lib/catalog-cache";
+import { parseOfferBrands, type OfferData } from "@/shared/offers";
 
 // Catalogue reads are cached (tag "catalog"): the database is in Mumbai and
 // the same few dozen products are read on every page view. Anything that
@@ -41,6 +42,26 @@ function toCardData(product: {
     category: product.category?.slug ?? "unknown",
   };
 }
+
+/** Every visible offer, best first. Brand, price and date filtering is offersFor(). */
+export const getVisibleOffers = cached("visible-offers", async (): Promise<OfferData[]> => {
+  const offers = await prisma.offer.findMany({
+    where: { isActive: true },
+    orderBy: [{ position: "asc" }, { createdAt: "desc" }],
+  });
+  return offers.map((o) => ({
+    id: o.id,
+    kind: o.kind,
+    provider: o.provider,
+    logoUrl: o.logoUrl,
+    title: o.title,
+    details: o.details,
+    brands: parseOfferBrands(o.brands),
+    minPrice: o.minPrice,
+    startsAt: o.startsAt?.toISOString() ?? null,
+    endsAt: o.endsAt?.toISOString() ?? null,
+  }));
+});
 
 export async function getCategories() {
   return prisma.category.findMany({ orderBy: { name: "asc" } });

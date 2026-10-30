@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/app/admin/login/actions";
 import { BrandLogo } from "@/shared/BrandLogo";
-import { DashboardIcon, ProductsIcon, CategoriesIcon, OrdersIcon, LogoutIcon, StoreIcon } from "./icons";
+import { DashboardIcon, ProductsIcon, CategoriesIcon, OrdersIcon, OffersIcon, LogoutIcon, StoreIcon } from "./icons";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: DashboardIcon },
   { href: "/admin/orders", label: "Orders", icon: OrdersIcon },
   { href: "/admin/products", label: "Products", icon: ProductsIcon },
+  { href: "/admin/offers", label: "Offers", icon: OffersIcon },
   { href: "/admin/categories", label: "Categories", icon: CategoriesIcon },
 ];
 
@@ -118,7 +119,7 @@ export function AdminShell({
       {/* Phone / tablet bottom tabs */}
       <nav
         aria-label="Admin"
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
       >
         {NAV.map((item) => {
           const active = isActive(pathname, item.href);
@@ -129,7 +130,7 @@ export function AdminShell({
               aria-current={active ? "page" : undefined}
               className={`relative flex flex-col items-center gap-1 py-2.5 text-[11px] font-bold ${active ? "text-ink" : "text-ink-3"}`}
             >
-              <span className={`relative grid h-8 w-14 place-items-center rounded-full ${active ? "bg-lime/20" : ""}`}>
+              <span className={`relative grid h-8 w-12 place-items-center rounded-full ${active ? "bg-lime/20" : ""}`}>
                 <item.icon className={`h-5 w-5 ${active ? "text-lime-ink" : ""}`} />
                 {item.href === "/admin/orders" && waitingOrders > 0 && (
                   <span className="absolute -right-0.5 -top-1 min-w-4.5 rounded-full bg-[#E8A317] px-1 text-center text-[10px] leading-4.5 text-white">

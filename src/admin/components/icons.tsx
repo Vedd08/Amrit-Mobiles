@@ -46,6 +46,21 @@ export function OrdersIcon({ className = base }: IconProps) {
   );
 }
 
+export function OffersIcon({ className = base }: IconProps) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9.6 3.4a3 3 0 0 1 4.8 0l.5.7a1.5 1.5 0 0 0 1.4.6l.9-.1a3 3 0 0 1 3.4 3.4l-.1.9a1.5 1.5 0 0 0 .6 1.4l.7.5a3 3 0 0 1 0 4.8l-.7.5a1.5 1.5 0 0 0-.6 1.4l.1.9a3 3 0 0 1-3.4 3.4l-.9-.1a1.5 1.5 0 0 0-1.4.6l-.5.7a3 3 0 0 1-4.8 0l-.5-.7a1.5 1.5 0 0 0-1.4-.6l-.9.1a3 3 0 0 1-3.4-3.4l.1-.9a1.5 1.5 0 0 0-.6-1.4l-.7-.5a3 3 0 0 1 0-4.8l.7-.5a1.5 1.5 0 0 0 .6-1.4l-.1-.9a3 3 0 0 1 3.4-3.4l.9.1a1.5 1.5 0 0 0 1.4-.6Z"
+      />
+      <path strokeLinecap="round" d="m9 15 6-6" />
+      <circle cx="9.5" cy="9.5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="14.5" cy="14.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export function SearchIcon({ className = base }: IconProps) {
   return (
     <svg className={className} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

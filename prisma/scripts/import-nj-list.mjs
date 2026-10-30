@@ -104,16 +104,47 @@ export function cleanColour(c) {
     [/\bLAVENDAR\b/gi, "Lavender"],
     [/\bTRANSSILVER\b/gi, "Trans Silver"],
     [/\bMIDNIGHT GREY\b/gi, "Midnight Gray"],
+    [/\bMISTRY\b/gi, "Misty"],
   ];
   for (const [pattern, replacement] of fixes) {
     res = res.replace(pattern, replacement);
   }
-  // Title-case words, preserving uppercase acronyms
+  // Title-case every word, including short all-caps ones ("FOG", "Passion RED")
+  // and the word after a slash or bracket ("Leaf Green/Midnight Black").
   return res
-    .split(/\s+/)
-    .map((w) => (w.length > 3 && w === w.toUpperCase() ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w))
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+    .toLowerCase()
+    .replace(/(^|[\s/(])([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase());
+}
+
+// Colour names that already carry the brand's prefix, e.g. Samsung lists the
+// same A36 as "Lavender" on one row and "Awesome Lavender" on the next.
+const COLOUR_PREFIXES = ["Awesome", "Titanium"];
+
+/**
+ * Within one model, folds spellings of the same colour into one name so the
+ * colour picker doesn't show it twice: "Lavender" -> "Awesome Lavender",
+ * "Titanium Grey" -> "Titanium Gray", "Tea" -> "Tea Green".
+ */
+function colourAliases(colours) {
+  const set = new Set(colours);
+  const alias = new Map();
+  for (const c of set) {
+    const prefixed = COLOUR_PREFIXES.map((p) => `${p} ${c}`).find((p) => set.has(p));
+    const gray = c.replace(/\bGrey\b/, "Gray");
+    const longer = !c.includes(" ") && !c.includes("/") && [...set].find((o) => o.startsWith(`${c} `) && !o.includes("/"));
+    if (prefixed) alias.set(c, prefixed);
+    else if (gray !== c && set.has(gray)) alias.set(c, gray);
+    else if (longer) alias.set(c, longer);
+  }
+  return alias;
+}
+
+function variantIds(model, ram, storage, colour) {
+  const memSlug = [ram ? kebab(ram) : "", kebab(storage)].filter(Boolean).join("-");
+  return {
+    slug: `${kebab(model)}-${kebab(colour)}-${memSlug}`,
+    fullName: `${model} (${colour}, ${[ram, storage].filter(Boolean).join(" + ")})`,
+  };
 }
 
 export function cleanOffer(remark) {
@@ -292,7 +323,8 @@ export function parsePhoneRow(rawBrand, rawName, price, stock, rawRemark) {
       .replace(/Pro Plus/i, "Pro+")
       .replace(/Pro Max/i, "Pro Max");
     const prefix = brand === "REDMI" ? "Redmi " : "Xiaomi ";
-    model = prefix + cleanBase + (has5G ? " 5G" : "");
+    // Xiaomi writes letter suffixes in capitals: Redmi 15C, Xiaomi 17T.
+    model = prefix + cleanBase.replace(/\b(\d+)([a-z])\b/g, (_, n, l) => n + l.toUpperCase()) + (has5G ? " 5G" : "");
     ram = m[2] + "GB";
     storage = m[3].toUpperCase();
     colour = cleanColour(m[4]);
@@ -305,7 +337,7 @@ export function parsePhoneRow(rawBrand, rawName, price, stock, rawRemark) {
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
       .join(" ");
     const has5G = /5G/i.test(m[1]);
-    const cleanBase = mRaw.replace(/\s*5g\b/i, "").replace(/\s*4g\b/i, "");
+    const cleanBase = mRaw.replace(/\s*5g\b/i, "").replace(/\s*4g\b/i, "").replace(/\bFe\b/, "FE");
     model = "vivo " + cleanBase + (has5G ? " 5G" : "");
     ram = m[2] + "GB";
     storage = m[3].toUpperCase();
@@ -342,10 +374,7 @@ export function parsePhoneRow(rawBrand, rawName, price, stock, rawRemark) {
 
   // Model slug for URLs and image asset directories
   const modelSlug = kebab(model);
-  const memSlug = [ram ? kebab(ram) : "", kebab(storage)].filter(Boolean).join("-");
-  const slug = `${modelSlug}-${kebab(colour)}-${memSlug}`;
-  const memLabel = [ram, storage].filter(Boolean).join(" + ");
-  const fullName = `${model} (${colour}, ${memLabel})`;
+  const { slug, fullName } = variantIds(model, ram, storage, colour);
 
   return {
     rawBrand,
@@ -391,13 +420,30 @@ export function loadCatalogue() {
     phones.push({ ...parsed, rowNum });
   }
 
-  // Merge the duplicate Moto G37 Capri Cyan rows (combine stock)
+  // One name per colour within each model.
+  const byModel = new Map();
+  for (const p of phones) byModel.set(p.model, [...(byModel.get(p.model) ?? []), p.colour]);
+  for (const [model, colours] of byModel) {
+    const alias = colourAliases(colours);
+    for (const p of phones) {
+      if (p.model === model && alias.has(p.colour)) {
+        p.colour = alias.get(p.colour);
+        Object.assign(p, variantIds(p.model, p.ram, p.storage, p.colour));
+      }
+    }
+  }
+
+  // Rows that are now the same variant (e.g. the Moto G37 "Capri (Cyan)" and
+  // "Capri Cyan" rows) become one product with their stock combined.
   const mergedPhones = [];
   const seenSlugs = new Map();
   for (const p of phones) {
     if (seenSlugs.has(p.slug)) {
       const existing = seenSlugs.get(p.slug);
       existing.stock += p.stock;
+      if (existing.price !== p.price) {
+        console.warn(`! ${p.fullName}: rows ${existing.rowNum} and ${p.rowNum} differ in price; kept ₹${existing.price}, not ₹${p.price}`);
+      }
     } else {
       seenSlugs.set(p.slug, p);
       mergedPhones.push(p);
@@ -485,7 +531,7 @@ async function main() {
       };
       const specsJson = JSON.stringify(specsObj);
 
-      const description = `${p.model} (${p.colour}) with ${[p.ram, p.storage].filter(Boolean).join(" and ")} storage.`;
+      const description = `${p.model} in ${p.colour}, with ${p.ram ? `${p.ram} RAM and ` : ""}${p.storage} storage.`;
 
       let id;
       if (existing) {

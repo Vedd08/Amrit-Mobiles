@@ -53,6 +53,7 @@ export function OfferForm({
     provider: offer?.provider ?? "",
     title: offer?.title ?? "",
     details: offer?.details ?? "",
+    endsAt: offer?.endsAt ?? "",
   });
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -69,6 +70,7 @@ export function OfferForm({
       provider: String(d.get("provider") || ""),
       title: String(d.get("title") || ""),
       details: String(d.get("details") || ""),
+      endsAt: String(d.get("endsAt") || ""),
     });
   };
 
@@ -231,8 +233,8 @@ export function OfferForm({
 
       <aside className="order-first lg:sticky lg:top-9 lg:order-0">
         <p className="mb-2 text-xs font-bold uppercase tracking-wider text-ink-3">Preview</p>
-        <div className="w-60">
-          <OfferCard offer={{ ...draft, logoUrl }} />
+        <div className="w-64">
+          <OfferCard offer={{ ...draft, endsAt: draft.endsAt || null, logoUrl }} />
         </div>
       </aside>
     </form>

@@ -249,6 +249,9 @@ export function CinematicFooter() {
                 <MagneticButton as={Link} href="/trade-in" className="footer-glass-pill px-6 py-3 rounded-full text-ink-3 font-medium text-xs md:text-sm hover:text-ink">
                   Trade-In
                 </MagneticButton>
+                <MagneticButton as={Link} href="/review" className="footer-glass-pill px-6 py-3 rounded-full text-ink-3 font-medium text-xs md:text-sm hover:text-ink">
+                  Review us
+                </MagneticButton>
               </div>
             </div>
           </div>

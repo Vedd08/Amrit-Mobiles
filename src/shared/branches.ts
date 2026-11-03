@@ -35,6 +35,8 @@ export type Branch = {
   approximateLocation?: boolean;
   /** Google Maps link for directions. */
   maps: string;
+  /** Google place ID of the shop's own listing, where its reviews go. */
+  googlePlaceId?: string;
   /** Extra label, e.g. a branded store. */
   note?: string;
 };
@@ -53,6 +55,7 @@ export const BRANCHES: Branch[] = [
     lat: 21.2094676,
     lng: 72.7673311,
     maps: "https://maps.app.goo.gl/wH9WuGsDk81DbyQK9",
+    googlePlaceId: "ChIJy8X-ewBN4DsR1Qd--nPauZw",
   },
   {
     slug: "vesu",
@@ -64,6 +67,7 @@ export const BRANCHES: Branch[] = [
     lat: 21.1411469,
     lng: 72.7824065,
     maps: "https://maps.app.goo.gl/EwLsUuK9YWyEpn7r7?g_st=ac",
+    googlePlaceId: "ChIJw5ed60xT4DsRvQyD8OGIe7k",
   },
   {
     slug: "udhna",
@@ -88,6 +92,7 @@ export const BRANCHES: Branch[] = [
     lat: 21.1850019,
     lng: 72.8357174,
     maps: "https://maps.app.goo.gl/TW5DRZuMPp3dQFH66",
+    googlePlaceId: "ChIJ6d1eQ0RO4DsRmwhSGPMA7KE",
   },
   {
     slug: "ring-road-2",
@@ -111,6 +116,7 @@ export const BRANCHES: Branch[] = [
     lat: 21.1756862,
     lng: 72.8568475,
     maps: "https://maps.app.goo.gl/Kffv6uCBtatX8hcp9?g_st=ac",
+    googlePlaceId: "ChIJaSBRSZ9P4DsRj2urc4CQsvQ",
   },
   {
     slug: "mahaprabhu-nagar",
@@ -122,6 +128,7 @@ export const BRANCHES: Branch[] = [
     lat: 21.1770707,
     lng: 72.8616666,
     maps: "https://maps.app.goo.gl/xNhXBZa9dcBroJEd8?g_st=ac",
+    googlePlaceId: "ChIJ2x9ZCMRP4DsRIfvBykIqlqM",
   },
   {
     slug: "godadara",
@@ -133,6 +140,7 @@ export const BRANCHES: Branch[] = [
     lat: 21.1674754,
     lng: 72.8702929,
     maps: "https://maps.app.goo.gl/VNSLRgom4nUdbaZc9?g_st=ac",
+    googlePlaceId: "ChIJq_a6yqtP4DsR2CJW5LyUUCw",
   },
   {
     slug: "pandol-ved-road",
@@ -144,12 +152,20 @@ export const BRANCHES: Branch[] = [
     lat: 21.2146914,
     lng: 72.8222315,
     maps: mapsSearch("Amrit Moblies Samsung Cafe, Ved Road, Surat"),
+    googlePlaceId: "ChIJ5VhDmiBP4DsRCoyIyV_ldSk",
     note: "Samsung Café",
   },
 ];
 
 /** Branches a visitor can message on WhatsApp. */
 export const CHAT_BRANCHES = BRANCHES.filter((b): b is Branch & { phone: string } => b.phone !== null);
+
+/** Branches with their own Google listing, so they can be reviewed (/review). */
+export const REVIEW_BRANCHES = BRANCHES.filter((b): b is Branch & { googlePlaceId: string } => !!b.googlePlaceId);
+
+/** Opens Google's "write a review" box for the branch's listing. */
+export const googleReviewUrl = (b: { googlePlaceId: string }) =>
+  `https://search.google.com/local/writereview?placeid=${b.googlePlaceId}`;
 
 /** Used when nothing better is known (no JS, no location, nothing chosen): the city-centre store. */
 export const DEFAULT_BRANCH = BRANCHES.find((b) => b.slug === "ring-road-1")!;

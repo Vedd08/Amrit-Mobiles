@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { brands } from '@/shared/brands';
 import { LogoStar } from '@/frontend/components/phones/LogoStar';
 import { useReducedMotion } from '@/frontend/lib/use-reduced-motion';
+import type { Quality } from '@/frontend/lib/experience/quality';
 
 /**
  * Living light backdrop behind the whole homepage: drifting lime/teal/steel
@@ -29,8 +30,10 @@ const SPARKS = [
   { x: 76, y: 64, s: 10, d: 1.5 },
 ];
 
-export function ExperienceBackdrop() {
+export function ExperienceBackdrop({ quality }: { quality: Quality }) {
   const reducedMotion = useReducedMotion();
+  // Idle drift and the cursor glow only where the device has headroom.
+  const drift = quality === 'high';
   const gridRef = useRef<HTMLDivElement>(null);
   const blobA = useRef<HTMLDivElement>(null);
   const blobB = useRef<HTMLDivElement>(null);
@@ -42,6 +45,10 @@ export function ExperienceBackdrop() {
 
   useEffect(() => {
     if (reducedMotion) return;
+    const fine = window.matchMedia('(pointer: fine)').matches;
+    // Budget phones keep the backdrop still: following the scroll costs them
+    // 10-20% of every frame (measured at 4x CPU), and it reads the same.
+    if (!drift && !fine) return;
 
     const mouse = { x: innerWidth / 2, y: innerHeight / 2, gx: innerWidth / 2, gy: innerHeight / 2 };
     const onMove = (e: PointerEvent) => {
@@ -53,18 +60,26 @@ export function ExperienceBackdrop() {
 
     let raf = 0;
     const t0 = performance.now();
-    // Touch devices: the backdrop moves with the scroll only (no idle drift),
-    // so a phone does no work at all while the reader is still.
-    const touch = !window.matchMedia('(pointer: fine)').matches;
+    // Touch devices and slower computers: the backdrop moves with the scroll
+    // only (no idle drift), so it does no work at all while the reader is still.
+    const still = !drift || !fine;
     let lastY = -1;
+    // Reading scrollHeight inside the frame forces a layout whenever anything
+    // else has touched the DOM first, so measure only when the page resizes.
+    let max = document.documentElement.scrollHeight - innerHeight;
+    const measure = () => {
+      max = document.documentElement.scrollHeight - innerHeight;
+    };
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(document.body);
+    window.addEventListener('resize', measure, { passive: true });
     const tick = (now: number) => {
-      if (touch && scrollY === lastY) {
+      if (still && scrollY === lastY) {
         raf = requestAnimationFrame(tick);
         return;
       }
       lastY = scrollY;
-      const t = touch ? 0 : (now - t0) / 1000;
-      const max = document.documentElement.scrollHeight - innerHeight;
+      const t = still ? 0 : (now - t0) / 1000;
       const y = scrollY;
       const p = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
       // 0 → 1 over the last fifth of the page: the build-up into the dive.
@@ -111,9 +126,11 @@ export function ExperienceBackdrop() {
 
     return () => {
       cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', measure);
       window.removeEventListener('pointermove', onMove);
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, drift]);
 
   const blobBase = 'absolute left-0 top-0 rounded-full will-change-transform';
 
@@ -201,10 +218,10 @@ export function ExperienceBackdrop() {
         </span>
       ))}
 
-      {/* Cursor glow (desktop pointers only) */}
+      {/* Cursor glow (desktop pointers, high quality only) */}
       <div
         ref={glowRef}
-        className="absolute left-0 top-0 hidden h-[420px] w-[420px] rounded-full md:block will-change-transform"
+        className={`absolute left-0 top-0 hidden h-[420px] w-[420px] rounded-full will-change-transform ${drift ? 'md:block' : ''}`}
         style={{ background: 'radial-gradient(circle, rgba(146,195,24,0.22) 0%, rgba(146,195,24,0) 65%)' }}
       />
 

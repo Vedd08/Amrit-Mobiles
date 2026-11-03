@@ -13,6 +13,8 @@ export const stageState = {
   mouseOffset: new Vector3(0, 0, 0),
   activeBrandIndex: 0,
   tier: 'desktop' as StageTier,
+  /** What this device can handle (quality.ts); set before the stage mounts. */
+  quality: 'high' as 'high' | 'medium' | 'lite',
   canvasOpacity: 1,
   /** True once the 3D screen has painted its first photo wallpaper. Until then
    *  the static poster stays up and the canvas stays hidden (no black screen). */

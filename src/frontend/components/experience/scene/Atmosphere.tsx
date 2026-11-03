@@ -51,7 +51,7 @@ export function Atmosphere() {
 
   const particlesRef = useRef<Points>(null);
 
-  const particlesCount = tier === 'desktop' ? 600 : tier === 'tablet' ? 240 : 0;
+  const particlesCount = tier === 'mobile' ? 0 : tier === 'desktop' && stageState.quality === 'high' ? 600 : 200;
   
   const particlesGeometry = useMemo(() => {
     if (particlesCount === 0) return null;

@@ -60,7 +60,7 @@ export class ScreenTexture {
     const tier = stageState.tier;
     this.variant = variant;
     if (variant === 'inner') {
-      this.canvas.width = tier === 'desktop' ? 1024 : 768;
+      this.canvas.width = tier === 'desktop' && stageState.quality === 'high' ? 1024 : 768;
       this.pxScale = this.canvas.width / 730;
     } else {
       this.canvas.width = tier === 'mobile' ? 384 : 512;
@@ -249,8 +249,10 @@ export class ScreenTexture {
                            (this.wakeUpStart > 0 && timestamp - this.wakeUpStart < 600);
                            
     // Live wallpapers drift continuously, so hold a smooth rate (the 3D stage
-    // never mounts on the mobile tier).
-    const targetFps = isInTransition ? (stageState.tier === 'mobile' ? 20 : 30) : (stageState.tier === 'mobile' ? 15 : 30);
+    // never mounts on the mobile tier). Each repaint is a full texture upload,
+    // so a medium-quality device repaints less often outside transitions.
+    const idleFps = stageState.tier === 'mobile' ? 15 : stageState.quality === 'high' ? 30 : 20;
+    const targetFps = isInTransition ? (stageState.tier === 'mobile' ? 20 : 30) : idleFps;
     const fpsInterval = 1000 / targetFps;
 
     const delta = timestamp - this.lastPaint;

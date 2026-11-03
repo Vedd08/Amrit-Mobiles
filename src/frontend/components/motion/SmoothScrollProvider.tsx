@@ -34,9 +34,11 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
+    // Lenis only smooths the wheel (syncTouch is off), so a touch-only device
+    // gains nothing from it but a second scroll listener feeding ScrollTrigger
+    // on every frame. Phones and tablets scroll natively.
+    if (!window.matchMedia("(any-pointer: fine)").matches) return;
 
-    // syncTouch defaults to false, so touch scrolling stays native — only
-    // wheel/programmatic scroll gets the eased smoothing.
     const lenis = new Lenis();
     storeRef.current!.lenis = lenis;
     storeRef.current!.listeners.forEach(l => l());

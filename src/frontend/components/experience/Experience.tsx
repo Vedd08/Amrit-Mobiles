@@ -1,6 +1,7 @@
 'use client';
 
 import { useStageTier } from '@/frontend/lib/experience/useStageTier';
+import { useQuality } from '@/frontend/lib/experience/quality';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { SiteNav } from '@/frontend/components/layout/SiteNav';
@@ -52,6 +53,7 @@ export function Experience({
   }, []);
 
   const tier = useStageTier();
+  const quality = useQuality();
   const [load3D, setLoad3D] = useState(false);
   const [stageReady, setStageReady] = useState(false);
 
@@ -82,11 +84,13 @@ export function Experience({
 
   return (
     <>
-      <ExperienceBackdrop />
+      <ExperienceBackdrop quality={quality} />
       <ScrollProgressHairline />
       <SiteNav />
-      {tier !== 'mobile' && load3D && <Stage onReady={() => { setStageReady(true); ScrollTrigger.refresh(); }} />}
-      <StaticHeroPoster stageReady={stageReady} />
+      {tier !== 'mobile' && quality !== 'lite' && load3D && (
+        <Stage quality={quality} onReady={() => { setStageReady(true); ScrollTrigger.refresh(); }} />
+      )}
+      <StaticHeroPoster stageReady={stageReady} lite={quality === 'lite'} />
       {load3D && <ScrollDirector />}
       <div className="relative z-10 w-full overflow-x-clip pb-24 md:pb-0">
         <Act01Hero />
@@ -119,9 +123,13 @@ function ScrollProgressHairline() {
 
   useEffect(() => {
     let rafId: number;
+    let last = -1;
     const updateProgress = () => {
-      if (lineRef.current) {
-        const p = stageState.progress;
+      const p = stageState.progress;
+      // Only touch the style when the page has moved: an unconditional write
+      // costs a style recalc every frame, even with nobody scrolling.
+      if (lineRef.current && p !== last) {
+        last = p;
         // Fade out hairline in the final act
         const opacity = p >= 0.92 ? Math.max(0, 1 - (p - 0.92) / 0.08) : 1;
         lineRef.current.style.transform = `scaleX(${p})`;
@@ -141,21 +149,25 @@ function ScrollProgressHairline() {
   );
 }
 
-function StaticHeroPoster({ stageReady }: { stageReady: boolean }) {
+/**
+ * The phone on tablet / desktop before the WebGL stage has painted. Without
+ * WebGL (lite quality) it is the phone for the whole text-left stretch: it
+ * floats beside the copy and bows out with the same fade as the 3D phone, so it
+ * never sits over the Trending cards, the map or the finale (which brings its
+ * own CSS phone).
+ */
+function StaticHeroPoster({ stageReady, lite }: { stageReady: boolean; lite: boolean }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     let rafId: number;
     let lastOpacity = -1;
     const updateOpacity = () => {
-      if (window.innerWidth < 768) {
-        rafId = requestAnimationFrame(updateOpacity);
-        return;
-      }
-      if (wrapperRef.current) {
-        const opacity = stageReady && stageState.screenReady ? 0 : 1;
+      if (wrapperRef.current && window.innerWidth >= 768) {
+        const opacity = lite ? stageState.canvasOpacity : stageReady && stageState.screenReady ? 0 : 1;
         if (opacity !== lastOpacity) {
           wrapperRef.current.style.opacity = opacity.toString();
+          wrapperRef.current.style.visibility = opacity > 0 ? 'visible' : 'hidden';
           lastOpacity = opacity;
         }
       }
@@ -163,7 +175,7 @@ function StaticHeroPoster({ stageReady }: { stageReady: boolean }) {
     };
     rafId = requestAnimationFrame(updateOpacity);
     return () => cancelAnimationFrame(rafId);
-  }, [stageReady]);
+  }, [stageReady, lite]);
 
   return (
     <div 
@@ -171,16 +183,21 @@ function StaticHeroPoster({ stageReady }: { stageReady: boolean }) {
       className="hidden md:block fixed inset-0 z-0 pointer-events-none transition-opacity duration-500"
       aria-hidden="true"
     >
-      {/* Placed where the 3D hero phone settles (its size and offset follow the
-          viewport height, like the WebGL camera), so the swap is seamless. */}
-      <img 
-        src="/images/phone-hero-poster-fold.webp" 
-        alt="" 
-        width={1362} 
-        height={983}
-        className="absolute left-[min(calc(50%+40vh),calc(100%-min(33vh,21.6vw)-2vw))] top-[49%] h-[min(46vh,30vw)] w-auto max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
-        fetchPriority="high"
-      />
+      {/* Lite: a gentle float (heroPosterFloat, Act01Hero), so the stand-in
+          phone isn't a still photo. Transform-only, on a wrapper so it doesn't
+          fight the image's centring. */}
+      <div className={`absolute inset-0 ${lite ? 'motion-safe:animate-[heroPosterFloat_5s_ease-in-out_infinite]' : ''}`}>
+        {/* Placed where the 3D hero phone settles (its size and offset follow the
+            viewport height, like the WebGL camera), so the swap is seamless. */}
+        <img
+          src="/images/phone-hero-poster-fold.webp"
+          alt=""
+          width={1362}
+          height={983}
+          className="absolute left-[min(calc(50%+40vh),calc(100%-min(33vh,21.6vw)-2vw))] top-[49%] h-[min(46vh,30vw)] w-auto max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
+          fetchPriority="high"
+        />
+      </div>
     </div>
   );
 }

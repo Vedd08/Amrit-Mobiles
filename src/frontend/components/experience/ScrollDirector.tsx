@@ -89,9 +89,11 @@ export function ScrollDirector() {
     stageState.progress = p;
     resolveKeyframes(p);
     
-    // Dynamic Brand Cycle
+    // Dynamic Brand Cycle. Only where Brands is pinned beside the phone (md+);
+    // on phones the list just scrolls past, and re-highlighting cards there
+    // re-rendered and repainted the list on every scroll frame.
     const brandBeat = keyframes.find(b => b.id === 'brand-cycle');
-    if (brandBeat) {
+    if (brandBeat && window.innerWidth >= 768) {
       const [cycleStart, cycleEnd] = brandBeat.at;
       if (p >= cycleStart && p <= cycleEnd) {
         const localP = (p - cycleStart) / (cycleEnd - cycleStart || 1);

@@ -1,6 +1,6 @@
 import { BRANCHES } from '@/shared/business';
-import { branchAddress } from '@/shared/branches';
-import { WhatsAppIcon } from '@/frontend/components/icons';
+import { branchAddress, HELPLINE_DISPLAY, HELPLINE_TEL } from '@/shared/branches';
+import { PhoneIcon, WhatsAppIcon } from '@/frontend/components/icons';
 import { BranchChatButton } from '@/frontend/components/whatsapp/BranchChatButton';
 
 export function Act06Stores() {
@@ -10,6 +10,14 @@ export function Act06Stores() {
         <div className="reveal-up text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-ink mb-6">Visit a store</h2>
           <p className="text-ink-2 text-xl">We have {BRANCHES.length} branches across Surat.</p>
+          <a
+            href={HELPLINE_TEL}
+            className="mt-6 inline-flex items-center gap-3 rounded-full border border-line bg-white px-6 py-3 text-ink shadow-sm transition-colors hover:border-lime-ink/50"
+          >
+            <PhoneIcon className="h-5 w-5 text-lime-ink" />
+            <span className="text-sm font-semibold text-ink-3">Helpline</span>
+            <span className="text-lg font-bold tabular-nums">{HELPLINE_DISPLAY}</span>
+          </a>
         </div>
 
         {/* TODO(owner): real branch photo */}

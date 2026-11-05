@@ -5,12 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cartCount, useCartStore } from "@/frontend/store/cart-store";
 import { useWishlistStore } from "@/frontend/store/wishlist-store";
-import { CartIcon, ChevronRightIcon, WhatsAppIcon } from "@/frontend/components/icons";
+import { CartIcon, ChevronRightIcon, PhoneIcon, WhatsAppIcon } from "@/frontend/components/icons";
 import { ArrowRightIcon, HeartIcon } from "@/frontend/components/phones/icons";
 import { PhoneSearch } from "@/frontend/components/phones/PhoneSearch";
 import { BrandLogo } from "@/shared/BrandLogo";
 import { brands } from "@/shared/brands";
-import { BRANCHES } from "@/shared/branches";
+import { BRANCHES, HELPLINE_DISPLAY, HELPLINE_TEL } from "@/shared/branches";
 import { PHONE_CATEGORIES } from "@/shared/phone-catalog";
 import { useStoreChatLink } from "@/frontend/store/store-chat-store";
 import { useMounted } from "@/frontend/lib/use-mounted";
@@ -316,6 +316,13 @@ export function SiteNav() {
             className="col-span-2 flex items-center justify-center gap-2 rounded-full bg-lime py-4 text-[16px] font-bold text-[#2A2A2A] shadow-[0_12px_26px_-12px_rgba(95,138,13,0.9)]"
           >
             <WhatsAppIcon className="h-5 w-5" /> Chat on WhatsApp
+          </a>
+          <a
+            href={HELPLINE_TEL}
+            className="col-span-2 flex items-center justify-center gap-2 rounded-full border border-lime-ink/40 bg-white py-4 text-[15px] font-bold text-ink"
+          >
+            <PhoneIcon className="h-5 w-5 text-lime-ink" />
+            Helpline <span className="tabular-nums">{HELPLINE_DISPLAY}</span>
           </a>
           <Link
             href="/#stores"

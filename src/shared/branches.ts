@@ -188,6 +188,11 @@ export function distanceKm(from: { lat: number; lng: number }, to: { lat: number
 /** Assumed until the owner confirms. Mirrored in the copy shown to visitors. */
 export const BRANCH_HOURS = { opens: "10:00", closes: "21:00", days: "Mon–Sun" };
 
+/** Customer helpline for calls, separate from the branches' WhatsApp numbers. */
+export const HELPLINE = "918000224433";
+export const HELPLINE_DISPLAY = "+91 80002 24433";
+export const HELPLINE_TEL = `tel:+${HELPLINE}`;
+
 export const CITY = "Surat";
 export const REGION = "Gujarat";
 export const COUNTRY = "IN";

@@ -3,10 +3,11 @@
 // Page.html) — placeholder but realistic, structured to be easy to swap for
 // real shop content later.
 
-import { SHOP_WHATSAPP_NUMBER } from "@/shared/whatsapp";
+import { HELPLINE_DISPLAY, HELPLINE_TEL } from "@/shared/branches";
 
-export const SHOP_DISPLAY_PHONE = "+91 98765 43210";
-export const SHOP_TEL_LINK = `tel:+${SHOP_WHATSAPP_NUMBER}`;
+// "Call" buttons ring the customer helpline.
+export const SHOP_DISPLAY_PHONE = HELPLINE_DISPLAY;
+export const SHOP_TEL_LINK = HELPLINE_TEL;
 
 
 export type TradeInModel = { name: string; short: string; base: number };

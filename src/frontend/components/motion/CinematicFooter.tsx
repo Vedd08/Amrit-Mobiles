@@ -10,9 +10,9 @@ import { cn } from "@/frontend/lib/utils";
 import { prefersReducedMotion } from "@/frontend/lib/motion";
 import { useLenis } from "@/frontend/components/motion/SmoothScrollProvider";
 import { usePauseOffscreen } from "@/frontend/lib/use-pause-offscreen";
-import { CartIcon, WhatsAppIcon } from "@/frontend/components/icons";
+import { CartIcon, PhoneIcon, WhatsAppIcon } from "@/frontend/components/icons";
 import { useStoreChatLink } from "@/frontend/store/store-chat-store";
-import { BRANCHES } from "@/shared/branches";
+import { BRANCHES, HELPLINE_DISPLAY, HELPLINE_TEL } from "@/shared/branches";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -238,6 +238,19 @@ export function CinematicFooter() {
                 >
                   <WhatsAppIcon className="w-6 h-6 text-ink-3 group-hover:text-ink transition-colors" />
                   Chat on WhatsApp
+                </MagneticButton>
+
+                <MagneticButton
+                  as="a"
+                  href={HELPLINE_TEL}
+                  aria-label={`Call the helpline, ${HELPLINE_DISPLAY}`}
+                  className="footer-glass-pill px-10 py-5 rounded-full text-ink font-bold text-sm md:text-base flex items-center gap-3 group"
+                >
+                  <PhoneIcon className="w-6 h-6 text-ink-3 group-hover:text-ink transition-colors" />
+                  <span className="flex flex-col items-start leading-tight">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-3">Helpline</span>
+                    <span className="tabular-nums">{HELPLINE_DISPLAY}</span>
+                  </span>
                 </MagneticButton>
               </div>
 

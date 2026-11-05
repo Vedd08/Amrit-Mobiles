@@ -3,9 +3,9 @@ import {
   BRANCH_HOURS,
   CITY,
   COUNTRY,
+  HELPLINE,
   REGION,
 } from "@/shared/branches";
-import { SHOP_WHATSAPP_NUMBER } from "@/shared/whatsapp";
 
 /**
  * LocalBusiness structured data for the Surat branches.
@@ -21,10 +21,11 @@ import { SHOP_WHATSAPP_NUMBER } from "@/shared/whatsapp";
  *
  * Fields the owner still has to confirm are listed in src/shared/branches.ts.
  * Nothing here is invented beyond the hours constant; a branch without a
- * confirmed number falls back to the main line.
+ * confirmed number falls back to the customer helpline.
  */
 export function LocalBusinessJsonLd({ siteUrl }: { siteUrl: string }) {
-  const telephone = `+${SHOP_WHATSAPP_NUMBER}`;
+  // The helpline is the business-wide number; branches list their own.
+  const telephone = `+${HELPLINE}`;
 
   const openingHoursSpecification = [
     {

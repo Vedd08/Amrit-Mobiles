@@ -83,4 +83,6 @@ export const checkoutSchema = z.object({
   checkoutMethod: z.literal("WHATSAPP"),
   branchSlug: z.string().min(1, "Choose a store"),
   note: z.string().trim().max(300, "That note is too long").optional().default(""),
+  // Optional and never pre-ticked: the order goes through either way.
+  marketingConsent: z.boolean().optional().default(false),
 });

@@ -16,6 +16,8 @@ export type PlaceOrderInput = {
   /** Store the customer is buying from; the order goes to its WhatsApp. */
   branchSlug: string;
   note?: string;
+  /** Ticked "I agree to receive RCS, SMS & WhatsApp messages". */
+  marketingConsent?: boolean;
   items: CheckoutItemInput[];
 };
 
@@ -59,7 +61,7 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
   }
 
   const total = orderItemsData.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const { customerName, phone, address, note } = parsed.data;
+  const { customerName, phone, address, note, marketingConsent } = parsed.data;
 
   const order = await prisma.$transaction(async (tx) => {
     const created = await tx.order.create({
@@ -69,6 +71,7 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
         address,
         branch: branch.slug,
         note: note || null,
+        marketingConsent,
         checkoutMethod: "WHATSAPP",
         total,
         status: "NEW",

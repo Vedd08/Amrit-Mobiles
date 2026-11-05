@@ -78,6 +78,8 @@ model Order {
   note           String?
   /// Internal note for the team; never shown to the customer.
   staffNote      String?
+  /// The customer ticked "I agree to receive RCS, SMS & WhatsApp messages" on the order form.
+  marketingConsent Boolean @default(false)
 
   items OrderItem[]
 

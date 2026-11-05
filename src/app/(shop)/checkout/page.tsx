@@ -100,6 +100,7 @@ export default function CheckoutPage() {
       phone: String(formData.get("phone") || ""),
       address: String(formData.get("address") || ""),
       note: String(formData.get("note") || ""),
+      marketingConsent: formData.get("marketingConsent") === "on",
       branchSlug,
       checkoutMethod: "WHATSAPP",
       items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
@@ -215,6 +216,17 @@ export default function CheckoutPage() {
               className={field}
             />
           </div>
+
+          <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-white px-4 py-3.5 transition-colors has-[:checked]:border-lime-ink/50 has-[:checked]:bg-lime/10">
+            <input
+              type="checkbox"
+              name="marketingConsent"
+              className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded accent-lime-ink"
+            />
+            <span className="text-sm leading-snug text-ink-2">
+              I agree to receive RCS, SMS &amp; WhatsApp messages from Amrit Mobiles on my mobile number.
+            </span>
+          </label>
 
           <button
             type="submit"

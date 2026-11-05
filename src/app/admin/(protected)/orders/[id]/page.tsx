@@ -56,6 +56,9 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
               <div className="min-w-0">
                 <p className="text-lg font-extrabold text-ink">{order.customerName}</p>
                 <p className="tabular-nums text-ink-3">+91 {order.phone}</p>
+                <p className={`mt-1 text-xs font-semibold ${order.marketingConsent ? "text-lime-ink" : "text-ink-3"}`}>
+                  {order.marketingConsent ? "✓ Agreed to RCS, SMS & WhatsApp messages" : "Did not agree to RCS, SMS & WhatsApp messages"}
+                </p>
               </div>
               <div className="flex w-full gap-2 sm:w-auto">
                 <a

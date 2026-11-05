@@ -217,7 +217,7 @@ export default function CheckoutPage() {
             />
           </div>
 
-          <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-white px-4 py-3.5 transition-colors has-[:checked]:border-lime-ink/50 has-[:checked]:bg-lime/10">
+          <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-white px-4 py-3.5 transition-colors has-checked:border-lime-ink/50 has-checked:bg-lime/10">
             <input
               type="checkbox"
               name="marketingConsent"

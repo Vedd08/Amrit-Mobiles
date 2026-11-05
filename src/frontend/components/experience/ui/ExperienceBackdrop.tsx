@@ -155,7 +155,7 @@ export function ExperienceBackdrop({ quality }: { quality: Quality }) {
 
       {/* Faint parallax grid, faded at the edges */}
       <div
-        className="absolute inset-x-0 -top-[56px] h-[calc(100%+112px)]"
+        className="absolute inset-x-0 -top-14 h-[calc(100%+112px)]"
         style={{
           maskImage: 'radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 85%)',
           WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 85%)',
@@ -201,7 +201,7 @@ export function ExperienceBackdrop({ quality }: { quality: Quality }) {
       </div>
 
       {/* Turning logo star */}
-      <div className="absolute -right-[18vmin] -top-[18vmin] h-[62vmin] w-[62vmin] opacity-70">
+      <div className="absolute right-[-18vmin] top-[-18vmin] h-[62vmin] w-[62vmin] opacity-70">
         <div ref={starRef} className="h-full w-full will-change-transform">
           <LogoStar className="h-full w-full" />
         </div>
@@ -221,7 +221,7 @@ export function ExperienceBackdrop({ quality }: { quality: Quality }) {
       {/* Cursor glow (desktop pointers, high quality only) */}
       <div
         ref={glowRef}
-        className={`absolute left-0 top-0 hidden h-[420px] w-[420px] rounded-full will-change-transform ${drift ? 'md:block' : ''}`}
+        className={`absolute left-0 top-0 hidden h-105 w-105 rounded-full will-change-transform ${drift ? 'md:block' : ''}`}
         style={{ background: 'radial-gradient(circle, rgba(146,195,24,0.22) 0%, rgba(146,195,24,0) 65%)' }}
       />
 

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* Brand palette — single source of truth, sampled directly from the logo
-   (public/logo.png). Referenced directly (var(--primary) etc.) by the
+   (public/amrit-mobiles-logo.png). Referenced directly (var(--primary) etc.) by the
    story/* components, and mirrored into the two token systems below so every
    part of the site resolves to the same actual colors.
 

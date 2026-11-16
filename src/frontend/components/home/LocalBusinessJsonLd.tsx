@@ -78,8 +78,8 @@ export function LocalBusinessJsonLd({ siteUrl }: { siteUrl: string }) {
         description:
           `Authorised mobile phone dealer with ${BRANCHES.length} branches across Surat. Every box opened at the counter, IMEI printed on your GST bill, 0% EMI approved in about ten minutes.`,
         url: siteUrl,
-        logo: `${siteUrl}/logo.png`,
-        image: `${siteUrl}/logo.png`,
+        logo: `${siteUrl}/amrit-mobiles-logo.png`,
+        image: `${siteUrl}/amrit-mobiles-logo.png`,
         telephone,
         areaServed: { "@type": "City", name: CITY },
         address: {

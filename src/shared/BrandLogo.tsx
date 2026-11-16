@@ -1,13 +1,12 @@
 import Image from "next/image";
 
 const VARIANTS = {
-  // Full lockup (star mark + "amrit" + "Mobiles & Electronics") — needs
-  // more vertical room to stay legible. Use in footer, login screen.
-  full: { src: "/logo.png", width: 656, height: 390 },
+  // Full lockup (star mark + "amrit" + "Mobiles") — needs more vertical
+  // room to stay legible. Use in footer, login screen.
+  full: { src: "/logo.png", width: 1000, height: 651 },
   // Star mark + "amrit" only, cropped from the same source — for tight
-  // spaces like the sticky header and admin sidebar where the full
-  // three-line lockup would be squeezed unreadable.
-  compact: { src: "/logo-compact.png", width: 525, height: 293 },
+  // spaces like the sticky header where "Mobiles" would be unreadable.
+  compact: { src: "/logo-compact.png", width: 1000, height: 556 },
 } as const;
 
 export function BrandLogo({
@@ -21,7 +20,7 @@ export function BrandLogo({
   return (
     <Image
       src={src}
-      alt="Amrit Mobiles & Electronics"
+      alt="Amrit Mobiles"
       width={width}
       height={height}
       priority

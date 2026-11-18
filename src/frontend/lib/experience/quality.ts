@@ -19,6 +19,8 @@ export type Quality = 'high' | 'medium' | 'lite';
 
 const RANK: Record<Quality, number> = { lite: 0, medium: 1, high: 2 };
 const REMEMBER_KEY = 'amrit:quality-lite';
+/** How long a measured drop to lite is remembered on this device. */
+const REMEMBER_MS = 3 * 24 * 60 * 60 * 1000;
 /** GPUs that are really the CPU drawing in software. */
 const SOFTWARE_GPU = /swiftshader|llvmpipe|softpipe|software|basic render|microsoft basic|mesa offscreen/i;
 
@@ -30,7 +32,11 @@ function detect(): Quality {
   if (forced === 'high' || forced === 'medium' || forced === 'lite') return forced;
 
   try {
-    if (localStorage.getItem(REMEMBER_KEY) === '1') return 'lite';
+    // A timestamp, so one bad visit doesn't switch the 3D off for good. The
+    // old value '1' (no timestamp) parses as 1970 and is ignored.
+    const at = Number(localStorage.getItem(REMEMBER_KEY));
+    if (at && Date.now() - at < REMEMBER_MS) return 'lite';
+    localStorage.removeItem(REMEMBER_KEY);
   } catch {}
 
   const nav = navigator as Navigator & { deviceMemory?: number };
@@ -61,14 +67,19 @@ function get(): Quality {
   return current;
 }
 
-/** Steps quality down (never up). Dropping to lite is remembered on this device. */
-export function lowerQuality(to: Quality) {
+/**
+ * Steps quality down (never up). A drop to lite is remembered on this device
+ * for a few days when `remember` is set: only for a measured slow frame rate,
+ * not for a slow first load (network, a dev-server compile) or a crash, which
+ * say nothing about the next visit. Never remembered in development.
+ */
+export function lowerQuality(to: Quality, { remember = false }: { remember?: boolean } = {}) {
   if (RANK[to] >= RANK[get()]) return;
   current = to;
   stageState.quality = to;
-  if (to === 'lite') {
+  if (to === 'lite' && remember && process.env.NODE_ENV === 'production') {
     try {
-      localStorage.setItem(REMEMBER_KEY, '1');
+      localStorage.setItem(REMEMBER_KEY, String(Date.now()));
     } catch {}
   }
   listeners.forEach((l) => l());

@@ -61,7 +61,7 @@ function FrameGuard({ minDpr }: { minDpr: number }) {
       setDpr(Math.max(minDpr, current - 0.25));
       a.warmup = 0.5;
     } else if (fps < FLOOR_FPS && ++a.strikes >= 2) {
-      lowerQuality('lite');
+      lowerQuality('lite', { remember: true });
     }
   });
   return null;
